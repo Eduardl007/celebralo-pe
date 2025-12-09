@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador de Eventos | Eventify Peru</title>
+    <meta name="description" content="Arma tu paquete personalizado para tu evento. Cotiza local + servicios con descuentos automaticos.">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .cotizador-page {
+            padding-top: var(--header-height);
+            min-height: 100vh;
+            background: var(--gray-50);
+        }
+
+        .cotizador-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: var(--spacing-6) 0;
+        }
+
+        .cotizador-header h1 {
+            color: var(--white);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .cotizador-header p {
+            color: rgba(255,255,255,0.85);
+            margin: 0;
+        }
+
+        /* Progress Steps */
+        .progress-bar {
+            background: var(--white);
+            padding: var(--spacing-4) 0;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: var(--header-height);
+            z-index: 50;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-2);
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-sm);
+            background: var(--gray-200);
+            color: var(--text-muted);
+            transition: all var(--transition-fast);
+        }
+
+        .progress-step.active .step-circle {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .progress-step.completed .step-circle {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .step-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            display: none;
+        }
+
+        .progress-step.active .step-label {
+            color: var(--text-primary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .step-connector {
+            width: 60px;
+            height: 2px;
+            background: var(--gray-200);
+        }
+
+        .step-connector.completed {
+            background: var(--success);
+        }
+
+        /* Main Layout */
+        .cotizador-content {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: var(--spacing-6);
+            padding: var(--spacing-6) 0;
+        }
+
+        .cotizador-main {
+            min-width: 0;
+        }
+
+        /* Step Sections */
+        .step-section {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            margin-bottom: var(--spacing-5);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .step-section.collapsed {
+            padding: var(--spacing-4) var(--spacing-6);
+        }
+
+        .step-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-5);
+        }
+
+        .step-section.collapsed .step-header {
+            margin-bottom: 0;
+        }
+
+        .step-header h2 {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            font-size: var(--font-size-lg);
+            margin: 0;
+        }
+
+        .step-header h2 i {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-md);
+            background: var(--primary-50);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step-selection {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            color: var(--success);
+            font-size: var(--font-size-sm);
+        }
+
+        .step-content {
+            display: block;
+        }
+
+        .step-section.collapsed .step-content {
+            display: none;
+        }
+
+        /* Event Details Form */
+        .event-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-4);
+        }
+
+        .event-form .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* Selection Cards */
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-4);
+        }
+
+        .selection-card {
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-4);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .selection-card:hover {
+            border-color: var(--primary);
+            background: var(--primary-50);
+        }
+
+        .selection-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-50);
+        }
+
+        .selection-card-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .selection-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .selection-info h4 {
+            font-size: var(--font-size-base);
+            margin-bottom: 2px;
+        }
+
+        .selection-info p {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .selection-price {
+            text-align: right;
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+        }
+
+        .selection-card-body {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .selection-checkbox {
+            position: absolute;
+            top: var(--spacing-3);
+            right: var(--spacing-3);
+        }
+
+        /* Service Options */
+        .service-option {
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-4);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-3);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .service-option:hover {
+            border-color: var(--primary-300);
+        }
+
+        .service-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-50);
+        }
+
+        .service-option-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .service-option-icon {
+            font-size: 1.5rem;
+        }
+
+        .service-option-details h4 {
+            font-size: var(--font-size-base);
+            margin-bottom: 2px;
+        }
+
+        .service-option-details p {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .service-option-price {
+            text-align: right;
+        }
+
+        .service-option-price .price {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+        }
+
+        .service-option-price .unit {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        /* Summary Sidebar */
+        .summary-sidebar {
+            position: sticky;
+            top: calc(var(--header-height) + 80px);
+            height: fit-content;
+        }
+
+        .summary-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .summary-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: var(--spacing-4);
+            text-align: center;
+        }
+
+        .summary-header h3 {
+            color: var(--white);
+            margin: 0;
+        }
+
+        .summary-body {
+            padding: var(--spacing-5);
+        }
+
+        .summary-event {
+            padding-bottom: var(--spacing-4);
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .summary-event p {
+            display: flex;
+            justify-content: space-between;
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .summary-event p span:first-child {
+            color: var(--text-muted);
+        }
+
+        .summary-items {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-2) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .summary-item-name {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .summary-item-price {
+            font-weight: var(--font-weight-medium);
+        }
+
+        .summary-item-remove {
+            color: var(--error);
+            cursor: pointer;
+            padding: var(--spacing-1);
+        }
+
+        .summary-totals {
+            border-top: 1px solid var(--border-light);
+            padding-top: var(--spacing-4);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-2);
+            font-size: var(--font-size-sm);
+        }
+
+        .summary-row.discount {
+            color: var(--success);
+        }
+
+        .summary-row.total {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            margin-top: var(--spacing-3);
+            padding-top: var(--spacing-3);
+            border-top: 2px solid var(--border-light);
+        }
+
+        .summary-row.total span:last-child {
+            color: var(--primary);
+        }
+
+        .summary-footer {
+            padding: var(--spacing-4);
+            background: var(--gray-50);
+        }
+
+        .discount-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-2);
+            background: var(--success-50);
+            color: var(--success);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-3);
+        }
+
+        /* Empty State */
+        .empty-summary {
+            text-align: center;
+            padding: var(--spacing-6);
+            color: var(--text-muted);
+        }
+
+        .empty-summary i {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-3);
+        }
+
+        @media (max-width: 1024px) {
+            .cotizador-content {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-sidebar {
+                position: static;
+                order: -1;
+            }
+
+            .step-label {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .event-form {
+                grid-template-columns: 1fr;
+            }
+
+            .selection-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="cotizador-page">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="container">
+                <nav class="nav">
+                    <a href="../index.html" class="logo">
+                        <span class="logo-icon">🎉</span>
+                        <span class="logo-text">Eventify</span>
+                        <span class="logo-badge">Peru</span>
+                    </a>
+
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                        <li><a href="locales.html" class="nav-link">Locales</a></li>
+                        <li><a href="servicios.html" class="nav-link">Servicios</a></li>
+                        <li><a href="paquetes.html" class="nav-link">Paquetes</a></li>
+                    </ul>
+
+                    <div class="nav-actions">
+                        <button class="btn btn-ghost" onclick="openAuthModal('login')">
+                            <i class="fas fa-user"></i>
+                            <span>Ingresar</span>
+                        </button>
+                        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Page Header -->
+        <div class="cotizador-header">
+            <div class="container">
+                <h1><i class="fas fa-calculator"></i> Cotizador de Eventos</h1>
+                <p>Arma tu paquete personalizado y obtiene descuentos automaticos</p>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="container">
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-circle">1</div>
+                        <span class="step-label">Detalles</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-circle">2</div>
+                        <span class="step-label">Local</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-circle">3</div>
+                        <span class="step-label">Servicios</span>
+                    </div>
+                    <div class="step-connector"></div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-circle">4</div>
+                        <span class="step-label">Confirmar</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container">
+            <div class="cotizador-content">
+                <!-- Main Column -->
+                <div class="cotizador-main">
+                    <!-- Step 1: Event Details -->
+                    <div class="step-section" id="step1">
+                        <div class="step-header">
+                            <h2>
+                                <i class="fas fa-calendar-alt"></i>
+                                Detalles del Evento
+                            </h2>
+                        </div>
+                        <div class="step-content">
+                            <form class="event-form" id="eventForm">
+                                <div class="form-group">
+                                    <label for="eventType">Tipo de Evento *</label>
+                                    <select id="eventType" required>
+                                        <option value="">Selecciona...</option>
+                                        <option value="cumpleanos">🎂 Cumpleanos</option>
+                                        <option value="matrimonio">💒 Matrimonio</option>
+                                        <option value="quinceanos">👸 XV Anos</option>
+                                        <option value="corporativo">🏢 Corporativo</option>
+                                        <option value="bautizo">⛪ Bautizo</option>
+                                        <option value="graduacion">🎓 Graduacion</option>
+                                        <option value="baby-shower">👶 Baby Shower</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="eventDate">Fecha del Evento *</label>
+                                    <input type="date" id="eventDate" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="guestCount">Numero de Invitados *</label>
+                                    <select id="guestCount" required>
+                                        <option value="">Selecciona...</option>
+                                        <option value="30">Hasta 30 personas</option>
+                                        <option value="50">30 - 50 personas</option>
+                                        <option value="80">50 - 80 personas</option>
+                                        <option value="100">80 - 100 personas</option>
+                                        <option value="150">100 - 150 personas</option>
+                                        <option value="200">150 - 200 personas</option>
+                                        <option value="300">200 - 300 personas</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="budget">Presupuesto Aproximado</label>
+                                    <select id="budget">
+                                        <option value="">Sin limite</option>
+                                        <option value="1500">Hasta S/ 1,500</option>
+                                        <option value="3000">Hasta S/ 3,000</option>
+                                        <option value="5000">Hasta S/ 5,000</option>
+                                        <option value="10000">Hasta S/ 10,000</option>
+                                        <option value="20000">Hasta S/ 20,000</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group full-width" style="text-align: right;">
+                                    <button type="button" class="btn btn-primary" onclick="goToStep(2)">
+                                        Continuar <i class="fas fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Select Local -->
+                    <div class="step-section collapsed" id="step2">
+                        <div class="step-header" onclick="goToStep(2)">
+                            <h2>
+                                <i class="fas fa-building"></i>
+                                Selecciona un Local
+                            </h2>
+                            <span class="step-selection" id="localSelection" style="display: none;">
+                                <i class="fas fa-check-circle"></i>
+                                <span id="selectedLocalName">-</span>
+                            </span>
+                        </div>
+                        <div class="step-content">
+                            <div class="selection-grid" id="localesGrid">
+                                <!-- Locales loaded via JS -->
+                            </div>
+                            <div style="margin-top: var(--spacing-5); display: flex; justify-content: space-between;">
+                                <button class="btn btn-ghost" onclick="goToStep(1)">
+                                    <i class="fas fa-arrow-left"></i> Atras
+                                </button>
+                                <button class="btn btn-primary" onclick="goToStep(3)" id="btnStep2Next" disabled>
+                                    Continuar <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Select Services -->
+                    <div class="step-section collapsed" id="step3">
+                        <div class="step-header" onclick="goToStep(3)">
+                            <h2>
+                                <i class="fas fa-concierge-bell"></i>
+                                Agrega Servicios (Opcional)
+                            </h2>
+                            <span class="step-selection" id="servicesSelection" style="display: none;">
+                                <i class="fas fa-check-circle"></i>
+                                <span id="selectedServicesCount">0 servicios</span>
+                            </span>
+                        </div>
+                        <div class="step-content">
+                            <p style="color: var(--text-secondary); margin-bottom: var(--spacing-4);">
+                                Agrega servicios y obtiene hasta 15% de descuento por combo
+                            </p>
+
+                            <div id="servicesGrid">
+                                <!-- Services loaded via JS -->
+                            </div>
+
+                            <div style="margin-top: var(--spacing-5); display: flex; justify-content: space-between;">
+                                <button class="btn btn-ghost" onclick="goToStep(2)">
+                                    <i class="fas fa-arrow-left"></i> Atras
+                                </button>
+                                <button class="btn btn-primary" onclick="goToStep(4)">
+                                    Ver Resumen <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Confirm -->
+                    <div class="step-section collapsed" id="step4">
+                        <div class="step-header">
+                            <h2>
+                                <i class="fas fa-check-circle"></i>
+                                Confirmar Cotizacion
+                            </h2>
+                        </div>
+                        <div class="step-content">
+                            <div style="text-align: center; padding: var(--spacing-6);">
+                                <div style="font-size: 4rem; margin-bottom: var(--spacing-4);">🎉</div>
+                                <h3>Tu cotizacion esta lista!</h3>
+                                <p style="color: var(--text-secondary); margin-bottom: var(--spacing-6);">
+                                    Revisa el resumen a la derecha y confirma tu reserva o guardala para despues.
+                                </p>
+
+                                <div style="display: flex; flex-direction: column; gap: var(--spacing-3); max-width: 400px; margin: 0 auto;">
+                                    <button class="btn btn-primary btn-lg" onclick="confirmBooking()">
+                                        <i class="fas fa-calendar-check"></i>
+                                        Reservar Ahora
+                                    </button>
+                                    <button class="btn btn-outline" onclick="saveQuote()">
+                                        <i class="fas fa-save"></i>
+                                        Guardar Cotizacion
+                                    </button>
+                                    <button class="btn btn-ghost" onclick="shareQuote()">
+                                        <i class="fas fa-share-alt"></i>
+                                        Compartir
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: var(--spacing-5);">
+                                <button class="btn btn-ghost" onclick="goToStep(3)">
+                                    <i class="fas fa-arrow-left"></i> Volver a editar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Sidebar -->
+                <aside class="summary-sidebar">
+                    <div class="summary-card">
+                        <div class="summary-header">
+                            <h3><i class="fas fa-receipt"></i> Resumen</h3>
+                        </div>
+                        <div class="summary-body" id="summaryBody">
+                            <div class="empty-summary">
+                                <i class="fas fa-shopping-cart"></i>
+                                <p>Completa los pasos para ver tu cotizacion</p>
+                            </div>
+                        </div>
+                        <div class="summary-footer" id="summaryFooter" style="display: none;">
+                            <div class="discount-badge" id="discountBadge" style="display: none;">
+                                <i class="fas fa-tag"></i>
+                                <span>Descuento combo aplicado!</span>
+                            </div>
+                            <button class="btn btn-primary btn-block btn-lg" onclick="confirmBooking()">
+                                Reservar Ahora
+                            </button>
+                            <p style="text-align: center; font-size: var(--font-size-xs); color: var(--text-muted); margin-top: var(--spacing-2);">
+                                <i class="fas fa-shield-alt"></i> Pago seguro garantizado
+                            </p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <!-- Chatbot -->
+        <div class="chatbot" id="chatbot">
+            <button class="chatbot-trigger" id="chatbotTrigger" aria-label="Abrir chat">
+                <i class="fas fa-comments"></i>
+                <span class="chatbot-badge">1</span>
+            </button>
+            <div class="chatbot-window" id="chatbotWindow">
+                <div class="chatbot-header">
+                    <div class="chatbot-avatar">
+                        <img src="../assets/images/eventbot-avatar.svg" alt="EventBot">
+                        <span class="status-dot"></span>
+                    </div>
+                    <div class="chatbot-info">
+                        <strong>EventBot</strong>
+                        <span>Tu asistente virtual 24/7</span>
+                    </div>
+                    <button class="chatbot-close" id="chatbotClose" aria-label="Cerrar chat">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="chatbot-messages" id="chatbotMessages"></div>
+                <div class="chatbot-quick-actions" id="quickActions">
+                    <button class="quick-action" data-action="cotizar">📦 Cotizar</button>
+                    <button class="quick-action" data-action="precios">💰 Precios</button>
+                    <button class="quick-action" data-action="ayuda">❓ Ayuda</button>
+                </div>
+                <form class="chatbot-input" id="chatbotForm">
+                    <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+                    <button type="submit" aria-label="Enviar mensaje">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Auth Modal -->
+        <div class="modal" id="authModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content auth-modal">
+                <button class="modal-close" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+                <div class="auth-form" id="loginForm">
+                    <div class="auth-header">
+                        <h2>Bienvenido de vuelta</h2>
+                        <p>Ingresa a tu cuenta para continuar</p>
+                    </div>
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail">Correo electronico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Contrasena</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="loginPassword" placeholder="********" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Ingresar</button>
+                    </form>
+                    <p class="auth-switch">No tienes cuenta? <a href="#" onclick="switchAuthForm('register')">Registrate</a></p>
+                </div>
+                <div class="auth-form hidden" id="registerForm">
+                    <div class="auth-header">
+                        <h2>Crea tu cuenta</h2>
+                        <p>Unete a Eventify</p>
+                    </div>
+                    <form id="registerFormElement">
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="registerName">Nombre</label>
+                                <input type="text" id="registerName" placeholder="Tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerLastname">Apellido</label>
+                                <input type="text" id="registerLastname" placeholder="Tu apellido" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Correo electronico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="registerEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPhone">Telefono</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="registerPhone" placeholder="999 888 777" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Contrasena</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="registerPassword" placeholder="Minimo 8 caracteres" required>
+                            </div>
+                        </div>
+                        <label class="checkbox">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <span>Acepto los <a href="terminos.html">Terminos y Condiciones</a></span>
+                        </label>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Crear cuenta</button>
+                    </form>
+                    <p class="auth-switch">Ya tienes cuenta? <a href="#" onclick="switchAuthForm('login')">Inicia sesion</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/data/locales.js"></script>
+    <script src="../js/data/servicios.js"></script>
+    <script src="../js/utils/helpers.js"></script>
+    <script src="../js/components/header.js"></script>
+    <script src="../js/components/chatbot.js"></script>
+    <script src="../js/components/auth.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/app.js"></script>
+
+    <script>
+        // Cotizador State
+        const cotizador = {
+            currentStep: 1,
+            eventDetails: {
+                type: '',
+                date: '',
+                guests: 0,
+                budget: null
+            },
+            selectedLocal: null,
+            selectedServices: [],
+            subtotal: 0,
+            discount: 0,
+            total: 0
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('eventDate').min = today;
+
+            // Check URL params for pre-selected package
+            checkUrlParams();
+
+            // Load initial data
+            loadLocales();
+            loadServices();
+        });
+
+        function checkUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const evento = params.get('evento');
+            const paquete = params.get('paquete');
+
+            if (evento) {
+                document.getElementById('eventType').value = evento;
+            }
+        }
+
+        function goToStep(step) {
+            // Validate current step before proceeding
+            if (step > cotizador.currentStep) {
+                if (!validateStep(cotizador.currentStep)) {
+                    return;
+                }
+            }
+
+            // Update progress bar
+            document.querySelectorAll('.progress-step').forEach((el, index) => {
+                el.classList.remove('active', 'completed');
+                if (index + 1 < step) {
+                    el.classList.add('completed');
+                } else if (index + 1 === step) {
+                    el.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.step-connector').forEach((el, index) => {
+                el.classList.toggle('completed', index < step - 1);
+            });
+
+            // Update sections
+            document.querySelectorAll('.step-section').forEach((section, index) => {
+                section.classList.toggle('collapsed', index + 1 !== step);
+            });
+
+            cotizador.currentStep = step;
+
+            // If going to step 2, load locales
+            if (step === 2) {
+                loadLocales();
+            }
+
+            updateSummary();
+        }
+
+        function validateStep(step) {
+            if (step === 1) {
+                const type = document.getElementById('eventType').value;
+                const date = document.getElementById('eventDate').value;
+                const guests = document.getElementById('guestCount').value;
+
+                if (!type || !date || !guests) {
+                    showToast('warning', 'Campos requeridos', 'Completa todos los campos obligatorios');
+                    return false;
+                }
+
+                cotizador.eventDetails = {
+                    type,
+                    date,
+                    guests: parseInt(guests),
+                    budget: document.getElementById('budget').value || null
+                };
+
+                return true;
+            }
+
+            if (step === 2) {
+                if (!cotizador.selectedLocal) {
+                    showToast('warning', 'Selecciona un local', 'Debes elegir un local para continuar');
+                    return false;
+                }
+                return true;
+            }
+
+            return true;
+        }
+
+        function loadLocales() {
+            const container = document.getElementById('localesGrid');
+            const guests = cotizador.eventDetails.guests || 50;
+
+            // Filter locales by capacity
+            const locales = LOCALES_DATA.filter(l => l.capacity.max >= guests).slice(0, 6);
+
+            container.innerHTML = locales.map(local => `
+                <div class="selection-card ${cotizador.selectedLocal?.id === local.id ? 'selected' : ''}"
+                     onclick="selectLocal(${local.id})">
+                    <div class="selection-card-header">
+                        <div class="selection-icon">${local.icon}</div>
+                        <div class="selection-info">
+                            <h4>${local.name}</h4>
+                            <p>${local.location.district} - ${local.capacity.min}-${local.capacity.max} personas</p>
+                        </div>
+                    </div>
+                    <div class="selection-card-body">
+                        <p style="margin-bottom: var(--spacing-2);">${local.shortDescription}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="color: var(--text-muted); font-size: var(--font-size-xs);">
+                                <i class="fas fa-star" style="color: var(--accent);"></i> ${local.rating} (${local.reviewsCount})
+                            </span>
+                            <span class="selection-price">${formatPrice(local.price.base)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectLocal(localId) {
+            const local = LOCALES_DATA.find(l => l.id === localId);
+            if (!local) return;
+
+            cotizador.selectedLocal = local;
+
+            // Update UI
+            document.querySelectorAll('#localesGrid .selection-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+
+            // Update selection display
+            document.getElementById('localSelection').style.display = 'flex';
+            document.getElementById('selectedLocalName').textContent = local.name;
+
+            // Enable next button
+            document.getElementById('btnStep2Next').disabled = false;
+
+            updateSummary();
+        }
+
+        function loadServices() {
+            const container = document.getElementById('servicesGrid');
+
+            const serviceGroups = [
+                { category: 'catering', title: 'Catering', emoji: '🍽️' },
+                { category: 'musica', title: 'Musica', emoji: '🎵' },
+                { category: 'fotografia', title: 'Fotografia', emoji: '📸' },
+                { category: 'decoracion', title: 'Decoracion', emoji: '🎈' },
+                { category: 'pasteleria', title: 'Pasteleria', emoji: '🎂' }
+            ];
+
+            container.innerHTML = serviceGroups.map(group => {
+                const services = SERVICIOS_DATA.filter(s => s.category === group.category);
+                if (services.length === 0) return '';
+
+                const service = services[0]; // Get first service of each category
+                const basePrice = service.pricing.basePrice || (service.pricing.packages && service.pricing.packages[0].price) || 0;
+                const isSelected = cotizador.selectedServices.some(s => s.id === service.id);
+
+                return `
+                    <div class="service-option ${isSelected ? 'selected' : ''}" onclick="toggleService(${service.id})">
+                        <div class="service-option-info">
+                            <span class="service-option-icon">${service.icon}</span>
+                            <div class="service-option-details">
+                                <h4>${service.name}</h4>
+                                <p>${service.shortDescription}</p>
+                            </div>
+                        </div>
+                        <div class="service-option-price">
+                            <div class="price">${formatPrice(basePrice)}</div>
+                            <div class="unit">${service.pricing.type === 'per-person' ? '/persona' : ''}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function toggleService(serviceId) {
+            const service = SERVICIOS_DATA.find(s => s.id === serviceId);
+            if (!service) return;
+
+            const index = cotizador.selectedServices.findIndex(s => s.id === serviceId);
+
+            if (index > -1) {
+                cotizador.selectedServices.splice(index, 1);
+            } else {
+                cotizador.selectedServices.push(service);
+            }
+
+            // Update UI
+            loadServices();
+
+            // Update services count
+            const count = cotizador.selectedServices.length;
+            if (count > 0) {
+                document.getElementById('servicesSelection').style.display = 'flex';
+                document.getElementById('selectedServicesCount').textContent = `${count} servicio${count > 1 ? 's' : ''}`;
+            } else {
+                document.getElementById('servicesSelection').style.display = 'none';
+            }
+
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const body = document.getElementById('summaryBody');
+            const footer = document.getElementById('summaryFooter');
+
+            if (!cotizador.selectedLocal && cotizador.selectedServices.length === 0) {
+                body.innerHTML = `
+                    <div class="empty-summary">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Completa los pasos para ver tu cotizacion</p>
+                    </div>
+                `;
+                footer.style.display = 'none';
+                return;
+            }
+
+            // Calculate totals
+            let subtotal = 0;
+            const items = [];
+
+            // Add local
+            if (cotizador.selectedLocal) {
+                subtotal += cotizador.selectedLocal.price.base;
+                items.push({
+                    name: cotizador.selectedLocal.name,
+                    icon: cotizador.selectedLocal.icon,
+                    price: cotizador.selectedLocal.price.base
+                });
+            }
+
+            // Add services
+            cotizador.selectedServices.forEach(service => {
+                const basePrice = service.pricing.basePrice || (service.pricing.packages && service.pricing.packages[0].price) || 0;
+                let servicePrice = basePrice;
+
+                // If per-person pricing, multiply by guests
+                if (service.pricing.type === 'per-person') {
+                    servicePrice = basePrice * (cotizador.eventDetails.guests || 50);
+                }
+
+                subtotal += servicePrice;
+                items.push({
+                    name: service.name,
+                    icon: service.icon,
+                    price: servicePrice
+                });
+            });
+
+            // Calculate discount (10% if local + 2+ services)
+            let discount = 0;
+            if (cotizador.selectedLocal && cotizador.selectedServices.length >= 2) {
+                discount = subtotal * 0.10;
+            } else if (cotizador.selectedLocal && cotizador.selectedServices.length === 1) {
+                discount = subtotal * 0.05;
+            }
+
+            const total = subtotal - discount;
+
+            // Store totals
+            cotizador.subtotal = subtotal;
+            cotizador.discount = discount;
+            cotizador.total = total;
+
+            // Render summary
+            const eventNames = {
+                cumpleanos: 'Cumpleanos',
+                matrimonio: 'Matrimonio',
+                quinceanos: 'XV Anos',
+                corporativo: 'Corporativo',
+                bautizo: 'Bautizo',
+                graduacion: 'Graduacion',
+                'baby-shower': 'Baby Shower'
+            };
+
+            body.innerHTML = `
+                ${cotizador.eventDetails.type ? `
+                    <div class="summary-event">
+                        <p><span>Tipo de evento:</span> <strong>${eventNames[cotizador.eventDetails.type] || cotizador.eventDetails.type}</strong></p>
+                        <p><span>Fecha:</span> <strong>${cotizador.eventDetails.date ? formatDate(cotizador.eventDetails.date, 'short') : '-'}</strong></p>
+                        <p><span>Invitados:</span> <strong>${cotizador.eventDetails.guests || '-'} personas</strong></p>
+                    </div>
+                ` : ''}
+
+                <div class="summary-items">
+                    ${items.map(item => `
+                        <div class="summary-item">
+                            <span class="summary-item-name">
+                                <span>${item.icon}</span>
+                                ${item.name}
+                            </span>
+                            <span class="summary-item-price">${formatPrice(item.price)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="summary-totals">
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span>${formatPrice(subtotal)}</span>
+                    </div>
+                    ${discount > 0 ? `
+                        <div class="summary-row discount">
+                            <span>Descuento combo</span>
+                            <span>-${formatPrice(discount)}</span>
+                        </div>
+                    ` : ''}
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span>${formatPrice(total)}</span>
+                    </div>
+                </div>
+            `;
+
+            footer.style.display = 'block';
+            document.getElementById('discountBadge').style.display = discount > 0 ? 'flex' : 'none';
+        }
+
+        function confirmBooking() {
+            if (!cotizador.selectedLocal) {
+                showToast('warning', 'Selecciona un local', 'Debes elegir al menos un local para reservar');
+                return;
+            }
+
+            showToast('success', 'Reserva iniciada!', 'Redirigiendo al proceso de pago...');
+
+            setTimeout(() => {
+                alert(`PROTOTIPO: Resumen de Cotizacion\n\n` +
+                    `Evento: ${cotizador.eventDetails.type}\n` +
+                    `Fecha: ${cotizador.eventDetails.date}\n` +
+                    `Invitados: ${cotizador.eventDetails.guests}\n` +
+                    `Local: ${cotizador.selectedLocal.name}\n` +
+                    `Servicios: ${cotizador.selectedServices.map(s => s.name).join(', ') || 'Ninguno'}\n\n` +
+                    `Subtotal: ${formatPrice(cotizador.subtotal)}\n` +
+                    `Descuento: ${formatPrice(cotizador.discount)}\n` +
+                    `TOTAL: ${formatPrice(cotizador.total)}`);
+            }, 1000);
+        }
+
+        function saveQuote() {
+            showToast('success', 'Cotizacion guardada', 'Puedes acceder a ella desde tu perfil');
+        }
+
+        function shareQuote() {
+            const text = `Mi cotizacion en Eventify:\n` +
+                `${cotizador.eventDetails.type} - ${cotizador.eventDetails.guests} personas\n` +
+                `Total: ${formatPrice(cotizador.total)}`;
+
+            shareContent('Cotizacion Eventify', text, window.location.href);
+        }
+    </script>
+</body>
+</html>

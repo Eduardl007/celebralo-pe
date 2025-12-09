@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicios para Eventos en Sullana | Eventify Peru</title>
+    <meta name="description" content="Encuentra los mejores servicios para tu evento: catering, DJ, fotografia, decoracion y mas. Proveedores verificados en Sullana, Piura.">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: calc(var(--header-height) + var(--spacing-8)) 0 var(--spacing-8);
+        }
+
+        .page-header h1 {
+            color: var(--white);
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .page-header p {
+            color: rgba(255,255,255,0.85);
+            margin: 0;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .breadcrumb a { color: rgba(255,255,255,0.7); }
+        .breadcrumb a:hover { color: var(--white); }
+        .breadcrumb .separator { color: rgba(255,255,255,0.5); }
+
+        /* Categories Section */
+        .categories-bar {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: var(--header-height);
+            z-index: 50;
+            overflow-x: auto;
+        }
+
+        .categories-bar .container {
+            display: flex;
+            gap: var(--spacing-2);
+            padding: var(--spacing-3) 0;
+        }
+
+        .category-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-2) var(--spacing-4);
+            border-radius: var(--radius-full);
+            background: var(--gray-100);
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 2px solid transparent;
+        }
+
+        .category-btn:hover {
+            background: var(--primary-50);
+            color: var(--primary);
+        }
+
+        .category-btn.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .category-btn .emoji {
+            font-size: 1.2rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: var(--spacing-8) 0;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-6);
+            flex-wrap: wrap;
+            gap: var(--spacing-3);
+        }
+
+        .results-count {
+            font-size: var(--font-size-base);
+            color: var(--text-secondary);
+        }
+
+        .results-count strong {
+            color: var(--text-primary);
+        }
+
+        .sort-select {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .sort-select label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .sort-select select {
+            padding: var(--spacing-2) var(--spacing-3);
+            font-size: var(--font-size-sm);
+            min-width: 180px;
+        }
+
+        /* Services Grid */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: var(--spacing-6);
+        }
+
+        /* Service Card */
+        .service-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+            border: 1px solid var(--border-light);
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .service-card-header {
+            position: relative;
+            padding: var(--spacing-5);
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+        }
+
+        .service-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .service-title-area {
+            flex: 1;
+        }
+
+        .service-title-area h3 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-1);
+            color: var(--text-primary);
+        }
+
+        .service-category {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        .service-badges {
+            position: absolute;
+            top: var(--spacing-3);
+            right: var(--spacing-3);
+            display: flex;
+            gap: var(--spacing-1);
+        }
+
+        .service-card-body {
+            padding: var(--spacing-5);
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            line-height: var(--line-height-relaxed);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .service-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-4);
+            padding-bottom: var(--spacing-4);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .service-meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            font-size: var(--font-size-sm);
+        }
+
+        .service-meta-item i {
+            color: var(--primary);
+        }
+
+        .service-pricing {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .price-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        .price-amount {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+        }
+
+        .price-unit {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .service-actions {
+            display: flex;
+            gap: var(--spacing-2);
+        }
+
+        /* Service Detail Modal */
+        .service-modal .modal-content {
+            max-width: 700px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .service-modal-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+            padding: var(--spacing-6);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+        }
+
+        .service-modal-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-xl);
+            background: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .service-modal-title h2 {
+            color: var(--white);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .service-modal-title p {
+            color: rgba(255,255,255,0.8);
+            margin: 0;
+        }
+
+        .service-modal-body {
+            padding: var(--spacing-6);
+        }
+
+        .packages-grid {
+            display: grid;
+            gap: var(--spacing-4);
+            margin: var(--spacing-5) 0;
+        }
+
+        .package-option {
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-4);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .package-option:hover {
+            border-color: var(--primary);
+            background: var(--primary-50);
+        }
+
+        .package-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-50);
+        }
+
+        .package-option-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-2);
+        }
+
+        .package-option-name {
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .package-option-price {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+        }
+
+        .package-option-desc {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-2);
+            margin: var(--spacing-4) 0;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .feature-item i {
+            color: var(--success);
+        }
+
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="container">
+                <nav class="nav">
+                    <a href="../index.html" class="logo">
+                        <span class="logo-icon">🎉</span>
+                        <span class="logo-text">Eventify</span>
+                        <span class="logo-badge">Peru</span>
+                    </a>
+
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                        <li><a href="locales.html" class="nav-link">Locales</a></li>
+                        <li><a href="servicios.html" class="nav-link active">Servicios</a></li>
+                        <li><a href="paquetes.html" class="nav-link">Paquetes</a></li>
+                        <li><a href="como-funciona.html" class="nav-link">Como Funciona?</a></li>
+                    </ul>
+
+                    <div class="nav-actions">
+                        <button class="btn btn-ghost" onclick="openAuthModal('login')">
+                            <i class="fas fa-user"></i>
+                            <span>Ingresar</span>
+                        </button>
+                        <a href="registro-proveedor.html" class="btn btn-primary">
+                            <i class="fas fa-store"></i>
+                            <span>Ofrece tus Servicios</span>
+                        </a>
+                        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <nav class="breadcrumb">
+                    <a href="../index.html">Inicio</a>
+                    <span class="separator">/</span>
+                    <span>Servicios</span>
+                </nav>
+                <h1>Servicios para Eventos</h1>
+                <p>Completa tu evento con los mejores proveedores de Sullana</p>
+            </div>
+        </section>
+
+        <!-- Categories Bar -->
+        <div class="categories-bar">
+            <div class="container">
+                <button class="category-btn active" data-category="all">
+                    <span class="emoji">✨</span>
+                    <span>Todos</span>
+                </button>
+                <button class="category-btn" data-category="catering">
+                    <span class="emoji">🍽️</span>
+                    <span>Catering</span>
+                </button>
+                <button class="category-btn" data-category="musica">
+                    <span class="emoji">🎵</span>
+                    <span>Musica y DJ</span>
+                </button>
+                <button class="category-btn" data-category="fotografia">
+                    <span class="emoji">📸</span>
+                    <span>Fotografia</span>
+                </button>
+                <button class="category-btn" data-category="decoracion">
+                    <span class="emoji">🎈</span>
+                    <span>Decoracion</span>
+                </button>
+                <button class="category-btn" data-category="animacion">
+                    <span class="emoji">🤹</span>
+                    <span>Animacion</span>
+                </button>
+                <button class="category-btn" data-category="pasteleria">
+                    <span class="emoji">🎂</span>
+                    <span>Pasteleria</span>
+                </button>
+                <button class="category-btn" data-category="mobiliario">
+                    <span class="emoji">🪑</span>
+                    <span>Mobiliario</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container">
+            <div class="main-content">
+                <div class="results-header">
+                    <p class="results-count">
+                        Mostrando <strong id="resultsCount">8</strong> servicios
+                    </p>
+
+                    <div class="sort-select">
+                        <label for="sortBy">Ordenar por:</label>
+                        <select id="sortBy" onchange="handleSort(this.value)">
+                            <option value="rating">Mejor valorados</option>
+                            <option value="price-asc">Precio: menor a mayor</option>
+                            <option value="price-desc">Precio: mayor a menor</option>
+                            <option value="reviews">Mas resenas</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="services-grid" id="servicesGrid">
+                    <!-- Services loaded via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-bottom" style="border: none; padding: var(--spacing-6) 0;">
+                    <p>&copy; 2025 Eventify Peru. Todos los derechos reservados.</p>
+                    <p>Hecho con amor en Sullana, Piura</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Chatbot -->
+        <div class="chatbot" id="chatbot">
+            <button class="chatbot-trigger" id="chatbotTrigger" aria-label="Abrir chat">
+                <i class="fas fa-comments"></i>
+                <span class="chatbot-badge">1</span>
+            </button>
+            <div class="chatbot-window" id="chatbotWindow">
+                <div class="chatbot-header">
+                    <div class="chatbot-avatar">
+                        <img src="../assets/images/eventbot-avatar.svg" alt="EventBot">
+                        <span class="status-dot"></span>
+                    </div>
+                    <div class="chatbot-info">
+                        <strong>EventBot</strong>
+                        <span>Tu asistente virtual 24/7</span>
+                    </div>
+                    <button class="chatbot-close" id="chatbotClose" aria-label="Cerrar chat">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="chatbot-messages" id="chatbotMessages"></div>
+                <div class="chatbot-quick-actions" id="quickActions">
+                    <button class="quick-action" data-action="precios">💰 Ver precios</button>
+                    <button class="quick-action" data-action="paquetes">📦 Paquetes</button>
+                    <button class="quick-action" data-action="ayuda">❓ Ayuda</button>
+                </div>
+                <form class="chatbot-input" id="chatbotForm">
+                    <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+                    <button type="submit" aria-label="Enviar mensaje">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Service Detail Modal -->
+        <div class="modal service-modal" id="serviceModal">
+            <div class="modal-overlay" onclick="closeServiceModal()"></div>
+            <div class="modal-content">
+                <button class="modal-close" onclick="closeServiceModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div id="serviceModalContent">
+                    <!-- Content loaded via JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Modal -->
+        <div class="modal" id="authModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content auth-modal">
+                <button class="modal-close" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+                <div class="auth-form" id="loginForm">
+                    <div class="auth-header">
+                        <h2>Bienvenido de vuelta</h2>
+                        <p>Ingresa a tu cuenta para continuar</p>
+                    </div>
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail">Correo electronico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Contrasena</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="loginPassword" placeholder="********" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Ingresar</button>
+                    </form>
+                    <p class="auth-switch">No tienes cuenta? <a href="#" onclick="switchAuthForm('register')">Registrate</a></p>
+                </div>
+                <div class="auth-form hidden" id="registerForm">
+                    <div class="auth-header">
+                        <h2>Crea tu cuenta</h2>
+                        <p>Unete a Eventify</p>
+                    </div>
+                    <form id="registerFormElement">
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="registerName">Nombre</label>
+                                <input type="text" id="registerName" placeholder="Tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerLastname">Apellido</label>
+                                <input type="text" id="registerLastname" placeholder="Tu apellido" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Correo electronico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="registerEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPhone">Telefono</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="registerPhone" placeholder="999 888 777" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Contrasena</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="registerPassword" placeholder="Minimo 8 caracteres" required>
+                            </div>
+                        </div>
+                        <label class="checkbox">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <span>Acepto los <a href="terminos.html">Terminos y Condiciones</a></span>
+                        </label>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Crear cuenta</button>
+                    </form>
+                    <p class="auth-switch">Ya tienes cuenta? <a href="#" onclick="switchAuthForm('login')">Inicia sesion</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Container -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/data/locales.js"></script>
+    <script src="../js/data/servicios.js"></script>
+    <script src="../js/utils/helpers.js"></script>
+    <script src="../js/components/header.js"></script>
+    <script src="../js/components/chatbot.js"></script>
+    <script src="../js/components/auth.js"></script>
+    <script src="../js/components/cards.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/app.js"></script>
+
+    <script>
+        let currentCategory = 'all';
+        let currentSort = 'rating';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadServices();
+            initCategoryButtons();
+        });
+
+        function initCategoryButtons() {
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.category;
+                    loadServices();
+                });
+            });
+        }
+
+        function loadServices() {
+            const container = document.getElementById('servicesGrid');
+            container.innerHTML = '<div class="loading-spinner" style="grid-column: 1/-1; text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
+
+            setTimeout(() => {
+                const filters = {
+                    sortBy: currentSort,
+                    verified: true
+                };
+
+                if (currentCategory !== 'all') {
+                    filters.category = currentCategory;
+                }
+
+                const services = filterServices(filters);
+                renderServices(container, services);
+                document.getElementById('resultsCount').textContent = services.length;
+            }, 300);
+        }
+
+        function renderServices(container, services) {
+            if (services.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                        <i class="fas fa-search" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                        <h3>No se encontraron servicios</h3>
+                        <p style="color: var(--text-secondary);">Intenta con otra categoria o filtro</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = services.map(service => {
+                const categoryInfo = SERVICE_CATEGORIES[service.category] || { name: service.category, icon: '🎉' };
+                const basePrice = service.pricing.basePrice || (service.pricing.packages && service.pricing.packages[0].price) || 0;
+                const priceUnit = service.pricing.type === 'per-person' ? '/persona' : service.pricing.type === 'per-item' ? '' : '/evento';
+
+                return `
+                    <div class="service-card" onclick="openServiceModal(${service.id})">
+                        <div class="service-card-header">
+                            <div class="service-icon">${service.icon}</div>
+                            <div class="service-title-area">
+                                <h3>${service.name}</h3>
+                                <span class="service-category">${categoryInfo.name}</span>
+                            </div>
+                            <div class="service-badges">
+                                ${service.verified ? '<span class="badge badge-success"><i class="fas fa-check"></i></span>' : ''}
+                            </div>
+                        </div>
+                        <div class="service-card-body">
+                            <p class="service-description">${service.shortDescription}</p>
+                            <div class="service-meta">
+                                <div class="service-meta-item">
+                                    <i class="fas fa-star"></i>
+                                    <span>${service.rating} (${service.reviewsCount})</span>
+                                </div>
+                                <div class="service-meta-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>${service.location.district}</span>
+                                </div>
+                            </div>
+                            <div class="service-pricing">
+                                <div class="price-info">
+                                    <span class="price-label">Desde</span>
+                                    <span class="price-amount">${formatPrice(basePrice)}</span>
+                                    <span class="price-unit">${priceUnit}</span>
+                                </div>
+                                <div class="service-actions">
+                                    <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); openServiceModal(${service.id})">
+                                        Ver detalles
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function handleSort(value) {
+            currentSort = value;
+            loadServices();
+        }
+
+        function openServiceModal(serviceId) {
+            const service = getServiceById(serviceId);
+            if (!service) return;
+
+            const modal = document.getElementById('serviceModal');
+            const content = document.getElementById('serviceModalContent');
+            const categoryInfo = SERVICE_CATEGORIES[service.category] || { name: service.category };
+
+            content.innerHTML = `
+                <div class="service-modal-header">
+                    <div class="service-modal-icon">${service.icon}</div>
+                    <div class="service-modal-title">
+                        <h2>${service.name}</h2>
+                        <p>${categoryInfo.name} - ${service.location.district}, ${service.location.city}</p>
+                    </div>
+                </div>
+                <div class="service-modal-body">
+                    <div style="display: flex; gap: var(--spacing-4); margin-bottom: var(--spacing-5);">
+                        <div class="service-meta-item">
+                            <i class="fas fa-star" style="color: var(--accent);"></i>
+                            <strong>${service.rating}</strong>
+                            <span>(${service.reviewsCount} resenas)</span>
+                        </div>
+                        ${service.badges.map(badge => `<span class="badge badge-primary">${badge}</span>`).join('')}
+                    </div>
+
+                    <p style="color: var(--text-secondary); line-height: var(--line-height-relaxed); margin-bottom: var(--spacing-5);">
+                        ${service.description}
+                    </p>
+
+                    <h3 style="margin-bottom: var(--spacing-3);">Paquetes disponibles</h3>
+                    <div class="packages-grid">
+                        ${service.pricing.packages ? service.pricing.packages.map((pkg, index) => `
+                            <div class="package-option ${index === 1 ? 'selected' : ''}" onclick="selectPackage(this)">
+                                <div class="package-option-header">
+                                    <span class="package-option-name">${pkg.name}</span>
+                                    <span class="package-option-price">${formatPrice(pkg.price)}${pkg.hours ? ` / ${pkg.hours}h` : ''}</span>
+                                </div>
+                                <p class="package-option-desc">${pkg.description}</p>
+                            </div>
+                        `).join('') : `
+                            <div class="package-option selected">
+                                <div class="package-option-header">
+                                    <span class="package-option-name">Servicio Base</span>
+                                    <span class="package-option-price">${formatPrice(service.pricing.basePrice)}</span>
+                                </div>
+                                <p class="package-option-desc">Precio base del servicio</p>
+                            </div>
+                        `}
+                    </div>
+
+                    <h3 style="margin: var(--spacing-5) 0 var(--spacing-3);">Que incluye</h3>
+                    <div class="features-list">
+                        ${service.features.map(feature => `
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>${feature}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div style="margin-top: var(--spacing-6); display: flex; gap: var(--spacing-3);">
+                        <button class="btn btn-primary btn-lg" style="flex: 1;" onclick="addServiceToCart(${service.id})">
+                            <i class="fas fa-cart-plus"></i>
+                            Agregar al carrito
+                        </button>
+                        <button class="btn btn-outline btn-lg" onclick="contactService(${service.id})">
+                            <i class="fab fa-whatsapp"></i>
+                            Contactar
+                        </button>
+                    </div>
+
+                    <div style="margin-top: var(--spacing-4); padding: var(--spacing-4); background: var(--gray-50); border-radius: var(--radius-lg);">
+                        <div style="display: flex; align-items: center; gap: var(--spacing-3);">
+                            <div class="avatar">${service.owner.avatar}</div>
+                            <div>
+                                <strong>${service.owner.name}</strong>
+                                <p style="font-size: var(--font-size-sm); color: var(--text-muted); margin: 0;">
+                                    Responde en ${service.owner.responseTime} - ${service.owner.responseRate}% tasa de respuesta
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeServiceModal() {
+            document.getElementById('serviceModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function selectPackage(element) {
+            document.querySelectorAll('.package-option').forEach(p => p.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function addServiceToCart(serviceId) {
+            const service = getServiceById(serviceId);
+            if (!service) return;
+
+            const basePrice = service.pricing.basePrice || (service.pricing.packages && service.pricing.packages[0].price) || 0;
+
+            addToCart({
+                type: 'service',
+                id: service.id,
+                name: service.name,
+                price: basePrice,
+                icon: service.icon
+            });
+
+            closeServiceModal();
+        }
+
+        function contactService(serviceId) {
+            const service = getServiceById(serviceId);
+            if (!service) return;
+
+            const message = `Hola, me interesa el servicio "${service.name}" publicado en Eventify. Podrian darme mas informacion?`;
+            const url = formatWhatsAppLink(service.contact.whatsapp, message);
+            window.open(url, '_blank');
+        }
+
+        // Close modal on escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeServiceModal();
+            }
+        });
+    </script>
+</body>
+</html>

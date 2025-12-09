@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como Funciona Eventify | Reserva tu Local en 3 Pasos</title>
+    <meta name="description" content="Descubre como reservar el local perfecto para tu evento en Sullana. Proceso simple, seguro y con asistencia 24/7.">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .how-it-works-page {
+            padding-top: var(--header-height);
+        }
+
+        /* Hero */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            padding: var(--spacing-12) 0;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            color: var(--white);
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .hero-section p {
+            font-size: var(--font-size-lg);
+            color: rgba(255,255,255,0.9);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Steps Section */
+        .steps-section {
+            padding: var(--spacing-12) 0;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto var(--spacing-10);
+        }
+
+        .section-header h2 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+        }
+
+        .steps-timeline {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .steps-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            border-radius: var(--radius-full);
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-8);
+            position: relative;
+        }
+
+        .step-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .step-content {
+            width: calc(50% - 40px);
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            box-shadow: var(--shadow-md);
+        }
+
+        .step-item:nth-child(even) .step-content {
+            text-align: right;
+        }
+
+        .step-number {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-full);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            box-shadow: var(--shadow-lg);
+            z-index: 1;
+        }
+
+        .step-icon {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-3);
+        }
+
+        .step-content h3 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Features Grid */
+        .features-section {
+            padding: var(--spacing-12) 0;
+            background: var(--gray-50);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-6);
+        }
+
+        .feature-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-full);
+            background: var(--primary-50);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--spacing-4);
+            font-size: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            margin: 0;
+        }
+
+        /* Video Section */
+        .video-section {
+            padding: var(--spacing-12) 0;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+        }
+
+        .video-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-8);
+            align-items: center;
+        }
+
+        .video-content h2 {
+            color: var(--white);
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .video-content p {
+            color: rgba(255,255,255,0.9);
+            margin-bottom: var(--spacing-6);
+            line-height: var(--line-height-relaxed);
+        }
+
+        .video-placeholder {
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius-2xl);
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .video-placeholder:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-full);
+            background: var(--white);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: var(--spacing-12) 0;
+        }
+
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: var(--spacing-6);
+        }
+
+        .faq-item {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-4) var(--spacing-5);
+            cursor: pointer;
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .faq-question:hover {
+            background: var(--gray-50);
+        }
+
+        .faq-question i {
+            transition: transform var(--transition-fast);
+            color: var(--primary);
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 var(--spacing-5);
+            max-height: 0;
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: var(--spacing-4) var(--spacing-5);
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: var(--spacing-12) 0;
+            background: var(--gray-50);
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .cta-content p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: var(--spacing-4);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Trust Section */
+        .trust-section {
+            padding: var(--spacing-8) 0;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .trust-items {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-8);
+            flex-wrap: wrap;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .trust-item i {
+            color: var(--success);
+        }
+
+        @media (max-width: 768px) {
+            .steps-timeline::before {
+                left: 20px;
+            }
+
+            .step-item,
+            .step-item:nth-child(even) {
+                flex-direction: column;
+                padding-left: 50px;
+            }
+
+            .step-content,
+            .step-item:nth-child(even) .step-content {
+                width: 100%;
+                text-align: left;
+            }
+
+            .step-number {
+                left: 20px;
+                width: 40px;
+                height: 40px;
+                font-size: var(--font-size-base);
+            }
+
+            .video-container {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="how-it-works-page">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="container">
+                <nav class="nav">
+                    <a href="../index.html" class="logo">
+                        <span class="logo-icon">🎉</span>
+                        <span class="logo-text">Eventify</span>
+                        <span class="logo-badge">Peru</span>
+                    </a>
+
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                        <li><a href="locales.html" class="nav-link">Locales</a></li>
+                        <li><a href="servicios.html" class="nav-link">Servicios</a></li>
+                        <li><a href="paquetes.html" class="nav-link">Paquetes</a></li>
+                        <li><a href="como-funciona.html" class="nav-link active">Como Funciona?</a></li>
+                    </ul>
+
+                    <div class="nav-actions">
+                        <button class="btn btn-ghost" onclick="openAuthModal('login')">
+                            <i class="fas fa-user"></i>
+                            <span>Ingresar</span>
+                        </button>
+                        <a href="locales.html" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                            <span>Buscar Locales</span>
+                        </a>
+                        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <h1>Organizar tu evento nunca fue tan facil</h1>
+                <p>Reserva el local perfecto en 3 simples pasos. Sin llamadas, sin estres, con precios transparentes.</p>
+            </div>
+        </section>
+
+        <!-- Steps Section -->
+        <section class="steps-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Como reservar en Eventify</h2>
+                    <p>Un proceso simple disenado para ahorrarte tiempo</p>
+                </div>
+
+                <div class="steps-timeline">
+                    <!-- Step 1 -->
+                    <div class="step-item">
+                        <div class="step-content">
+                            <div class="step-icon">🔍</div>
+                            <h3>Busca y Compara</h3>
+                            <p>Explora +40 locales verificados en Sullana. Filtra por capacidad, precio, tipo de evento y ubicacion. Mira fotos reales y resenas de clientes anteriores.</p>
+                        </div>
+                        <div class="step-number">1</div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="step-item">
+                        <div class="step-content">
+                            <div class="step-icon">📅</div>
+                            <h3>Elige tu Fecha</h3>
+                            <p>Verifica disponibilidad en tiempo real. Selecciona la fecha de tu evento y ve el precio exacto sin sorpresas. Agrega servicios extras como catering, DJ o decoracion.</p>
+                        </div>
+                        <div class="step-number">2</div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="step-item">
+                        <div class="step-content">
+                            <div class="step-icon">💳</div>
+                            <h3>Reserva Seguro</h3>
+                            <p>Paga con Yape, Plin, tarjeta o transferencia. Tu reserva queda confirmada al instante. Recibe todos los detalles por WhatsApp y email.</p>
+                        </div>
+                        <div class="step-number">3</div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="step-item">
+                        <div class="step-content">
+                            <div class="step-icon">🎉</div>
+                            <h3>Disfruta tu Evento!</h3>
+                            <p>Llega al local y disfruta. Nosotros nos encargamos de coordinar todo. Despues del evento, deja tu resena para ayudar a otros.</p>
+                        </div>
+                        <div class="step-number">4</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Por que elegir Eventify?</h2>
+                    <p>Ventajas que hacen la diferencia</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>100% Seguro</h3>
+                        <p>Todos los locales son verificados. Pagos protegidos con garantia de devolucion si hay problemas.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <h3>Precios Transparentes</h3>
+                        <p>Ve el precio final desde el inicio. Sin cargos ocultos ni sorpresas al momento de pagar.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>Asistente 24/7</h3>
+                        <p>EventBot responde tus dudas a cualquier hora. Tambien puedes hablar con un asesor humano.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <h3>Descuentos por Combo</h3>
+                        <p>Ahorra hasta 15% al reservar local + servicios juntos. Armamos paquetes a tu medida.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3>Resenas Verificadas</h3>
+                        <p>Solo clientes que reservaron pueden dejar resenas. Opiniones reales de eventos reales.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                        <h3>Cancelacion Flexible</h3>
+                        <p>Cancelacion gratuita hasta 7 dias antes. Politicas claras sin letra pequena.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Section -->
+        <section class="video-section">
+            <div class="container">
+                <div class="video-container">
+                    <div class="video-content">
+                        <h2>Mira como funciona en 60 segundos</h2>
+                        <p>Te mostramos lo facil que es encontrar y reservar el local perfecto para tu evento. Desde la busqueda hasta la confirmacion, todo en menos de 5 minutos.</p>
+                        <a href="locales.html" class="btn btn-lg" style="background: var(--white); color: var(--primary);">
+                            <i class="fas fa-search"></i>
+                            Comenzar a Buscar
+                        </a>
+                    </div>
+                    <div class="video-placeholder" onclick="playVideo()">
+                        <div class="play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Preguntas Frecuentes</h2>
+                    <p>Respuestas a las dudas mas comunes</p>
+                </div>
+
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Eventify cobra algun costo extra?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Cobramos una pequena comision de servicio (10-12%) que ya esta incluida en los precios que ves. No hay costos ocultos ni sorpresas al pagar.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Puedo visitar el local antes de reservar?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Si! Puedes solicitar una visita gratuita desde la pagina de cada local. Coordinamos directamente con el propietario para agendar tu visita sin compromiso.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Como funciona la garantia de devolucion?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Si el local no cumple con lo prometido en la publicacion, te devolvemos el 100% de tu pago. Debes reportar el problema dentro de las 24 horas del evento.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Que metodos de pago aceptan?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Aceptamos Yape, Plin, tarjetas Visa/Mastercard, y transferencias bancarias (BCP, BBVA, Interbank, Scotiabank). Todos los pagos son seguros.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Que pasa si necesito cancelar?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Hasta 14 dias antes: devolucion 100%. Entre 7-14 dias: devolucion 70%. Menos de 7 dias: puedes reprogramar pero no hay devolucion del adelanto.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Eventify solo opera en Sullana?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Actualmente nos enfocamos en Sullana y alrededores (Bellavista, Marcavelica). Pronto expandiremos a toda la region Piura y otras ciudades del norte.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Como contacto a un asesor humano?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Puedes escribirnos por WhatsApp al +51 999 888 777 o enviarnos un correo a hola@eventify.pe. Respondemos de lunes a sabado de 9am a 7pm.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Los precios incluyen IGV?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Si, todos los precios mostrados incluyen IGV. Emitimos boletas electronicas automaticamente y facturas si lo solicitas al reservar.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Listo para encontrar tu local ideal?</h2>
+                    <p>Explora nuestra seleccion de locales verificados y reserva en minutos. Tu evento perfecto esta a un clic de distancia.</p>
+                    <div class="cta-buttons">
+                        <a href="locales.html" class="btn btn-primary btn-lg">
+                            <i class="fas fa-search"></i>
+                            Ver Locales
+                        </a>
+                        <a href="paquetes.html" class="btn btn-outline btn-lg">
+                            <i class="fas fa-box"></i>
+                            Ver Paquetes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Trust Section -->
+        <section class="trust-section">
+            <div class="container">
+                <div class="trust-items">
+                    <div class="trust-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Locales Verificados</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Pagos Seguros</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Garantia de Devolucion</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Soporte 24/7</span>
+                    </div>
+                    <div class="trust-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>+500 Eventos Exitosos</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-bottom" style="border: none; padding: var(--spacing-6) 0;">
+                    <p>&copy; 2025 Eventify Peru. Todos los derechos reservados.</p>
+                    <p>Hecho con amor en Sullana, Piura</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Chatbot -->
+        <div class="chatbot" id="chatbot">
+            <button class="chatbot-trigger" id="chatbotTrigger" aria-label="Abrir chat">
+                <i class="fas fa-comments"></i>
+                <span class="chatbot-badge">1</span>
+            </button>
+            <div class="chatbot-window" id="chatbotWindow">
+                <div class="chatbot-header">
+                    <div class="chatbot-avatar">
+                        <img src="../assets/images/eventbot-avatar.svg" alt="EventBot">
+                        <span class="status-dot"></span>
+                    </div>
+                    <div class="chatbot-info">
+                        <strong>EventBot</strong>
+                        <span>Tu asistente virtual 24/7</span>
+                    </div>
+                    <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="chatbot-messages" id="chatbotMessages"></div>
+                <div class="chatbot-quick-actions" id="quickActions">
+                    <button class="quick-action" data-action="precios">💰 Precios</button>
+                    <button class="quick-action" data-action="ayuda">❓ Ayuda</button>
+                </div>
+                <form class="chatbot-input" id="chatbotForm">
+                    <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Auth Modal -->
+        <div class="modal" id="authModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content auth-modal">
+                <button class="modal-close" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+                <div class="auth-form" id="loginForm">
+                    <div class="auth-header">
+                        <h2>Bienvenido de vuelta</h2>
+                        <p>Ingresa a tu cuenta para continuar</p>
+                    </div>
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail">Correo electronico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Contrasena</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="loginPassword" placeholder="********" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Ingresar</button>
+                    </form>
+                    <p class="auth-switch">No tienes cuenta? <a href="#" onclick="switchAuthForm('register')">Registrate</a></p>
+                </div>
+                <div class="auth-form hidden" id="registerForm">
+                    <div class="auth-header">
+                        <h2>Crea tu cuenta</h2>
+                        <p>Unete a Eventify</p>
+                    </div>
+                    <form id="registerFormElement">
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="registerName">Nombre</label>
+                                <input type="text" id="registerName" placeholder="Tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerLastname">Apellido</label>
+                                <input type="text" id="registerLastname" placeholder="Tu apellido" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Correo electronico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="registerEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPhone">Telefono</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="registerPhone" placeholder="999 888 777" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Contrasena</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="registerPassword" placeholder="Minimo 8 caracteres" required>
+                            </div>
+                        </div>
+                        <label class="checkbox">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <span>Acepto los <a href="terminos.html">Terminos y Condiciones</a></span>
+                        </label>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Crear cuenta</button>
+                    </form>
+                    <p class="auth-switch">Ya tienes cuenta? <a href="#" onclick="switchAuthForm('login')">Inicia sesion</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/data/locales.js"></script>
+    <script src="../js/data/servicios.js"></script>
+    <script src="../js/utils/helpers.js"></script>
+    <script src="../js/components/header.js"></script>
+    <script src="../js/components/chatbot.js"></script>
+    <script src="../js/components/auth.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/app.js"></script>
+
+    <script>
+        function toggleFaq(element) {
+            const faqItem = element.parentElement;
+            const isActive = faqItem.classList.contains('active');
+
+            // Close all FAQs
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Open clicked one if it wasn't active
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+
+        function playVideo() {
+            showToast('info', 'Video demo', 'En la version final aqui se reproduciria un video tutorial');
+        }
+    </script>
+</body>
+</html>

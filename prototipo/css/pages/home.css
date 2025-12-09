@@ -1,0 +1,268 @@
+/* ========================================
+   EVENTIFY - Home Page Specific Styles
+   ======================================== */
+
+/* Additional home page animations */
+.hero-title .highlight::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--primary) 100%);
+    opacity: 0.4;
+    border-radius: 4px;
+}
+
+/* Animated counter effect */
+.stat-number {
+    transition: all 0.5s ease-out;
+}
+
+/* Search form enhancements */
+.search-form select option {
+    padding: var(--spacing-2);
+}
+
+/* Category hover effects */
+.category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-50) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity var(--transition-base);
+    border-radius: var(--radius-xl);
+}
+
+.category-card:hover::before {
+    opacity: 1;
+}
+
+.category-card > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Featured locale cards shine effect */
+.locales-grid .card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 50%,
+        transparent 100%
+    );
+    transition: left 0.5s ease;
+    pointer-events: none;
+}
+
+.locales-grid .card:hover::before {
+    left: 100%;
+}
+
+/* Package card glow effect */
+.package-card.featured::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 50%, var(--primary) 100%);
+    border-radius: var(--radius-2xl);
+    z-index: -1;
+    opacity: 0.5;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Service card icon animation */
+.service-card:hover .service-icon {
+    transform: scale(1.1) rotate(5deg);
+    transition: transform var(--transition-base);
+}
+
+/* Step connector animation */
+.step-connector i {
+    animation: slideRight 1.5s ease-in-out infinite;
+}
+
+@keyframes slideRight {
+    0%, 100% {
+        transform: translateX(0);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translateX(5px);
+        opacity: 1;
+    }
+}
+
+/* Testimonial card hover */
+.testimonial-card {
+    transition: all var(--transition-base);
+}
+
+.testimonial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* CTA Section decorative elements */
+.cta-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 60%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.cta-section::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -10%;
+    width: 40%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+/* Scroll indicator pulse */
+.scroll-indicator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: var(--radius-full);
+    animation: pulse 2s infinite;
+}
+
+/* Hero background animated particles (CSS only) */
+.hero-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(2px 2px at 20px 30px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(2px 2px at 50px 160px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 90px 40px, rgba(255,255,255,0.2), transparent),
+        radial-gradient(2px 2px at 130px 80px, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.2), transparent);
+    background-size: 200px 200px;
+    animation: float 20s linear infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-200px);
+    }
+}
+
+/* Load animations stagger */
+.categories-grid .category-card {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.categories-grid .category-card:nth-child(1) { animation-delay: 0.1s; }
+.categories-grid .category-card:nth-child(2) { animation-delay: 0.15s; }
+.categories-grid .category-card:nth-child(3) { animation-delay: 0.2s; }
+.categories-grid .category-card:nth-child(4) { animation-delay: 0.25s; }
+.categories-grid .category-card:nth-child(5) { animation-delay: 0.3s; }
+.categories-grid .category-card:nth-child(6) { animation-delay: 0.35s; }
+
+.locales-grid .card {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.locales-grid .card:nth-child(1) { animation-delay: 0.1s; }
+.locales-grid .card:nth-child(2) { animation-delay: 0.2s; }
+.locales-grid .card:nth-child(3) { animation-delay: 0.3s; }
+
+/* Gradient text effect for section tags */
+.section-tag {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Interactive benefits */
+.benefit-item {
+    padding: var(--spacing-3) var(--spacing-4);
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-fast);
+}
+
+.benefit-item:hover {
+    background-color: var(--white);
+    box-shadow: var(--shadow-sm);
+}
+
+/* Package features check animation */
+.package-features li {
+    opacity: 0;
+    animation: slideInLeft 0.3s ease-out forwards;
+}
+
+.package-card:hover .package-features li {
+    opacity: 1;
+}
+
+/* Rating stars shimmer */
+.testimonial-rating i {
+    transition: transform var(--transition-fast);
+}
+
+.testimonial-card:hover .testimonial-rating i {
+    animation: starPop 0.3s ease-out;
+}
+
+@keyframes starPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* Footer social icons bounce */
+.footer-social a:hover {
+    animation: bounce 0.5s ease;
+}
+
+/* Responsive adjustments for home page */
+@media (max-width: 1024px) {
+    .cta-section::before,
+    .cta-section::after {
+        display: none;
+    }
+}

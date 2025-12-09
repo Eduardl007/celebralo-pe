@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventify Perú - Encuentra el Local Perfecto para tu Evento</title>
+    <meta name="description" content="Plataforma líder en Sullana para encontrar locales y servicios para eventos. Reserva en minutos con precios transparentes y reseñas verificadas.">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Eventify Perú - Tu Evento Perfecto en Minutos">
+    <meta property="og:description" content="Encuentra locales verificados y servicios para tu evento en Sullana, Piura">
+    <meta property="og:type" content="website">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/pages/home.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="container">
+                <nav class="nav">
+                    <a href="index.html" class="logo">
+                        <span class="logo-icon">🎉</span>
+                        <span class="logo-text">Eventify</span>
+                        <span class="logo-badge">Perú</span>
+                    </a>
+
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="index.html" class="nav-link active">Inicio</a></li>
+                        <li><a href="pages/locales.html" class="nav-link">Locales</a></li>
+                        <li><a href="pages/servicios.html" class="nav-link">Servicios</a></li>
+                        <li><a href="pages/paquetes.html" class="nav-link">Paquetes</a></li>
+                        <li><a href="pages/como-funciona.html" class="nav-link">¿Cómo Funciona?</a></li>
+                    </ul>
+
+                    <div class="nav-actions">
+                        <button class="btn btn-ghost" onclick="openAuthModal('login')">
+                            <i class="fas fa-user"></i>
+                            <span>Ingresar</span>
+                        </button>
+                        <a href="pages/registro-proveedor.html" class="btn btn-primary">
+                            <i class="fas fa-store"></i>
+                            <span>Publica tu Local</span>
+                        </a>
+                        <button class="nav-toggle" id="navToggle" aria-label="Menú">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-bg">
+                <div class="hero-gradient"></div>
+                <div class="hero-pattern"></div>
+            </div>
+
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge">
+                        <i class="fas fa-bolt"></i>
+                        <span>Reserva en menos de 5 minutos</span>
+                    </div>
+
+                    <h1 class="hero-title">
+                        Organiza tu <span class="highlight">Evento Perfecto</span> sin Estrés
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        Encuentra locales verificados, servicios de calidad y paquetes todo-en-uno
+                        para cualquier celebración en Sullana, Piura.
+                    </p>
+
+                    <!-- Search Box -->
+                    <div class="search-box">
+                        <div class="search-tabs">
+                            <button class="search-tab active" data-tab="locales">
+                                <i class="fas fa-building"></i> Locales
+                            </button>
+                            <button class="search-tab" data-tab="servicios">
+                                <i class="fas fa-concierge-bell"></i> Servicios
+                            </button>
+                            <button class="search-tab" data-tab="paquetes">
+                                <i class="fas fa-box-open"></i> Paquetes
+                            </button>
+                        </div>
+
+                        <form class="search-form" id="searchForm">
+                            <div class="search-field">
+                                <label>
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Tipo de Evento
+                                </label>
+                                <select id="eventType" required>
+                                    <option value="">Selecciona...</option>
+                                    <option value="cumpleanos">🎂 Cumpleaños</option>
+                                    <option value="matrimonio">💒 Matrimonio</option>
+                                    <option value="quinceanos">👸 XV Años</option>
+                                    <option value="corporativo">🏢 Corporativo</option>
+                                    <option value="bautizo">⛪ Bautizo</option>
+                                    <option value="graduacion">🎓 Graduación</option>
+                                    <option value="baby-shower">👶 Baby Shower</option>
+                                    <option value="otro">✨ Otro</option>
+                                </select>
+                            </div>
+
+                            <div class="search-field">
+                                <label>
+                                    <i class="fas fa-calendar"></i>
+                                    Fecha del Evento
+                                </label>
+                                <input type="date" id="eventDate" required>
+                            </div>
+
+                            <div class="search-field">
+                                <label>
+                                    <i class="fas fa-users"></i>
+                                    N° de Invitados
+                                </label>
+                                <select id="guestCount" required>
+                                    <option value="">Selecciona...</option>
+                                    <option value="1-50">1 - 50 personas</option>
+                                    <option value="51-100">51 - 100 personas</option>
+                                    <option value="101-150">101 - 150 personas</option>
+                                    <option value="151-200">151 - 200 personas</option>
+                                    <option value="201-300">201 - 300 personas</option>
+                                    <option value="300+">Más de 300</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-lg search-btn">
+                                <i class="fas fa-search"></i>
+                                Buscar
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="stat-number" data-count="40">0</span>
+                            <span class="stat-label">Locales Verificados</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="25">0</span>
+                            <span class="stat-label">Proveedores de Servicios</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="500">0</span>
+                            <span class="stat-label">Eventos Exitosos</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number" data-count="4.8">0</span>
+                            <span class="stat-label">Calificación Promedio</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="scroll-indicator">
+                <span>Descubre más</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- Categories Section -->
+        <section class="section categories-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Categorías</span>
+                    <h2 class="section-title">¿Qué tipo de evento vas a organizar?</h2>
+                    <p class="section-subtitle">Selecciona una categoría y encuentra las mejores opciones para tu celebración</p>
+                </div>
+
+                <div class="categories-grid">
+                    <a href="pages/locales.html?categoria=cumpleanos" class="category-card">
+                        <div class="category-icon" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E);">
+                            🎂
+                        </div>
+                        <h3>Cumpleaños</h3>
+                        <p>15 locales disponibles</p>
+                    </a>
+
+                    <a href="pages/locales.html?categoria=matrimonio" class="category-card">
+                        <div class="category-icon" style="background: linear-gradient(135deg, #A855F7, #C084FC);">
+                            💒
+                        </div>
+                        <h3>Matrimonios</h3>
+                        <p>12 locales disponibles</p>
+                    </a>
+
+                    <a href="pages/locales.html?categoria=quinceanos" class="category-card">
+                        <div class="category-icon" style="background: linear-gradient(135deg, #EC4899, #F472B6);">
+                            👸
+                        </div>
+                        <h3>XV Años</h3>
+                        <p>18 locales disponibles</p>
+                    </a>
+
+                    <a href="pages/locales.html?categoria=corporativo" class="category-card">
+                        <div class="category-icon" style="background: linear-gradient(135deg, #3B82F6, #60A5FA);">
+                            🏢
+                        </div>
+                        <h3>Corporativo</h3>
+                        <p>10 locales disponibles</p>
+                    </a>
+
+                    <a href="pages/locales.html?categoria=bautizo" class="category-card">
+                        <div class="category-icon" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                            ⛪
+                        </div>
+                        <h3>Bautizos</h3>
+                        <p>14 locales disponibles</p>
+                    </a>
+
+                    <a href="pages/locales.html?categoria=familiar" class="category-card">
+                        <div class="category-icon" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">
+                            👨‍👩‍👧‍👦
+                        </div>
+                        <h3>Familiar</h3>
+                        <p>20 locales disponibles</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Locales Section -->
+        <section class="section locales-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Destacados</span>
+                    <h2 class="section-title">Locales más populares en Sullana</h2>
+                    <p class="section-subtitle">Espacios verificados con las mejores calificaciones de nuestros usuarios</p>
+                </div>
+
+                <div class="locales-grid" id="localesGrid">
+                    <!-- Cards will be loaded via JavaScript -->
+                </div>
+
+                <div class="section-footer">
+                    <a href="pages/locales.html" class="btn btn-outline btn-lg">
+                        Ver todos los locales
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="section how-it-works-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Proceso Simple</span>
+                    <h2 class="section-title">¿Cómo funciona Eventify?</h2>
+                    <p class="section-subtitle">En solo 3 pasos tendrás todo listo para tu evento</p>
+                </div>
+
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div class="step-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>Busca y Compara</h3>
+                        <p>Explora locales y servicios verificados. Usa filtros para encontrar exactamente lo que necesitas.</p>
+                    </div>
+
+                    <div class="step-connector">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div class="step-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <h3>Reserva al Instante</h3>
+                        <p>Selecciona fecha, elige servicios adicionales y confirma tu reserva en minutos.</p>
+                    </div>
+
+                    <div class="step-connector">
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div class="step-icon">
+                            <i class="fas fa-party-horn"></i>
+                        </div>
+                        <h3>Disfruta tu Evento</h3>
+                        <p>Relájate y disfruta. Nosotros nos encargamos de la coordinación con los proveedores.</p>
+                    </div>
+                </div>
+
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Pagos Seguros</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Locales Verificados</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-headset"></i>
+                        <span>Soporte 24/7</span>
+                    </div>
+                    <div class="benefit-item">
+                        <i class="fas fa-undo"></i>
+                        <span>Garantía de Devolución</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="section services-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Todo en un solo lugar</span>
+                    <h2 class="section-title">Servicios Complementarios</h2>
+                    <p class="section-subtitle">Completa tu evento con los mejores proveedores de Sullana</p>
+                </div>
+
+                <div class="services-grid" id="servicesGrid">
+                    <!-- Services will be loaded via JavaScript -->
+                </div>
+
+                <div class="section-footer">
+                    <a href="pages/servicios.html" class="btn btn-outline btn-lg">
+                        Ver todos los servicios
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Packages Section -->
+        <section class="section packages-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Ahorra tiempo y dinero</span>
+                    <h2 class="section-title">Paquetes Todo-en-Uno</h2>
+                    <p class="section-subtitle">Local + Servicios con descuentos exclusivos</p>
+                </div>
+
+                <div class="packages-grid">
+                    <div class="package-card package-basic">
+                        <div class="package-badge">Más Popular</div>
+                        <div class="package-header">
+                            <h3>Paquete Básico</h3>
+                            <p>Ideal para eventos pequeños</p>
+                        </div>
+                        <div class="package-price">
+                            <span class="price-from">Desde</span>
+                            <span class="price-amount">S/ 1,200</span>
+                            <span class="price-note">para 50 personas</span>
+                        </div>
+                        <ul class="package-features">
+                            <li><i class="fas fa-check"></i> Local por 6 horas</li>
+                            <li><i class="fas fa-check"></i> Mesas y sillas</li>
+                            <li><i class="fas fa-check"></i> Sonido básico</li>
+                            <li><i class="fas fa-check"></i> Decoración estándar</li>
+                        </ul>
+                        <a href="pages/paquetes.html?tipo=basico" class="btn btn-outline btn-block">
+                            Ver Opciones
+                        </a>
+                    </div>
+
+                    <div class="package-card package-premium featured">
+                        <div class="package-badge">Mejor Valor</div>
+                        <div class="package-header">
+                            <h3>Paquete Premium</h3>
+                            <p>La mejor experiencia completa</p>
+                        </div>
+                        <div class="package-price">
+                            <span class="price-from">Desde</span>
+                            <span class="price-amount">S/ 3,500</span>
+                            <span class="price-note">para 100 personas</span>
+                        </div>
+                        <ul class="package-features">
+                            <li><i class="fas fa-check"></i> Local por 8 horas</li>
+                            <li><i class="fas fa-check"></i> Catering completo</li>
+                            <li><i class="fas fa-check"></i> DJ profesional</li>
+                            <li><i class="fas fa-check"></i> Fotografía y video</li>
+                            <li><i class="fas fa-check"></i> Decoración premium</li>
+                            <li><i class="fas fa-check"></i> Coordinador de evento</li>
+                        </ul>
+                        <a href="pages/paquetes.html?tipo=premium" class="btn btn-primary btn-block">
+                            Ver Opciones
+                        </a>
+                    </div>
+
+                    <div class="package-card package-custom">
+                        <div class="package-badge">Personalizado</div>
+                        <div class="package-header">
+                            <h3>Arma tu Paquete</h3>
+                            <p>Tú eliges los servicios</p>
+                        </div>
+                        <div class="package-price">
+                            <span class="price-from">Cotización</span>
+                            <span class="price-amount">Personalizada</span>
+                            <span class="price-note">según tus necesidades</span>
+                        </div>
+                        <ul class="package-features">
+                            <li><i class="fas fa-check"></i> Elige tu local favorito</li>
+                            <li><i class="fas fa-check"></i> Selecciona servicios</li>
+                            <li><i class="fas fa-check"></i> Descuento por combo</li>
+                            <li><i class="fas fa-check"></i> Asesoría gratuita</li>
+                        </ul>
+                        <a href="pages/cotizador.html" class="btn btn-outline btn-block">
+                            Cotizar Ahora
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="section testimonials-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Testimonios</span>
+                    <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+                </div>
+
+                <div class="testimonials-slider" id="testimonialsSlider">
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "Organizar los XV años de mi hija fue súper fácil. Encontré el local perfecto
+                            y todos los servicios en un solo lugar. ¡100% recomendado!"
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">MG</div>
+                            <div class="author-info">
+                                <strong>María García</strong>
+                                <span>XV Años - Diciembre 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "El chatbot me ayudó a resolver todas mis dudas a las 11pm.
+                            Al día siguiente ya tenía mi reserva confirmada. ¡Increíble servicio!"
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">CR</div>
+                            <div class="author-info">
+                                <strong>Carlos Rodríguez</strong>
+                                <span>Matrimonio - Noviembre 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p class="testimonial-text">
+                            "Como empresa, organizamos nuestro aniversario con Eventify.
+                            El proceso fue rápido y el resultado superó nuestras expectativas."
+                        </p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">LP</div>
+                            <div class="author-info">
+                                <strong>Laura Pérez</strong>
+                                <span>Evento Corporativo - Octubre 2024</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonials-nav">
+                    <button class="testimonial-prev" aria-label="Anterior">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="testimonials-dots"></div>
+                    <button class="testimonial-next" aria-label="Siguiente">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="section cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <div class="cta-text">
+                        <h2>¿Tienes un local o brindas servicios para eventos?</h2>
+                        <p>Únete a Eventify y llega a miles de clientes potenciales en Sullana y Piura.
+                           Aumenta tus reservas hasta un 300%.</p>
+                        <ul class="cta-benefits">
+                            <li><i class="fas fa-check"></i> Registro gratuito</li>
+                            <li><i class="fas fa-check"></i> Panel de administración</li>
+                            <li><i class="fas fa-check"></i> Pagos seguros garantizados</li>
+                            <li><i class="fas fa-check"></i> Soporte dedicado</li>
+                        </ul>
+                    </div>
+                    <div class="cta-actions">
+                        <a href="pages/registro-proveedor.html" class="btn btn-white btn-lg">
+                            <i class="fas fa-store"></i>
+                            Registrar mi Local
+                        </a>
+                        <a href="pages/registro-proveedor.html?tipo=servicio" class="btn btn-outline-white btn-lg">
+                            <i class="fas fa-concierge-bell"></i>
+                            Ofrecer mis Servicios
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-brand">
+                        <a href="index.html" class="logo">
+                            <span class="logo-icon">🎉</span>
+                            <span class="logo-text">Eventify</span>
+                            <span class="logo-badge">Perú</span>
+                        </a>
+                        <p>La plataforma líder para organizar eventos en Sullana, Piura.
+                           Conectamos organizadores con los mejores locales y servicios.</p>
+                        <div class="footer-social">
+                            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                            <a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Explorar</h4>
+                        <ul>
+                            <li><a href="pages/locales.html">Locales</a></li>
+                            <li><a href="pages/servicios.html">Servicios</a></li>
+                            <li><a href="pages/paquetes.html">Paquetes</a></li>
+                            <li><a href="pages/ofertas.html">Ofertas</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Información</h4>
+                        <ul>
+                            <li><a href="pages/como-funciona.html">¿Cómo Funciona?</a></li>
+                            <li><a href="pages/sobre-nosotros.html">Sobre Nosotros</a></li>
+                            <li><a href="pages/preguntas-frecuentes.html">Preguntas Frecuentes</a></li>
+                            <li><a href="pages/contacto.html">Contacto</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-links">
+                        <h4>Legal</h4>
+                        <ul>
+                            <li><a href="pages/terminos.html">Términos y Condiciones</a></li>
+                            <li><a href="pages/privacidad.html">Política de Privacidad</a></li>
+                            <li><a href="pages/cookies.html">Política de Cookies</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-contact">
+                        <h4>Contacto</h4>
+                        <ul>
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Sullana, Piura - Perú</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone"></i>
+                                <a href="tel:+51999888777">+51 999 888 777</a>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <a href="mailto:hola@eventify.pe">hola@eventify.pe</a>
+                            </li>
+                        </ul>
+                        <div class="footer-payments">
+                            <span>Métodos de pago:</span>
+                            <div class="payment-icons">
+                                <img src="assets/images/yape.svg" alt="Yape">
+                                <img src="assets/images/plin.svg" alt="Plin">
+                                <img src="assets/images/visa.svg" alt="Visa">
+                                <img src="assets/images/mastercard.svg" alt="Mastercard">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Eventify Perú. Todos los derechos reservados.</p>
+                    <p>Hecho con ❤️ en Sullana, Piura</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Chatbot -->
+        <div class="chatbot" id="chatbot">
+            <button class="chatbot-trigger" id="chatbotTrigger" aria-label="Abrir chat">
+                <i class="fas fa-comments"></i>
+                <span class="chatbot-badge">1</span>
+            </button>
+
+            <div class="chatbot-window" id="chatbotWindow">
+                <div class="chatbot-header">
+                    <div class="chatbot-avatar">
+                        <img src="assets/images/eventbot-avatar.svg" alt="EventBot">
+                        <span class="status-dot"></span>
+                    </div>
+                    <div class="chatbot-info">
+                        <strong>EventBot</strong>
+                        <span>Tu asistente virtual 24/7</span>
+                    </div>
+                    <button class="chatbot-close" id="chatbotClose" aria-label="Cerrar chat">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="chatbot-messages" id="chatbotMessages">
+                    <!-- Messages will be loaded via JavaScript -->
+                </div>
+
+                <div class="chatbot-quick-actions" id="quickActions">
+                    <button class="quick-action" data-action="precios">💰 Ver precios</button>
+                    <button class="quick-action" data-action="disponibilidad">📅 Disponibilidad</button>
+                    <button class="quick-action" data-action="paquetes">📦 Paquetes</button>
+                    <button class="quick-action" data-action="ayuda">❓ Ayuda</button>
+                </div>
+
+                <form class="chatbot-input" id="chatbotForm">
+                    <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+                    <button type="submit" aria-label="Enviar mensaje">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Auth Modal -->
+        <div class="modal" id="authModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content auth-modal">
+                <button class="modal-close" aria-label="Cerrar">
+                    <i class="fas fa-times"></i>
+                </button>
+
+                <!-- Login Form -->
+                <div class="auth-form" id="loginForm">
+                    <div class="auth-header">
+                        <h2>Bienvenido de vuelta</h2>
+                        <p>Ingresa a tu cuenta para continuar</p>
+                    </div>
+
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail">Correo electrónico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loginPassword">Contraseña</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="loginPassword" placeholder="••••••••" required>
+                                <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label class="checkbox">
+                                <input type="checkbox" id="rememberMe">
+                                <span>Recordarme</span>
+                            </label>
+                            <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">
+                            Ingresar
+                        </button>
+                    </form>
+
+                    <div class="auth-divider">
+                        <span>o continúa con</span>
+                    </div>
+
+                    <div class="social-login">
+                        <button class="btn btn-social btn-google">
+                            <i class="fab fa-google"></i>
+                            Google
+                        </button>
+                        <button class="btn btn-social btn-facebook">
+                            <i class="fab fa-facebook-f"></i>
+                            Facebook
+                        </button>
+                    </div>
+
+                    <p class="auth-switch">
+                        ¿No tienes cuenta?
+                        <a href="#" onclick="switchAuthForm('register')">Regístrate gratis</a>
+                    </p>
+                </div>
+
+                <!-- Register Form -->
+                <div class="auth-form hidden" id="registerForm">
+                    <div class="auth-header">
+                        <h2>Crea tu cuenta</h2>
+                        <p>Únete a Eventify y organiza eventos increíbles</p>
+                    </div>
+
+                    <form id="registerFormElement">
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="registerName">Nombre</label>
+                                <input type="text" id="registerName" placeholder="Tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerLastname">Apellido</label>
+                                <input type="text" id="registerLastname" placeholder="Tu apellido" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registerEmail">Correo electrónico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="registerEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registerPhone">Teléfono</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="registerPhone" placeholder="999 888 777" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registerPassword">Contraseña</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="registerPassword" placeholder="Mínimo 8 caracteres" required>
+                                <button type="button" class="toggle-password" aria-label="Mostrar contraseña">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <label class="checkbox">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <span>Acepto los <a href="pages/terminos.html">Términos y Condiciones</a> y la <a href="pages/privacidad.html">Política de Privacidad</a></span>
+                        </label>
+
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">
+                            Crear cuenta
+                        </button>
+                    </form>
+
+                    <div class="auth-divider">
+                        <span>o regístrate con</span>
+                    </div>
+
+                    <div class="social-login">
+                        <button class="btn btn-social btn-google">
+                            <i class="fab fa-google"></i>
+                            Google
+                        </button>
+                        <button class="btn btn-social btn-facebook">
+                            <i class="fab fa-facebook-f"></i>
+                            Facebook
+                        </button>
+                    </div>
+
+                    <p class="auth-switch">
+                        ¿Ya tienes cuenta?
+                        <a href="#" onclick="switchAuthForm('login')">Inicia sesión</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data/locales.js"></script>
+    <script src="js/data/servicios.js"></script>
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/components/header.js"></script>
+    <script src="js/components/chatbot.js"></script>
+    <script src="js/components/auth.js"></script>
+    <script src="js/components/cards.js"></script>
+    <script src="js/components/toast.js"></script>
+    <script src="js/pages/home.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

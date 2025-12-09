@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del Local | Eventify Perú</title>
+    <meta name="description" content="Información detallada del local para eventos">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .local-page {
+            padding-top: var(--header-height);
+        }
+
+        /* Gallery */
+        .gallery-section {
+            background: var(--gray-100);
+            padding: var(--spacing-4) 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--spacing-3);
+            max-height: 480px;
+        }
+
+        .gallery-main {
+            position: relative;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-main img,
+        .gallery-main .placeholder {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-main .placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        .gallery-side {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: var(--spacing-3);
+        }
+
+        .gallery-thumb {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-thumb img,
+        .gallery-thumb .placeholder {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-thumb .placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+        }
+
+        .gallery-more {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        /* Content Layout */
+        .local-content {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: var(--spacing-8);
+            padding: var(--spacing-8) 0;
+        }
+
+        /* Main Info */
+        .local-main {
+            min-width: 0;
+        }
+
+        .local-header {
+            margin-bottom: var(--spacing-6);
+        }
+
+        .local-badges {
+            display: flex;
+            gap: var(--spacing-2);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .local-title {
+            font-size: var(--font-size-3xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .local-location {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            color: var(--text-secondary);
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .local-location i {
+            color: var(--primary);
+        }
+
+        .local-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-6);
+            padding: var(--spacing-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .meta-item i {
+            color: var(--primary);
+            font-size: var(--font-size-lg);
+        }
+
+        .meta-item strong {
+            color: var(--text-primary);
+        }
+
+        .meta-item span {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Sections */
+        .info-section {
+            margin-bottom: var(--spacing-8);
+        }
+
+        .info-section h2 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-4);
+            padding-bottom: var(--spacing-3);
+            border-bottom: 2px solid var(--border-light);
+        }
+
+        .description {
+            color: var(--text-secondary);
+            line-height: var(--line-height-relaxed);
+        }
+
+        /* Amenities Grid */
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-4);
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            padding: var(--spacing-3);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+        }
+
+        .amenity-item i {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary-50);
+            color: var(--primary);
+            border-radius: var(--radius-md);
+        }
+
+        .amenity-item span {
+            font-size: var(--font-size-sm);
+            color: var(--text-primary);
+        }
+
+        /* Availability */
+        .availability-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: var(--spacing-2);
+        }
+
+        .day-slot {
+            text-align: center;
+            padding: var(--spacing-3);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-sm);
+        }
+
+        .day-slot.available {
+            background: var(--success-50);
+            color: var(--success);
+        }
+
+        .day-slot.unavailable {
+            background: var(--gray-100);
+            color: var(--text-muted);
+        }
+
+        .day-slot .day-name {
+            font-weight: var(--font-weight-semibold);
+            display: block;
+            margin-bottom: var(--spacing-1);
+        }
+
+        .day-slot .hours {
+            font-size: var(--font-size-xs);
+        }
+
+        /* Reviews */
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-5);
+        }
+
+        .rating-summary {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+        }
+
+        .rating-big {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+        }
+
+        .rating-details {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-1);
+        }
+
+        .rating-stars {
+            color: var(--accent);
+        }
+
+        .review-card {
+            padding: var(--spacing-5);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-3);
+        }
+
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .review-text {
+            color: var(--text-secondary);
+            line-height: var(--line-height-relaxed);
+        }
+
+        /* Owner Card */
+        .owner-card {
+            padding: var(--spacing-5);
+            background: var(--gray-50);
+            border-radius: var(--radius-xl);
+            margin-top: var(--spacing-6);
+        }
+
+        .owner-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .owner-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-full);
+            background: var(--primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+        }
+
+        .owner-info h4 {
+            margin-bottom: var(--spacing-1);
+        }
+
+        .owner-info p {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            margin: 0;
+        }
+
+        .owner-stats {
+            display: flex;
+            gap: var(--spacing-6);
+            padding: var(--spacing-3) 0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .owner-stats div {
+            text-align: center;
+        }
+
+        .owner-stats strong {
+            display: block;
+            font-size: var(--font-size-lg);
+            color: var(--text-primary);
+        }
+
+        .owner-stats span {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        /* Sidebar */
+        .local-sidebar {
+            position: sticky;
+            top: calc(var(--header-height) + var(--spacing-4));
+            height: fit-content;
+        }
+
+        .booking-card {
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-6);
+            border: 1px solid var(--border-light);
+        }
+
+        .booking-price {
+            display: flex;
+            align-items: baseline;
+            gap: var(--spacing-2);
+            margin-bottom: var(--spacing-5);
+        }
+
+        .booking-price .amount {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+        }
+
+        .booking-price .note {
+            color: var(--text-muted);
+        }
+
+        .booking-form {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-4);
+        }
+
+        .booking-form label {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--spacing-1);
+            display: block;
+        }
+
+        .price-breakdown {
+            padding: var(--spacing-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            margin: var(--spacing-4) 0;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--spacing-2) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .price-row.total {
+            border-top: 1px solid var(--border-light);
+            margin-top: var(--spacing-2);
+            padding-top: var(--spacing-3);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .price-row.total span:last-child {
+            color: var(--primary);
+            font-size: var(--font-size-lg);
+        }
+
+        .booking-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-3);
+        }
+
+        .share-actions {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-4);
+            margin-top: var(--spacing-4);
+            padding-top: var(--spacing-4);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .share-actions button {
+            padding: var(--spacing-2);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color var(--transition-fast);
+        }
+
+        .share-actions button:hover {
+            color: var(--primary);
+        }
+
+        /* Policies */
+        .policies-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-3);
+        }
+
+        .policy-item {
+            display: flex;
+            gap: var(--spacing-3);
+            padding: var(--spacing-3);
+            background: var(--gray-50);
+            border-radius: var(--radius-md);
+        }
+
+        .policy-item i {
+            color: var(--success);
+            margin-top: 2px;
+        }
+
+        .policy-item p {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .local-content {
+                grid-template-columns: 1fr;
+            }
+
+            .local-sidebar {
+                position: static;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                max-height: none;
+            }
+
+            .gallery-main {
+                height: 300px;
+            }
+
+            .gallery-side {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto;
+                height: 150px;
+            }
+
+            .amenities-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .availability-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .amenities-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .availability-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .local-meta {
+                flex-direction: column;
+                gap: var(--spacing-3);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="local-page">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="container">
+                <nav class="nav">
+                    <a href="../index.html" class="logo">
+                        <span class="logo-icon">🎉</span>
+                        <span class="logo-text">Eventify</span>
+                        <span class="logo-badge">Perú</span>
+                    </a>
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                        <li><a href="locales.html" class="nav-link active">Locales</a></li>
+                        <li><a href="servicios.html" class="nav-link">Servicios</a></li>
+                        <li><a href="paquetes.html" class="nav-link">Paquetes</a></li>
+                    </ul>
+                    <div class="nav-actions">
+                        <button class="btn btn-ghost" onclick="openAuthModal('login')">
+                            <i class="fas fa-user"></i>
+                            <span>Ingresar</span>
+                        </button>
+                        <button class="nav-toggle" id="navToggle" aria-label="Menú">
+                            <span></span><span></span><span></span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Gallery Section -->
+        <section class="gallery-section">
+            <div class="container">
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Gallery loaded via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <div class="container">
+            <div class="local-content">
+                <!-- Main Info -->
+                <main class="local-main" id="localMain">
+                    <!-- Content loaded via JS -->
+                </main>
+
+                <!-- Sidebar -->
+                <aside class="local-sidebar">
+                    <div class="booking-card" id="bookingCard">
+                        <!-- Booking form loaded via JS -->
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-bottom" style="border: none; padding: var(--spacing-6) 0;">
+                    <p>&copy; 2025 Eventify Perú. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Chatbot -->
+        <div class="chatbot" id="chatbot">
+            <button class="chatbot-trigger" id="chatbotTrigger"><i class="fas fa-comments"></i></button>
+            <div class="chatbot-window" id="chatbotWindow">
+                <div class="chatbot-header">
+                    <div class="chatbot-avatar"><img src="../assets/images/eventbot-avatar.svg" alt="EventBot"><span class="status-dot"></span></div>
+                    <div class="chatbot-info"><strong>EventBot</strong><span>Tu asistente 24/7</span></div>
+                    <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="chatbot-messages" id="chatbotMessages"></div>
+                <div class="chatbot-quick-actions" id="quickActions">
+                    <button class="quick-action" data-action="precios">💰 Precios</button>
+                    <button class="quick-action" data-action="disponibilidad">📅 Disponibilidad</button>
+                </div>
+                <form class="chatbot-input" id="chatbotForm">
+                    <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Auth Modal -->
+        <div class="modal" id="authModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content auth-modal">
+                <button class="modal-close" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+                <div class="auth-form" id="loginForm">
+                    <div class="auth-header">
+                        <h2>Bienvenido de vuelta</h2>
+                        <p>Ingresa a tu cuenta para continuar</p>
+                    </div>
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail">Correo electrónico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Contraseña</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="loginPassword" placeholder="••••••••" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Ingresar</button>
+                    </form>
+                    <p class="auth-switch">¿No tienes cuenta? <a href="#" onclick="switchAuthForm('register')">Regístrate</a></p>
+                </div>
+                <div class="auth-form hidden" id="registerForm">
+                    <div class="auth-header">
+                        <h2>Crea tu cuenta</h2>
+                        <p>Únete a Eventify</p>
+                    </div>
+                    <form id="registerFormElement">
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="registerName">Nombre</label>
+                                <input type="text" id="registerName" placeholder="Tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerLastname">Apellido</label>
+                                <input type="text" id="registerLastname" placeholder="Tu apellido" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Correo electrónico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="registerEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPhone">Teléfono</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="registerPhone" placeholder="999 888 777" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Contraseña</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="registerPassword" placeholder="Mínimo 8 caracteres" required>
+                            </div>
+                        </div>
+                        <label class="checkbox">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <span>Acepto los <a href="terminos.html">Términos y Condiciones</a></span>
+                        </label>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Crear cuenta</button>
+                    </form>
+                    <p class="auth-switch">¿Ya tienes cuenta? <a href="#" onclick="switchAuthForm('login')">Inicia sesión</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/data/locales.js"></script>
+    <script src="../js/data/servicios.js"></script>
+    <script src="../js/utils/helpers.js"></script>
+    <script src="../js/components/header.js"></script>
+    <script src="../js/components/chatbot.js"></script>
+    <script src="../js/components/auth.js"></script>
+    <script src="../js/components/cards.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/app.js"></script>
+
+    <script>
+        let currentLocale = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const slug = getUrlParam('slug');
+            if (slug) {
+                loadLocaleDetail(slug);
+            } else {
+                // Default to first locale
+                loadLocaleDetail(LOCALES_DATA[0].slug);
+            }
+        });
+
+        function loadLocaleDetail(slug) {
+            currentLocale = getLocaleBySlug(slug);
+
+            if (!currentLocale) {
+                showToast('error', 'Error', 'Local no encontrado');
+                window.location.href = 'locales.html';
+                return;
+            }
+
+            // Update page title
+            document.title = `${currentLocale.name} | Eventify Perú`;
+
+            // Render sections
+            renderGallery();
+            renderMainContent();
+            renderBookingCard();
+        }
+
+        function renderGallery() {
+            const gallery = document.getElementById('galleryGrid');
+            gallery.innerHTML = `
+                <div class="gallery-main">
+                    <div class="placeholder">${currentLocale.icon}</div>
+                </div>
+                <div class="gallery-side">
+                    <div class="gallery-thumb">
+                        <div class="placeholder">🎉</div>
+                    </div>
+                    <div class="gallery-thumb">
+                        <div class="placeholder">✨</div>
+                        <div class="gallery-more">+5 fotos</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderMainContent() {
+            const main = document.getElementById('localMain');
+            const starsHtml = generateStars(currentLocale.rating);
+            const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+            const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+
+            main.innerHTML = `
+                <!-- Header -->
+                <div class="local-header">
+                    <div class="local-badges">
+                        ${currentLocale.badges.map(badge => `<span class="badge badge-${badge === 'Verificado' ? 'success' : 'primary'}">${badge}</span>`).join('')}
+                    </div>
+                    <h1 class="local-title">${currentLocale.name}</h1>
+                    <p class="local-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${currentLocale.location.address}, ${currentLocale.location.district}, ${currentLocale.location.city}
+                    </p>
+                    <div class="local-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <strong>${currentLocale.capacity.min}-${currentLocale.capacity.max}</strong>
+                                <span>personas</span>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-star"></i>
+                            <div>
+                                <strong>${currentLocale.rating}</strong>
+                                <span>(${currentLocale.reviewsCount} reseñas)</span>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <div>
+                                <strong>${LOCALE_CATEGORIES[currentLocale.category]?.name || currentLocale.category}</strong>
+                                <span>categoría</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <section class="info-section">
+                    <h2><i class="fas fa-info-circle"></i> Descripción</h2>
+                    <p class="description">${currentLocale.description}</p>
+                </section>
+
+                <!-- Amenities -->
+                <section class="info-section">
+                    <h2><i class="fas fa-check-circle"></i> Servicios Incluidos</h2>
+                    <div class="amenities-grid">
+                        ${currentLocale.amenities.map(amenity => `
+                            <div class="amenity-item">
+                                <i class="fas ${amenity.icon}"></i>
+                                <span>${amenity.name}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- Availability -->
+                <section class="info-section">
+                    <h2><i class="fas fa-calendar-alt"></i> Disponibilidad</h2>
+                    <div class="availability-grid">
+                        ${dayKeys.map((day, i) => {
+                            const avail = currentLocale.availability[day];
+                            return `
+                                <div class="day-slot ${avail.available ? 'available' : 'unavailable'}">
+                                    <span class="day-name">${days[i]}</span>
+                                    <span class="hours">${avail.available ? avail.hours : 'Cerrado'}</span>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </section>
+
+                <!-- Event Types -->
+                <section class="info-section">
+                    <h2><i class="fas fa-calendar-check"></i> Ideal para</h2>
+                    <div style="display: flex; flex-wrap: wrap; gap: var(--spacing-2);">
+                        ${currentLocale.eventTypes.map(type => {
+                            const eventInfo = EVENT_TYPES[type] || { name: type, icon: '🎉' };
+                            return `<span class="badge badge-primary">${eventInfo.icon} ${eventInfo.name}</span>`;
+                        }).join('')}
+                    </div>
+                </section>
+
+                <!-- Policies -->
+                <section class="info-section">
+                    <h2><i class="fas fa-file-contract"></i> Políticas</h2>
+                    <div class="policies-list">
+                        <div class="policy-item">
+                            <i class="fas fa-undo"></i>
+                            <p><strong>Cancelación:</strong> ${currentLocale.policies.cancellation}</p>
+                        </div>
+                        <div class="policy-item">
+                            <i class="fas fa-money-bill"></i>
+                            <p><strong>Pago:</strong> ${currentLocale.policies.deposit}</p>
+                        </div>
+                        ${currentLocale.policies.rules.map(rule => `
+                            <div class="policy-item">
+                                <i class="fas fa-check"></i>
+                                <p>${rule}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </section>
+
+                <!-- Reviews -->
+                <section class="info-section">
+                    <div class="reviews-header">
+                        <h2><i class="fas fa-star"></i> Reseñas</h2>
+                        <div class="rating-summary">
+                            <span class="rating-big">${currentLocale.rating}</span>
+                            <div class="rating-details">
+                                <div class="rating-stars">${starsHtml}</div>
+                                <span style="color: var(--text-muted); font-size: var(--font-size-sm);">${currentLocale.reviewsCount} reseñas</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-author">
+                                <div class="avatar">MG</div>
+                                <div>
+                                    <strong>María García</strong>
+                                    <p style="color: var(--text-muted); font-size: var(--font-size-xs); margin: 0;">Hace 2 semanas</p>
+                                </div>
+                            </div>
+                            <div class="rating-stars">${generateStars(5)}</div>
+                        </div>
+                        <p class="review-text">Excelente local, todo salió perfecto para mi evento de XV años. El espacio es hermoso y el personal muy atento. Totalmente recomendado.</p>
+                    </div>
+
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="review-author">
+                                <div class="avatar" style="background: var(--secondary);">JR</div>
+                                <div>
+                                    <strong>Juan Rodríguez</strong>
+                                    <p style="color: var(--text-muted); font-size: var(--font-size-xs); margin: 0;">Hace 1 mes</p>
+                                </div>
+                            </div>
+                            <div class="rating-stars">${generateStars(4.5)}</div>
+                        </div>
+                        <p class="review-text">Muy buen local para eventos corporativos. Amplio estacionamiento y buena ubicación. El único detalle fue el aire acondicionado que tardó un poco en enfriar.</p>
+                    </div>
+
+                    <button class="btn btn-outline" style="margin-top: var(--spacing-4);">
+                        Ver todas las reseñas (${currentLocale.reviewsCount})
+                    </button>
+                </section>
+
+                <!-- Owner -->
+                <div class="owner-card">
+                    <div class="owner-header">
+                        <div class="owner-avatar">${currentLocale.owner.avatar}</div>
+                        <div class="owner-info">
+                            <h4>${currentLocale.owner.name}</h4>
+                            <p>Propietario del local</p>
+                        </div>
+                    </div>
+                    <div class="owner-stats">
+                        <div>
+                            <strong>${currentLocale.owner.responseRate}%</strong>
+                            <span>Respuesta</span>
+                        </div>
+                        <div>
+                            <strong>${currentLocale.owner.responseTime}</strong>
+                            <span>Tiempo respuesta</span>
+                        </div>
+                        <div>
+                            <strong>${currentLocale.reviewsCount}</strong>
+                            <span>Reseñas</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline btn-block" onclick="contactOwner()">
+                        <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
+                    </button>
+                </div>
+            `;
+        }
+
+        function renderBookingCard() {
+            const card = document.getElementById('bookingCard');
+            const minDate = new Date().toISOString().split('T')[0];
+
+            card.innerHTML = `
+                <div class="booking-price">
+                    <span class="amount">${formatPrice(currentLocale.price.base)}</span>
+                    <span class="note">por evento</span>
+                </div>
+
+                <form class="booking-form" id="bookingForm" onsubmit="handleBooking(event)">
+                    <div class="form-group">
+                        <label>Fecha del evento</label>
+                        <input type="date" id="bookingDate" min="${minDate}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tipo de evento</label>
+                        <select id="bookingEventType" required>
+                            <option value="">Selecciona...</option>
+                            ${currentLocale.eventTypes.map(type => {
+                                const info = EVENT_TYPES[type] || { name: type, icon: '🎉' };
+                                return `<option value="${type}">${info.icon} ${info.name}</option>`;
+                            }).join('')}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Número de invitados</label>
+                        <input type="number" id="bookingGuests" min="${currentLocale.capacity.min}" max="${currentLocale.capacity.max}" placeholder="${currentLocale.capacity.min}-${currentLocale.capacity.max}" required>
+                    </div>
+
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Alquiler del local</span>
+                            <span>${formatPrice(currentLocale.price.base)}</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Depósito de garantía</span>
+                            <span>${formatPrice(currentLocale.price.deposit)}</span>
+                        </div>
+                        <div class="price-row">
+                            <span>Comisión Eventify</span>
+                            <span>${formatPrice(currentLocale.price.base * 0.12)}</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Total</span>
+                            <span>${formatPrice(currentLocale.price.base + currentLocale.price.deposit + currentLocale.price.base * 0.12)}</span>
+                        </div>
+                    </div>
+
+                    <div class="booking-actions">
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">
+                            <i class="fas fa-calendar-check"></i>
+                            Reservar Ahora
+                        </button>
+                        <button type="button" class="btn btn-outline btn-block" onclick="requestVisit()">
+                            <i class="fas fa-eye"></i>
+                            Solicitar Visita
+                        </button>
+                    </div>
+                </form>
+
+                <div class="share-actions">
+                    <button onclick="shareLocal()" title="Compartir">
+                        <i class="fas fa-share-alt"></i>
+                    </button>
+                    <button onclick="toggleFavoriteLocal()" title="Guardar" id="favBtn">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    <button onclick="printLocal()" title="Imprimir">
+                        <i class="fas fa-print"></i>
+                    </button>
+                </div>
+
+                <p style="text-align: center; font-size: var(--font-size-xs); color: var(--text-muted); margin-top: var(--spacing-4);">
+                    <i class="fas fa-shield-alt"></i> Pago seguro con garantía de devolución
+                </p>
+            `;
+        }
+
+        function handleBooking(e) {
+            e.preventDefault();
+
+            if (!window.auth?.isLoggedIn()) {
+                showToast('info', 'Inicia sesión', 'Debes iniciar sesión para reservar');
+                openAuthModal('login');
+                return;
+            }
+
+            const date = document.getElementById('bookingDate').value;
+            const eventType = document.getElementById('bookingEventType').value;
+            const guests = document.getElementById('bookingGuests').value;
+
+            // Simulate booking process
+            showToast('success', '¡Reserva iniciada!', `Procesando reserva para ${formatDate(date, 'long')}`);
+
+            // In a real app, this would navigate to checkout
+            setTimeout(() => {
+                alert(`PROTOTIPO: En la versión final, aquí se procesaría el pago.\n\nDetalles de reserva:\n- Local: ${currentLocale.name}\n- Fecha: ${formatDate(date, 'long')}\n- Evento: ${EVENT_TYPES[eventType]?.name || eventType}\n- Invitados: ${guests}\n- Total: ${formatPrice(currentLocale.price.base + currentLocale.price.deposit + currentLocale.price.base * 0.12)}`);
+            }, 1000);
+        }
+
+        function contactOwner() {
+            const message = `Hola, me interesa el local "${currentLocale.name}" publicado en Eventify. ¿Podrían darme más información?`;
+            const url = formatWhatsAppLink(currentLocale.contact.whatsapp, message);
+            window.open(url, '_blank');
+        }
+
+        function requestVisit() {
+            showToast('success', 'Solicitud enviada', 'Te contactaremos pronto para coordinar la visita');
+        }
+
+        function shareLocal() {
+            shareContent(currentLocale.name, currentLocale.shortDescription, window.location.href);
+        }
+
+        function toggleFavoriteLocal() {
+            const btn = document.getElementById('favBtn');
+            const icon = btn.querySelector('i');
+            const isFavorite = icon.classList.contains('fas');
+
+            if (isFavorite) {
+                icon.classList.remove('fas');
+                icon.classList.add('far');
+                showToast('info', 'Eliminado', 'Eliminado de favoritos');
+            } else {
+                icon.classList.remove('far');
+                icon.classList.add('fas');
+                showToast('success', 'Guardado', 'Agregado a favoritos');
+            }
+        }
+
+        function printLocal() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

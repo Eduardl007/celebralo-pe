@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paquetes Todo-en-Uno para Eventos | Eventify Peru</title>
+    <meta name="description" content="Paquetes completos para tu evento: local + catering + DJ + decoracion con hasta 15% de descuento. Ahorra tiempo y dinero.">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .page-header {
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            color: var(--white);
+            padding: calc(var(--header-height) + var(--spacing-8)) 0 var(--spacing-8);
+            text-align: center;
+        }
+
+        .page-header h1 {
+            color: var(--white);
+            font-size: var(--font-size-4xl);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .page-header p {
+            color: rgba(255,255,255,0.9);
+            font-size: var(--font-size-lg);
+            margin: 0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .savings-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: var(--spacing-2) var(--spacing-4);
+            border-radius: var(--radius-full);
+            margin-top: var(--spacing-4);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        /* Event Type Selector */
+        .event-selector {
+            background: var(--white);
+            padding: var(--spacing-6) 0;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: var(--header-height);
+            z-index: 50;
+        }
+
+        .event-selector .container {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-3);
+            flex-wrap: wrap;
+        }
+
+        .event-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--spacing-1);
+            padding: var(--spacing-3) var(--spacing-5);
+            border-radius: var(--radius-xl);
+            background: var(--gray-50);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            min-width: 100px;
+        }
+
+        .event-btn:hover {
+            background: var(--primary-50);
+            border-color: var(--primary);
+        }
+
+        .event-btn.active {
+            background: var(--primary);
+            color: var(--white);
+        }
+
+        .event-btn .emoji {
+            font-size: 1.5rem;
+        }
+
+        .event-btn span:last-child {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: var(--spacing-10) 0;
+            background: var(--gray-50);
+        }
+
+        /* Packages Section */
+        .packages-section {
+            margin-bottom: var(--spacing-12);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: var(--spacing-8);
+        }
+
+        .section-title h2 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+        }
+
+        /* Package Cards */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-6);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .package-card {
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            transition: all var(--transition-base);
+        }
+
+        .package-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .package-card.featured {
+            border: 3px solid var(--primary);
+        }
+
+        .package-card.featured::before {
+            content: 'Mas Popular';
+            position: absolute;
+            top: var(--spacing-4);
+            right: calc(var(--spacing-4) * -1);
+            background: var(--primary);
+            color: var(--white);
+            padding: var(--spacing-1) var(--spacing-6);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            transform: rotate(45deg);
+            transform-origin: center;
+            z-index: 1;
+        }
+
+        .package-header {
+            padding: var(--spacing-6);
+            text-align: center;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+        }
+
+        .package-card.featured .package-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+        }
+
+        .package-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-3);
+        }
+
+        .package-name {
+            font-size: var(--font-size-xl);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .package-tagline {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
+        }
+
+        .package-price {
+            padding: var(--spacing-5);
+            text-align: center;
+            background: var(--white);
+        }
+
+        .price-from {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        .price-amount {
+            font-size: var(--font-size-4xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .price-note {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .price-savings {
+            display: inline-block;
+            background: var(--success-50);
+            color: var(--success);
+            padding: var(--spacing-1) var(--spacing-3);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            margin-top: var(--spacing-2);
+        }
+
+        .package-includes {
+            padding: var(--spacing-5);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .package-includes h4 {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-4);
+        }
+
+        .includes-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-3);
+        }
+
+        .include-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+        }
+
+        .include-item i {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-full);
+            background: var(--success-50);
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xs);
+        }
+
+        .include-item span {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .package-footer {
+            padding: var(--spacing-5);
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* Custom Package Builder */
+        .builder-section {
+            background: var(--white);
+            padding: var(--spacing-10) 0;
+        }
+
+        .builder-card {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, var(--primary-50) 0%, var(--secondary-50) 100%);
+            border-radius: var(--radius-2xl);
+            padding: var(--spacing-8);
+        }
+
+        .builder-header {
+            text-align: center;
+            margin-bottom: var(--spacing-8);
+        }
+
+        .builder-header h2 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .builder-steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-4);
+        }
+
+        .builder-step {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-5);
+            text-align: center;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: var(--primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+            margin: 0 auto var(--spacing-3);
+        }
+
+        .builder-step h4 {
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .builder-step p {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: var(--spacing-10) 0;
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-3);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-4) var(--spacing-5);
+            cursor: pointer;
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .faq-question:hover {
+            background: var(--gray-50);
+        }
+
+        .faq-question i {
+            transition: transform var(--transition-fast);
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 var(--spacing-5);
+            max-height: 0;
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .faq-item.active .faq-answer {
+            padding: var(--spacing-4) var(--spacing-5);
+            max-height: 500px;
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .packages-grid {
+                grid-template-columns: 1fr;
+                padding: 0 var(--spacing-4);
+            }
+
+            .builder-steps {
+                grid-template-columns: 1fr;
+            }
+
+            .event-btn {
+                min-width: auto;
+                padding: var(--spacing-2) var(--spacing-3);
+            }
+
+            .event-btn .emoji {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="container">
+                <nav class="nav">
+                    <a href="../index.html" class="logo">
+                        <span class="logo-icon">🎉</span>
+                        <span class="logo-text">Eventify</span>
+                        <span class="logo-badge">Peru</span>
+                    </a>
+
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                        <li><a href="locales.html" class="nav-link">Locales</a></li>
+                        <li><a href="servicios.html" class="nav-link">Servicios</a></li>
+                        <li><a href="paquetes.html" class="nav-link active">Paquetes</a></li>
+                        <li><a href="como-funciona.html" class="nav-link">Como Funciona?</a></li>
+                    </ul>
+
+                    <div class="nav-actions">
+                        <button class="btn btn-ghost" onclick="openAuthModal('login')">
+                            <i class="fas fa-user"></i>
+                            <span>Ingresar</span>
+                        </button>
+                        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Page Header -->
+        <section class="page-header">
+            <div class="container">
+                <h1>Paquetes Todo-en-Uno</h1>
+                <p>Local + Servicios con descuentos exclusivos. Ahorra tiempo y dinero organizando tu evento perfecto.</p>
+                <div class="savings-badge">
+                    <i class="fas fa-piggy-bank"></i>
+                    Ahorra hasta 15% vs contratar por separado
+                </div>
+            </div>
+        </section>
+
+        <!-- Event Type Selector -->
+        <div class="event-selector">
+            <div class="container">
+                <button class="event-btn active" data-event="cumpleanos">
+                    <span class="emoji">🎂</span>
+                    <span>Cumpleanos</span>
+                </button>
+                <button class="event-btn" data-event="matrimonio">
+                    <span class="emoji">💒</span>
+                    <span>Matrimonio</span>
+                </button>
+                <button class="event-btn" data-event="quinceanos">
+                    <span class="emoji">👸</span>
+                    <span>XV Anos</span>
+                </button>
+                <button class="event-btn" data-event="corporativo">
+                    <span class="emoji">🏢</span>
+                    <span>Corporativo</span>
+                </button>
+                <button class="event-btn" data-event="bautizo">
+                    <span class="emoji">⛪</span>
+                    <span>Bautizo</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="container">
+                <!-- Pre-made Packages -->
+                <div class="packages-section">
+                    <div class="section-title">
+                        <h2>Elige tu Paquete Ideal</h2>
+                        <p>Paquetes disenados para eventos de <span id="eventTypeDisplay">cumpleanos</span></p>
+                    </div>
+
+                    <div class="packages-grid" id="packagesGrid">
+                        <!-- Package 1: Basico -->
+                        <div class="package-card">
+                            <div class="package-header">
+                                <div class="package-icon">🎉</div>
+                                <h3 class="package-name">Paquete Basico</h3>
+                                <p class="package-tagline">Ideal para eventos pequenos</p>
+                            </div>
+                            <div class="package-price">
+                                <span class="price-from">Desde</span>
+                                <div class="price-amount">S/ 1,200</div>
+                                <span class="price-note">para 50 personas</span>
+                                <div class="price-savings">Ahorras S/ 150</div>
+                            </div>
+                            <div class="package-includes">
+                                <h4>Incluye</h4>
+                                <div class="includes-list">
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Local por 6 horas</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Mesas y sillas incluidas</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Equipo de sonido basico</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Decoracion estandar</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Estacionamiento</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="package-footer">
+                                <button class="btn btn-outline btn-block btn-lg" onclick="selectPackage('basico')">
+                                    Seleccionar Paquete
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Package 2: Premium (Featured) -->
+                        <div class="package-card featured">
+                            <div class="package-header">
+                                <div class="package-icon">⭐</div>
+                                <h3 class="package-name">Paquete Premium</h3>
+                                <p class="package-tagline">La mejor experiencia completa</p>
+                            </div>
+                            <div class="package-price">
+                                <span class="price-from">Desde</span>
+                                <div class="price-amount">S/ 3,500</div>
+                                <span class="price-note">para 100 personas</span>
+                                <div class="price-savings">Ahorras S/ 580</div>
+                            </div>
+                            <div class="package-includes">
+                                <h4>Incluye</h4>
+                                <div class="includes-list">
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Local premium por 8 horas</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Catering completo (entrada + fondo + postre)</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>DJ profesional + iluminacion</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Fotografia y video (4 horas)</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Decoracion tematica premium</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Coordinador de evento</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="package-footer">
+                                <button class="btn btn-primary btn-block btn-lg" onclick="selectPackage('premium')">
+                                    Seleccionar Paquete
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Package 3: Deluxe -->
+                        <div class="package-card">
+                            <div class="package-header">
+                                <div class="package-icon">👑</div>
+                                <h3 class="package-name">Paquete Deluxe</h3>
+                                <p class="package-tagline">Para eventos inolvidables</p>
+                            </div>
+                            <div class="package-price">
+                                <span class="price-from">Desde</span>
+                                <div class="price-amount">S/ 6,500</div>
+                                <span class="price-note">para 150 personas</span>
+                                <div class="price-savings">Ahorras S/ 1,200</div>
+                            </div>
+                            <div class="package-includes">
+                                <h4>Incluye</h4>
+                                <div class="includes-list">
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Local exclusivo por 10 horas</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Buffet gourmet + open bar soft</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Orquesta en vivo o DJ premium</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Foto + video cinematografico</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Decoracion de lujo + iluminacion</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Hora loca incluida</span>
+                                    </div>
+                                    <div class="include-item">
+                                        <i class="fas fa-check"></i>
+                                        <span>Torta tematica personalizada</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="package-footer">
+                                <button class="btn btn-outline btn-block btn-lg" onclick="selectPackage('deluxe')">
+                                    Seleccionar Paquete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Custom Builder Section -->
+        <div class="builder-section">
+            <div class="container">
+                <div class="builder-card">
+                    <div class="builder-header">
+                        <h2>🎨 Arma tu Paquete Personalizado</h2>
+                        <p>Elige exactamente lo que necesitas y obtiene descuento por combo</p>
+                    </div>
+                    <div class="builder-steps">
+                        <div class="builder-step">
+                            <div class="step-number">1</div>
+                            <h4>Elige tu Local</h4>
+                            <p>Selecciona entre nuestros 40+ locales verificados</p>
+                        </div>
+                        <div class="builder-step">
+                            <div class="step-number">2</div>
+                            <h4>Agrega Servicios</h4>
+                            <p>Catering, DJ, foto, decoracion y mas</p>
+                        </div>
+                        <div class="builder-step">
+                            <div class="step-number">3</div>
+                            <h4>Obtiene Descuento</h4>
+                            <p>Hasta 15% off automatico por combo</p>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: var(--spacing-6);">
+                        <a href="cotizador.html" class="btn btn-primary btn-lg">
+                            <i class="fas fa-calculator"></i>
+                            Ir al Cotizador
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+            <div class="container">
+                <div class="section-title">
+                    <h2>Preguntas Frecuentes</h2>
+                    <p>Resolvemos tus dudas sobre los paquetes</p>
+                </div>
+
+                <div class="faq-list">
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Puedo modificar los servicios incluidos en un paquete?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Si! Los paquetes son una guia, pero puedes agregar o quitar servicios segun tus necesidades. El descuento se ajusta automaticamente segun los servicios que elijas.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Como funciona el pago de los paquetes?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Al reservar un paquete, pagas el 50% como adelanto para confirmar la fecha. El 50% restante se paga una semana antes del evento. Aceptamos Yape, Plin, tarjetas y transferencias.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Que pasa si necesito cancelar?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Ofrecemos cancelacion gratuita hasta 14 dias antes del evento con devolucion del 100%. Entre 7-14 dias, devolvemos el 70%. Menos de 7 dias, el adelanto no es reembolsable pero puedes reprogramar.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Los precios incluyen IGV?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Si, todos nuestros precios incluyen IGV. Emitimos boletas electronicas automaticamente y facturas si lo solicitas al momento de la reserva.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-question" onclick="toggleFaq(this)">
+                            <span>Puedo visitar el local antes de reservar?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Absolutamente! Puedes solicitar una visita gratuita al local desde la pagina de cada local. Coordinamos directamente con el propietario para agendar tu visita.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-bottom" style="border: none; padding: var(--spacing-6) 0;">
+                    <p>&copy; 2025 Eventify Peru. Todos los derechos reservados.</p>
+                    <p>Hecho con amor en Sullana, Piura</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Chatbot -->
+        <div class="chatbot" id="chatbot">
+            <button class="chatbot-trigger" id="chatbotTrigger" aria-label="Abrir chat">
+                <i class="fas fa-comments"></i>
+                <span class="chatbot-badge">1</span>
+            </button>
+            <div class="chatbot-window" id="chatbotWindow">
+                <div class="chatbot-header">
+                    <div class="chatbot-avatar">
+                        <img src="../assets/images/eventbot-avatar.svg" alt="EventBot">
+                        <span class="status-dot"></span>
+                    </div>
+                    <div class="chatbot-info">
+                        <strong>EventBot</strong>
+                        <span>Tu asistente virtual 24/7</span>
+                    </div>
+                    <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="chatbot-messages" id="chatbotMessages"></div>
+                <div class="chatbot-quick-actions" id="quickActions">
+                    <button class="quick-action" data-action="paquetes">📦 Ver paquetes</button>
+                    <button class="quick-action" data-action="precios">💰 Precios</button>
+                    <button class="quick-action" data-action="ayuda">❓ Ayuda</button>
+                </div>
+                <form class="chatbot-input" id="chatbotForm">
+                    <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Auth Modal -->
+        <div class="modal" id="authModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content auth-modal">
+                <button class="modal-close" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+                <div class="auth-form" id="loginForm">
+                    <div class="auth-header">
+                        <h2>Bienvenido de vuelta</h2>
+                        <p>Ingresa a tu cuenta para continuar</p>
+                    </div>
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail">Correo electronico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Contrasena</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="loginPassword" placeholder="********" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Ingresar</button>
+                    </form>
+                    <p class="auth-switch">No tienes cuenta? <a href="#" onclick="switchAuthForm('register')">Registrate</a></p>
+                </div>
+                <div class="auth-form hidden" id="registerForm">
+                    <div class="auth-header">
+                        <h2>Crea tu cuenta</h2>
+                        <p>Unete a Eventify</p>
+                    </div>
+                    <form id="registerFormElement">
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="registerName">Nombre</label>
+                                <input type="text" id="registerName" placeholder="Tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerLastname">Apellido</label>
+                                <input type="text" id="registerLastname" placeholder="Tu apellido" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Correo electronico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="registerEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPhone">Telefono</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="registerPhone" placeholder="999 888 777" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Contrasena</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="registerPassword" placeholder="Minimo 8 caracteres" required>
+                            </div>
+                        </div>
+                        <label class="checkbox">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <span>Acepto los <a href="terminos.html">Terminos y Condiciones</a></span>
+                        </label>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Crear cuenta</button>
+                    </form>
+                    <p class="auth-switch">Ya tienes cuenta? <a href="#" onclick="switchAuthForm('login')">Inicia sesion</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/data/locales.js"></script>
+    <script src="../js/data/servicios.js"></script>
+    <script src="../js/utils/helpers.js"></script>
+    <script src="../js/components/header.js"></script>
+    <script src="../js/components/chatbot.js"></script>
+    <script src="../js/components/auth.js"></script>
+    <script src="../js/components/cards.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/app.js"></script>
+
+    <script>
+        let selectedEventType = 'cumpleanos';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initEventButtons();
+            checkUrlParams();
+        });
+
+        function initEventButtons() {
+            document.querySelectorAll('.event-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.event-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedEventType = btn.dataset.event;
+                    updateEventDisplay();
+                });
+            });
+        }
+
+        function checkUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const tipo = params.get('tipo');
+            if (tipo) {
+                const btn = document.querySelector(`.event-btn[data-event="${tipo}"]`);
+                if (btn) {
+                    document.querySelectorAll('.event-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    selectedEventType = tipo;
+                    updateEventDisplay();
+                }
+            }
+        }
+
+        function updateEventDisplay() {
+            const eventNames = {
+                cumpleanos: 'cumpleanos',
+                matrimonio: 'matrimonios',
+                quinceanos: 'XV anos',
+                corporativo: 'eventos corporativos',
+                bautizo: 'bautizos'
+            };
+            document.getElementById('eventTypeDisplay').textContent = eventNames[selectedEventType] || selectedEventType;
+        }
+
+        function selectPackage(packageType) {
+            showToast('success', 'Paquete seleccionado', `Has elegido el paquete ${packageType}. Redirigiendo al cotizador...`);
+
+            setTimeout(() => {
+                window.location.href = `cotizador.html?paquete=${packageType}&evento=${selectedEventType}`;
+            }, 1500);
+        }
+
+        function toggleFaq(element) {
+            const faqItem = element.parentElement;
+            const isActive = faqItem.classList.contains('active');
+
+            // Close all FAQs
+            document.querySelectorAll('.faq-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Open clicked one if it wasn't active
+            if (!isActive) {
+                faqItem.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>
