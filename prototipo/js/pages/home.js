@@ -82,6 +82,19 @@ function handleSearch(e) {
     const eventDate = document.getElementById('eventDate').value;
     const guestCount = document.getElementById('guestCount').value;
 
+    // Registrar búsqueda en Google Sheets y Analytics
+    if (window.googleSheets) {
+        googleSheets.logSearch({
+            eventType: eventType,
+            eventDate: eventDate,
+            guestCount: guestCount,
+            category: tabType
+        });
+    }
+    if (window.analytics) {
+        analytics.trackSearch(`${eventType} - ${guestCount}`, tabType);
+    }
+
     // Build query params
     const params = new URLSearchParams();
     if (eventType) params.set('evento', eventType);

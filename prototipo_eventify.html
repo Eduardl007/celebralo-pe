@@ -1,0 +1,984 @@
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventify Perú - Tu Asistente Inteligente para Eventos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B35;
+            --secondary: #004E89;
+            --accent: #F7B801;
+            --success: #2A9D8F;
+            --background: #F8F9FA;
+            --text: #1A1A1A;
+            --text-light: #6C757D;
+            --white: #FFFFFF;
+            --border: #E0E0E0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: var(--white);
+            padding: 3rem 1.5rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        /* Search Box */
+        .search-box {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 900px;
+            margin: -3rem auto 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .search-input {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #E55A25;
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: white;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary);
+        }
+
+        .card-location {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-capacity {
+            color: var(--text);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stars {
+            color: var(--accent);
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .price-note {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .category-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            min-width: 150px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .category-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-name {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+
+        /* Chatbot */
+        .chatbot-trigger {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+            transition: transform 0.3s;
+            z-index: 999;
+        }
+
+        .chatbot-trigger:hover {
+            transform: scale(1.1);
+        }
+
+        .chatbot-window {
+            position: fixed;
+            bottom: 5rem;
+            right: 2rem;
+            width: 350px;
+            height: 500px;
+            background: var(--white);
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .chatbot-window.active {
+            display: flex;
+        }
+
+        .chatbot-header {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1rem;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            animation: fadeIn 0.3s;
+        }
+
+        .message.bot {
+            background: var(--background);
+            align-self: flex-start;
+        }
+
+        .message.user {
+            background: var(--primary);
+            color: var(--white);
+            align-self: flex-end;
+        }
+
+        .chatbot-input-area {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chatbot-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            outline: none;
+        }
+
+        .chatbot-send {
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: 15px;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--white);
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: white;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--success);
+            color: var(--white);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .service-item {
+            padding: 1rem;
+            background: var(--background);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .service-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .reservation-box {
+            background: var(--background);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .search-row {
+                grid-template-columns: 1fr;
+            }
+
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .chatbot-window {
+                width: calc(100% - 2rem);
+                right: 1rem;
+                left: 1rem;
+            }
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .quick-btn {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            background: var(--background);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-btn:hover {
+            border-color: var(--primary);
+            background: var(--white);
+        }
+
+        .footer {
+            background: var(--secondary);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">🎉 Eventify Perú</div>
+            <ul class="nav-links">
+                <li><a href="#home">Inicio</a></li>
+                <li><a href="#explorar">Explorar</a></li>
+                <li><a href="#como-funciona">Cómo Funciona</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Organiza tu Evento Perfecto en Minutos</h1>
+        <p>Encuentra locales y servicios verificados en Sullana, Piura</p>
+    </section>
+
+    <!-- Search Box -->
+    <div class="search-box">
+        <div class="search-row">
+            <input type="text" class="search-input" placeholder="¿Qué tipo de evento vas a organizar?" id="eventType">
+            <input type="date" class="search-input" id="eventDate">
+            <input type="number" class="search-input" placeholder="N° invitados" id="guestCount">
+        </div>
+        <button class="btn-primary" onclick="searchLocales()">🔍 Buscar Locales</button>
+    </div>
+
+    <!-- Categories -->
+    <div class="container">
+        <h2 class="section-title">Categorías Populares</h2>
+        <div class="categories">
+            <div class="category-card" onclick="filterCategory('cumpleaños')">
+                <div class="category-icon">🎂</div>
+                <div class="category-name">Cumpleaños</div>
+            </div>
+            <div class="category-card" onclick="filterCategory('matrimonios')">
+                <div class="category-icon">💍</div>
+                <div class="category-name">Matrimonios</div>
+            </div>
+            <div class="category-card" onclick="filterCategory('corporativo')">
+                <div class="category-icon">🏢</div>
+                <div class="category-name">Corporativo</div>
+            </div>
+            <div class="category-card" onclick="filterCategory('quinceaños')">
+                <div class="category-icon">👸</div>
+                <div class="category-name">XV Años</div>
+            </div>
+            <div class="category-card" onclick="filterCategory('familiar')">
+                <div class="category-icon">👨‍👩‍👧‍👦</div>
+                <div class="category-name">Familiar</div>
+            </div>
+        </div>
+
+        <!-- Featured Locales -->
+        <h2 class="section-title">Locales Destacados en Sullana</h2>
+        <div class="cards-grid" id="localesGrid">
+            <!-- Locales will be loaded here -->
+        </div>
+
+        <!-- Services Section -->
+        <h2 class="section-title">Servicios Complementarios</h2>
+        <div class="cards-grid" id="servicesGrid">
+            <!-- Services will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Chatbot Trigger -->
+    <button class="chatbot-trigger" onclick="toggleChatbot()">💬</button>
+
+    <!-- Chatbot Window -->
+    <div class="chatbot-window" id="chatbotWindow">
+        <div class="chatbot-header">
+            <div>
+                <strong>EventBot</strong>
+                <div style="font-size: 0.85rem; opacity: 0.9;">Tu asistente virtual</div>
+            </div>
+            <button class="chatbot-close" onclick="toggleChatbot()">×</button>
+        </div>
+        <div class="chatbot-messages" id="chatMessages">
+            <div class="message bot">
+                ¡Hola! 👋 Soy EventBot, tu asistente para organizar eventos perfectos. ¿En qué puedo ayudarte hoy?
+            </div>
+            <div class="quick-actions">
+                <button class="quick-btn" onclick="quickQuestion('presupuesto')">💰 Presupuestos</button>
+                <button class="quick-btn" onclick="quickQuestion('capacidad')">👥 Capacidades</button>
+                <button class="quick-btn" onclick="quickQuestion('servicios')">🎉 Servicios</button>
+            </div>
+        </div>
+        <div class="chatbot-input-area">
+            <input type="text" class="chatbot-input" placeholder="Escribe tu pregunta..." id="chatInput" onkeypress="handleChatEnter(event)">
+            <button class="chatbot-send" onclick="sendMessage()">📤</button>
+        </div>
+    </div>
+
+    <!-- Modal for Venue Details -->
+    <div class="modal" id="venueModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <div class="modal-image" id="modalImage">🏛️</div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Eventify Perú - Sullana, Piura</p>
+        <p>Tu asistente inteligente para eventos perfectos</p>
+    </footer>
+
+    <script>
+        // Sample Data
+        const locales = [
+            {
+                id: 1,
+                name: "Salón Los Jardines Premium",
+                location: "Av. José de Lama, Sullana",
+                capacity: "200 personas",
+                price: 1200,
+                rating: 4.8,
+                reviews: 45,
+                icon: "🏛️",
+                description: "Elegante salón con jardines amplios, ideal para matrimonios y eventos grandes. Incluye iluminación profesional y sistema de sonido.",
+                amenities: ["Estacionamiento", "Aire Acondicionado", "WiFi", "Cocina", "Baños VIP", "Jardín"],
+                verified: true
+            },
+            {
+                id: 2,
+                name: "Quinta El Paraíso",
+                location: "Urbanización San Martín, Sullana",
+                capacity: "150 personas",
+                price: 900,
+                rating: 4.6,
+                reviews: 32,
+                icon: "🌳",
+                description: "Hermosa quinta campestre con áreas verdes y piscina. Perfecta para eventos al aire libre y reuniones familiares.",
+                amenities: ["Piscina", "Parrillas", "Juegos Infantiles", "Estacionamiento", "Zona BBQ"],
+                verified: true
+            },
+            {
+                id: 3,
+                name: "Centro de Eventos La Mansión",
+                location: "Calle San Martín 450, Sullana",
+                capacity: "300 personas",
+                price: 1800,
+                rating: 4.9,
+                reviews: 67,
+                icon: "🏰",
+                description: "El local más exclusivo de Sullana. Decoración de lujo, servicio premium y tecnología de punta para eventos inolvidables.",
+                amenities: ["Decoración Incluida", "Seguridad 24/7", "Catering Gourmet", "Valet Parking", "Suite Novios"],
+                verified: true
+            },
+            {
+                id: 4,
+                name: "Salón Fiesta Alegre",
+                location: "Jr. Bolognesi 230, Sullana",
+                capacity: "100 personas",
+                price: 600,
+                rating: 4.4,
+                reviews: 28,
+                icon: "🎊",
+                description: "Salón acogedor y económico, perfecto para cumpleaños y reuniones pequeñas. Excelente relación calidad-precio.",
+                amenities: ["Sonido Básico", "Mesas y Sillas", "Decoración Opcional", "Cocina"],
+                verified: true
+            },
+            {
+                id: 5,
+                name: "Club Campestre El Bosque",
+                location: "Carretera Sullana-Piura Km 3, Sullana",
+                capacity: "250 personas",
+                price: 1500,
+                rating: 4.7,
+                reviews: 41,
+                icon: "⚽",
+                description: "Club deportivo con amplios espacios verdes. Ideal para eventos empresariales y familiares. Incluye áreas recreativas.",
+                amenities: ["Canchas Deportivas", "Piscina Olímpica", "Restaurante", "Estacionamiento Amplio", "Zona Kids"],
+                verified: true
+            },
+            {
+                id: 6,
+                name: "Terraza Vista Hermosa",
+                location: "Urb. Los Jardines, Sullana",
+                capacity: "80 personas",
+                price: 700,
+                rating: 4.5,
+                reviews: 19,
+                icon: "🌅",
+                description: "Terraza moderna con vista panorámica de Sullana. Perfecta para eventos íntimos y celebraciones especiales al atardecer.",
+                amenities: ["Vista Panorámica", "Bar Incluido", "Terraza Techada", "Iluminación LED"],
+                verified: true
+            }
+        ];
+
+        const services = [
+            {
+                id: 101,
+                name: "Catering Premium 'Sabor Norteño'",
+                category: "Alimentación",
+                price: 35,
+                unit: "por persona",
+                rating: 4.9,
+                icon: "🍽️",
+                description: "Menú completo con platos típicos norteños y opciones internacionales"
+            },
+            {
+                id: 102,
+                name: "DJ Profesional 'Mix Master'",
+                category: "Entretenimiento",
+                price: 400,
+                unit: "por evento",
+                rating: 4.7,
+                icon: "🎵",
+                description: "DJ con amplia experiencia, equipo de sonido profesional e iluminación"
+            },
+            {
+                id: 103,
+                name: "Fotografía y Video 'Momentos'",
+                category: "Audiovisual",
+                price: 550,
+                unit: "por evento",
+                rating: 4.8,
+                icon: "📸",
+                description: "Cobertura completa fotográfica y video HD, entrega de fotos editadas"
+            },
+            {
+                id: 104,
+                name: "Decoración Temática 'Eventos Mágicos'",
+                category: "Decoración",
+                price: 450,
+                unit: "por evento",
+                rating: 4.6,
+                icon: "🎈",
+                description: "Decoración personalizada según el tema de tu evento"
+            }
+        ];
+
+        // Load locales on page load
+        function loadLocales() {
+            const grid = document.getElementById('localesGrid');
+            grid.innerHTML = locales.map(local => `
+                <div class="card" onclick="showVenueDetails(${local.id})">
+                    <div class="card-image">${local.icon}</div>
+                    <div class="card-content">
+                        <h3 class="card-title">${local.name}</h3>
+                        <div class="card-location">📍 ${local.location}</div>
+                        <div class="card-capacity">👥 Capacidad: ${local.capacity}</div>
+                        <div class="card-rating">
+                            <span class="stars">⭐ ${local.rating}</span>
+                            <span class="text-light">(${local.reviews} reseñas)</span>
+                        </div>
+                        <div class="price">S/ ${local.price}</div>
+                        <div class="price-note">por evento</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadServices() {
+            const grid = document.getElementById('servicesGrid');
+            grid.innerHTML = services.map(service => `
+                <div class="card">
+                    <div class="card-image">${service.icon}</div>
+                    <div class="card-content">
+                        <h3 class="card-title">${service.name}</h3>
+                        <div class="card-location">${service.category}</div>
+                        <div class="card-rating">
+                            <span class="stars">⭐ ${service.rating}</span>
+                        </div>
+                        <div class="price">S/ ${service.price}</div>
+                        <div class="price-note">${service.unit}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showVenueDetails(id) {
+            const venue = locales.find(l => l.id === id);
+            const modal = document.getElementById('venueModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalBody = document.getElementById('modalBody');
+
+            modalImage.textContent = venue.icon;
+            modalBody.innerHTML = `
+                ${venue.verified ? '<span class="badge">✓ Verificado</span>' : ''}
+                <h2>${venue.name}</h2>
+                <div style="color: var(--text-light); margin-bottom: 1rem;">
+                    📍 ${venue.location}
+                </div>
+                <div style="display: flex; gap: 2rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <strong>Capacidad:</strong> ${venue.capacity}
+                    </div>
+                    <div>
+                        <strong>Rating:</strong> ⭐ ${venue.rating} (${venue.reviews} reseñas)
+                    </div>
+                </div>
+                <p style="margin-bottom: 1.5rem;">${venue.description}</p>
+                <h3 style="margin-bottom: 1rem;">Servicios Incluidos:</h3>
+                <div class="services-grid">
+                    ${venue.amenities.map(amenity => `
+                        <div class="service-item">
+                            <div class="service-icon">✓</div>
+                            <div>${amenity}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="reservation-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <div>
+                            <div class="price">S/ ${venue.price}</div>
+                            <div class="price-note">por evento</div>
+                        </div>
+                    </div>
+                    <input type="date" class="search-input" style="width: 100%; margin-bottom: 1rem;" placeholder="Selecciona una fecha">
+                    <button class="btn-primary" style="width: 100%;" onclick="makeReservation(${venue.id})">
+                        Reservar Ahora
+                    </button>
+                </div>
+            `;
+
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('venueModal').classList.remove('active');
+        }
+
+        function makeReservation(venueId) {
+            const venue = locales.find(l => l.id === venueId);
+            alert(`¡Excelente elección! 🎉\n\nEstás a punto de reservar:\n${venue.name}\n\nEn la versión completa, aquí procesaríamos tu pago de forma segura con Yape, Plin o tarjeta.`);
+        }
+
+        // Chatbot Functions
+        function toggleChatbot() {
+            const chatbot = document.getElementById('chatbotWindow');
+            chatbot.classList.toggle('active');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+
+            addMessage(message, 'user');
+            input.value = '';
+
+            // Simulate bot response
+            setTimeout(() => {
+                const response = generateBotResponse(message);
+                addMessage(response, 'bot');
+            }, 1000);
+        }
+
+        function addMessage(text, type) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function generateBotResponse(message) {
+            const lowerMessage = message.toLowerCase();
+
+            if (lowerMessage.includes('precio') || lowerMessage.includes('costo') || lowerMessage.includes('cuanto')) {
+                return 'Los precios de nuestros locales varían desde S/ 600 hasta S/ 1,800 dependiendo de la capacidad y servicios. ¿Te gustaría que te muestre opciones en un rango específico?';
+            } else if (lowerMessage.includes('capacidad') || lowerMessage.includes('personas')) {
+                return 'Tenemos locales para diferentes capacidades:\n• Pequeños (50-100 personas)\n• Medianos (100-200 personas)\n• Grandes (200-300 personas)\n\n¿Para cuántas personas es tu evento?';
+            } else if (lowerMessage.includes('disponib')) {
+                return 'Para verificar disponibilidad, necesito saber la fecha de tu evento. Puedes seleccionarla en el buscador o decirme aquí. ¿Qué fecha tienes en mente?';
+            } else if (lowerMessage.includes('pago') || lowerMessage.includes('pagar')) {
+                return 'Aceptamos múltiples formas de pago:\n• Yape\n• Plin\n• Tarjetas de crédito/débito\n• Transferencia bancaria\n\nEl pago es 100% seguro y recibirás confirmación inmediata.';
+            } else if (lowerMessage.includes('servicio')) {
+                return 'Además de locales, ofrecemos:\n🍽️ Catering\n🎵 DJ y música\n📸 Fotografía y video\n🎈 Decoración\n\n¿Te gustaría agregar alguno a tu reserva?';
+            } else {
+                return 'Entiendo tu consulta. Te puedo ayudar con:\n• Buscar locales disponibles\n• Comparar precios\n• Sugerir paquetes completos\n• Resolver dudas sobre servicios\n\n¿Qué te gustaría saber?';
+            }
+        }
+
+        function quickQuestion(type) {
+            let question = '';
+            if (type === 'presupuesto') {
+                question = '¿Cuáles son los rangos de precios?';
+            } else if (type === 'capacidad') {
+                question = '¿Qué capacidades tienen los locales?';
+            } else if (type === 'servicios') {
+                question = '¿Qué servicios adicionales ofrecen?';
+            }
+
+            addMessage(question, 'user');
+            setTimeout(() => {
+                const response = generateBotResponse(question);
+                addMessage(response, 'bot');
+            }, 800);
+        }
+
+        function handleChatEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function searchLocales() {
+            const eventType = document.getElementById('eventType').value;
+            const eventDate = document.getElementById('eventDate').value;
+            const guestCount = document.getElementById('guestCount').value;
+
+            let message = 'Buscando locales';
+            if (guestCount) message += ` para ${guestCount} personas`;
+            if (eventDate) message += ` el ${eventDate}`;
+            message += '...';
+
+            alert(message + '\n\nEn la versión completa, aquí filtraremos los resultados según tu búsqueda y mostraremos solo los locales disponibles.');
+
+            // Scroll to results
+            document.getElementById('localesGrid').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function filterCategory(category) {
+            alert(`Filtrando locales para eventos de tipo: ${category}\n\nEn la versión completa, mostraremos solo los locales más adecuados para este tipo de evento.`);
+        }
+
+        // Initialize
+        loadLocales();
+        loadServices();
+
+        // Close modal when clicking outside
+        document.getElementById('venueModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

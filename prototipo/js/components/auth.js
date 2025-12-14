@@ -151,6 +151,14 @@ class Auth {
                 sessionStorage.set('eventify_user', this.currentUser);
             }
 
+            // Registrar login en Google Sheets y Analytics
+            if (window.googleSheets) {
+                googleSheets.logLogin(email, 'email');
+            }
+            if (window.analytics) {
+                analytics.trackUserLogin('email');
+            }
+
             showToast('success', '¡Bienvenido!', `Hola ${this.currentUser.name}`);
             this.closeModal();
             this.updateUIForLoggedInUser();
@@ -220,6 +228,20 @@ class Auth {
 
             storage.set('eventify_user', this.currentUser);
 
+            // Registrar usuario en Google Sheets y Analytics
+            if (window.googleSheets) {
+                googleSheets.registerUser({
+                    name: name,
+                    lastname: lastname,
+                    email: email,
+                    phone: phone,
+                    registrationType: 'email'
+                });
+            }
+            if (window.analytics) {
+                analytics.trackUserRegistration('email');
+            }
+
             showToast('success', '¡Cuenta creada!', 'Bienvenido a Eventify');
             this.closeModal();
             this.updateUIForLoggedInUser();
@@ -247,6 +269,19 @@ class Auth {
         };
 
         storage.set('eventify_user', this.currentUser);
+
+        // Registrar en Google Sheets y Analytics
+        if (window.googleSheets) {
+            googleSheets.registerUser({
+                name: 'Usuario Google',
+                email: 'usuario@gmail.com',
+                registrationType: 'google'
+            });
+        }
+        if (window.analytics) {
+            analytics.trackUserLogin('google');
+        }
+
         showToast('success', '¡Bienvenido!', 'Sesión iniciada con Google');
         this.closeModal();
         this.updateUIForLoggedInUser();
@@ -267,6 +302,19 @@ class Auth {
         };
 
         storage.set('eventify_user', this.currentUser);
+
+        // Registrar en Google Sheets y Analytics
+        if (window.googleSheets) {
+            googleSheets.registerUser({
+                name: 'Usuario Facebook',
+                email: 'usuario@facebook.com',
+                registrationType: 'facebook'
+            });
+        }
+        if (window.analytics) {
+            analytics.trackUserLogin('facebook');
+        }
+
         showToast('success', '¡Bienvenido!', 'Sesión iniciada con Facebook');
         this.closeModal();
         this.updateUIForLoggedInUser();

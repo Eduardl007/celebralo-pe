@@ -59,6 +59,11 @@ class EventBot {
         if (this.isOpen) {
             this.hideBadge();
             this.input.focus();
+
+            // Registrar apertura del chatbot
+            if (window.analytics) {
+                analytics.trackChatbotOpen();
+            }
         }
     }
 
@@ -180,7 +185,32 @@ class EventBot {
             this.hideTyping();
             const response = this.generateResponse(message.toLowerCase());
             this.addBotMessage(response.text, response.options);
+
+            // Determinar categoría de la consulta
+            const category = this.categorizeQuery(message.toLowerCase());
+
+            // Registrar consulta en Google Sheets y Analytics
+            if (window.googleSheets) {
+                googleSheets.logChatbotQuery(message, response.text.substring(0, 200), category);
+            }
+            if (window.analytics) {
+                analytics.trackChatbotMessage(category);
+            }
         }, delay);
+    }
+
+    categorizeQuery(message) {
+        if (this.matchKeywords(message, ['precio', 'costo', 'cuanto', 'tarifa'])) return 'precios';
+        if (this.matchKeywords(message, ['capacidad', 'personas', 'invitados'])) return 'capacidad';
+        if (this.matchKeywords(message, ['disponib', 'fecha', 'reserva'])) return 'disponibilidad';
+        if (this.matchKeywords(message, ['paquete', 'combo', 'todo incluido'])) return 'paquetes';
+        if (this.matchKeywords(message, ['matrimonio', 'boda'])) return 'matrimonio';
+        if (this.matchKeywords(message, ['cumpleaño', 'quinceañ', 'xv'])) return 'cumpleanos';
+        if (this.matchKeywords(message, ['corporativo', 'empresa'])) return 'corporativo';
+        if (this.matchKeywords(message, ['servicio', 'catering', 'dj', 'foto'])) return 'servicios';
+        if (this.matchKeywords(message, ['pago', 'yape', 'plin'])) return 'pagos';
+        if (this.matchKeywords(message, ['ayuda', 'contacto', 'asesor'])) return 'ayuda';
+        return 'general';
     }
 
     generateResponse(message) {
