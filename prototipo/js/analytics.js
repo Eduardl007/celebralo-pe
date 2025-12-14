@@ -59,6 +59,89 @@ function initGA4() {
     });
 
     logDebug('✅ GA4 inicializado correctamente');
+
+    // Configurar propiedades de usuario para segmentación automática
+    setupUserProperties();
+}
+
+// ============================================
+// PROPIEDADES DE USUARIO PARA AUDIENCIAS
+// ============================================
+function setupUserProperties() {
+    // Detectar tipo de dispositivo
+    const deviceType = getDeviceType();
+
+    // Detectar si es visitante recurrente
+    let visitCount = parseInt(localStorage.getItem('eventify_visit_count') || '0');
+    visitCount++;
+    localStorage.setItem('eventify_visit_count', visitCount.toString());
+    const isReturning = visitCount > 1;
+
+    // Detectar fuente de tráfico
+    const referrer = document.referrer;
+    let trafficSource = 'direct';
+    if (referrer.includes('google')) trafficSource = 'google';
+    else if (referrer.includes('facebook')) trafficSource = 'facebook';
+    else if (referrer.includes('instagram')) trafficSource = 'instagram';
+    else if (referrer.includes('tiktok')) trafficSource = 'tiktok';
+    else if (referrer) trafficSource = 'referral';
+
+    // Establecer propiedades de usuario en GA4
+    if (window.gtag) {
+        gtag('set', 'user_properties', {
+            user_device_type: deviceType,
+            user_is_returning: isReturning ? 'yes' : 'no',
+            user_visit_count: visitCount,
+            user_traffic_source: trafficSource,
+            user_engagement_level: 'new',
+            user_interest: 'unknown'
+        });
+    }
+
+    // Actualizar engagement level después de interacciones
+    setTimeout(() => {
+        updateUserEngagement();
+    }, 30000); // Después de 30 segundos
+
+    logDebug('✅ Propiedades de usuario configuradas', {
+        deviceType,
+        isReturning,
+        visitCount,
+        trafficSource
+    });
+}
+
+// Actualizar nivel de engagement del usuario
+function updateUserEngagement() {
+    const scrolled = window.scrollY > (document.documentElement.scrollHeight * 0.3);
+    const timeSpent = (Date.now() - window.pageLoadTime) / 1000;
+
+    let engagementLevel = 'low';
+    if (timeSpent > 120 && scrolled) engagementLevel = 'high';
+    else if (timeSpent > 60 || scrolled) engagementLevel = 'medium';
+
+    if (window.gtag) {
+        gtag('set', 'user_properties', {
+            user_engagement_level: engagementLevel
+        });
+    }
+}
+
+// Actualizar interés del usuario basado en acciones
+function updateUserInterest(interest) {
+    // Guardar intereses en localStorage
+    let interests = JSON.parse(localStorage.getItem('eventify_interests') || '[]');
+    if (!interests.includes(interest)) {
+        interests.push(interest);
+        localStorage.setItem('eventify_interests', JSON.stringify(interests));
+    }
+
+    if (window.gtag) {
+        gtag('set', 'user_properties', {
+            user_interest: interests.join(','),
+            user_primary_interest: interests[0] || 'unknown'
+        });
+    }
 }
 
 // ============================================
@@ -169,6 +252,8 @@ function trackSearch() {
                 event_date: eventDate,
                 guest_count: guestCount
             });
+            // Actualizar interés del usuario
+            if (eventType) updateUserInterest('busca_' + eventType);
         });
     }
 
@@ -191,11 +276,14 @@ function trackSearch() {
 function trackCategories() {
     document.querySelectorAll('.category-card').forEach(card => {
         card.addEventListener('click', function() {
+            const categoryName = this.querySelector('h3')?.textContent || 'Unknown';
             trackEvent('category_click', {
                 event_category: 'Categories',
-                category_name: this.querySelector('h3')?.textContent || 'Unknown',
+                category_name: categoryName,
                 category_url: this.href
             });
+            // Actualizar interés del usuario
+            updateUserInterest('categoria_' + categoryName.toLowerCase().replace(/\s+/g, '_'));
         });
     });
 
@@ -452,6 +540,8 @@ function trackConversions() {
                 element_text: this.textContent.trim(),
                 page_location: window.location.pathname
             });
+            // Marcar usuario como interesado en reservar
+            updateUserInterest('quiere_reservar');
         });
     });
 
@@ -482,6 +572,8 @@ function trackConversions() {
                     button_text: this.textContent.trim(),
                     page_location: window.location.pathname
                 });
+                // Marcar usuario como proveedor potencial
+                updateUserInterest('es_proveedor');
             }
         });
     });
