@@ -2,6 +2,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+
+    <!-- ========== CONTROL DE ACCESO ========== -->
+    <!-- Cambia "true" a "false" para mostrar página de mantenimiento -->
+    <script>
+        const PROTOTIPO_ACTIVO = true;
+        if (!PROTOTIPO_ACTIVO) {
+            window.location.href = "mantenimiento.html";
+        }
+    </script>
+    <!-- ======================================= -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eventify Perú - Encuentra el Local Perfecto para tu Evento</title>
     <meta name="description" content="Plataforma líder en Sullana para encontrar locales y servicios para eventos. Reserva en minutos con precios transparentes y reseñas verificadas.">
