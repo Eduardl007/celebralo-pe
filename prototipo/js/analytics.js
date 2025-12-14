@@ -436,6 +436,176 @@ function trackCTAs() {
 }
 
 // ============================================
+// EVENTOS DE CONVERSIÓN PERSONALIZADOS
+// ============================================
+function trackConversions() {
+
+    // CONVERSIÓN 1: Interés en reserva (clic en paquetes o cotizar)
+    document.querySelectorAll('.package-card a, .package-card button, [href*="cotizador"], [href*="paquetes"]').forEach(btn => {
+        if (btn.dataset.conversionTracked) return;
+        btn.dataset.conversionTracked = 'true';
+
+        btn.addEventListener('click', function() {
+            trackEvent('interes_reserva', {
+                event_category: 'Conversion',
+                conversion_type: 'reservation_interest',
+                element_text: this.textContent.trim(),
+                page_location: window.location.pathname
+            });
+        });
+    });
+
+    // CONVERSIÓN 2: Contacto via chatbot
+    const chatbotForm = document.getElementById('chatbotForm');
+    if (chatbotForm && !chatbotForm.dataset.conversionTracked) {
+        chatbotForm.dataset.conversionTracked = 'true';
+        chatbotForm.addEventListener('submit', function() {
+            trackEvent('contacto_chatbot', {
+                event_category: 'Conversion',
+                conversion_type: 'chatbot_contact',
+                page_location: window.location.pathname
+            });
+        });
+    }
+
+    // CONVERSIÓN 3: Proveedor interesado (registro de local/servicio)
+    document.querySelectorAll('[href*="registro-proveedor"], .cta-section .btn').forEach(btn => {
+        if (btn.dataset.providerTracked) return;
+        btn.dataset.providerTracked = 'true';
+
+        btn.addEventListener('click', function() {
+            const text = this.textContent.toLowerCase();
+            if (text.includes('registrar') || text.includes('local') || text.includes('servicio') || text.includes('publica')) {
+                trackEvent('interes_proveedor', {
+                    event_category: 'Conversion',
+                    conversion_type: 'provider_interest',
+                    button_text: this.textContent.trim(),
+                    page_location: window.location.pathname
+                });
+            }
+        });
+    });
+
+    // CONVERSIÓN 4: Usuario ve detalles de local (alto interés)
+    document.querySelectorAll('.locale-card a, .local-card a, [href*="local.html"]').forEach(link => {
+        if (link.dataset.viewTracked) return;
+        link.dataset.viewTracked = 'true';
+
+        link.addEventListener('click', function() {
+            trackEvent('ver_local_detalle', {
+                event_category: 'Conversion',
+                conversion_type: 'local_detail_view',
+                local_name: this.closest('.locale-card, .local-card')?.querySelector('h3, .card-title')?.textContent || 'unknown'
+            });
+        });
+    });
+
+    // CONVERSIÓN 5: Inicio de cotización
+    const cotizadorForm = document.querySelector('[class*="cotizador"], #cotizadorForm, .quote-form');
+    if (cotizadorForm && !cotizadorForm.dataset.quoteTracked) {
+        cotizadorForm.dataset.quoteTracked = 'true';
+
+        // Track cuando el usuario interactúa con el cotizador
+        cotizadorForm.querySelectorAll('select, input').forEach(field => {
+            field.addEventListener('change', function() {
+                trackEvent('cotizacion_iniciada', {
+                    event_category: 'Conversion',
+                    conversion_type: 'quote_started',
+                    field_name: this.name || this.id,
+                    field_value: this.value
+                });
+            }, { once: true }); // Solo la primera vez
+        });
+    }
+
+    // CONVERSIÓN 6: Registro completado (formulario de registro)
+    const registerForm = document.getElementById('registerFormElement');
+    if (registerForm && !registerForm.dataset.registerConvTracked) {
+        registerForm.dataset.registerConvTracked = 'true';
+        registerForm.addEventListener('submit', function() {
+            trackEvent('registro_usuario', {
+                event_category: 'Conversion',
+                conversion_type: 'user_registration',
+                method: 'email'
+            });
+        });
+    }
+
+    // CONVERSIÓN 7: Login completado
+    const loginForm = document.getElementById('loginFormElement');
+    if (loginForm && !loginForm.dataset.loginConvTracked) {
+        loginForm.dataset.loginConvTracked = 'true';
+        loginForm.addEventListener('submit', function() {
+            trackEvent('login_usuario', {
+                event_category: 'Conversion',
+                conversion_type: 'user_login',
+                method: 'email'
+            });
+        });
+    }
+
+    // CONVERSIÓN 8: Formulario de proveedor enviado
+    const providerForm = document.querySelector('#providerForm, [class*="provider-form"], .registration-form form');
+    if (providerForm && !providerForm.dataset.providerFormTracked) {
+        providerForm.dataset.providerFormTracked = 'true';
+        providerForm.addEventListener('submit', function() {
+            trackEvent('registro_proveedor', {
+                event_category: 'Conversion',
+                conversion_type: 'provider_registration',
+                form_type: document.querySelector('[name="formType"]:checked')?.value || 'unknown'
+            });
+        });
+    }
+
+    // CONVERSIÓN 9: Búsqueda con intención (formulario de búsqueda completo)
+    const searchForm = document.getElementById('searchForm');
+    if (searchForm && !searchForm.dataset.searchConvTracked) {
+        searchForm.dataset.searchConvTracked = 'true';
+        searchForm.addEventListener('submit', function() {
+            const eventType = document.getElementById('eventType')?.value;
+            const eventDate = document.getElementById('eventDate')?.value;
+            const guestCount = document.getElementById('guestCount')?.value;
+
+            // Solo si completó todos los campos
+            if (eventType && eventDate && guestCount) {
+                trackEvent('busqueda_con_intencion', {
+                    event_category: 'Conversion',
+                    conversion_type: 'intentful_search',
+                    event_type: eventType,
+                    guest_count: guestCount,
+                    has_date: 'yes'
+                });
+            }
+        });
+    }
+
+    // CONVERSIÓN 10: Engagement alto (scroll + tiempo)
+    let highEngagementSent = false;
+    function checkHighEngagement() {
+        if (highEngagementSent) return;
+
+        const timeOnPage = (Date.now() - window.pageLoadTime) / 1000;
+        const scrollPercent = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
+
+        // Si el usuario pasó más de 60 segundos Y scrolleó más del 50%
+        if (timeOnPage > 60 && scrollPercent > 50) {
+            highEngagementSent = true;
+            trackEvent('usuario_comprometido', {
+                event_category: 'Conversion',
+                conversion_type: 'high_engagement',
+                time_on_page: Math.round(timeOnPage),
+                scroll_depth: scrollPercent
+            });
+        }
+    }
+
+    window.pageLoadTime = Date.now();
+    setInterval(checkHighEngagement, 10000); // Verificar cada 10 segundos
+
+    logDebug('✅ Tracking de conversiones configurado');
+}
+
+// ============================================
 // SCROLL DEPTH TRACKING
 // ============================================
 function trackScrollDepth() {
@@ -701,6 +871,7 @@ function setupTracking() {
     trackChatbot();
     trackAuth();
     trackCTAs();
+    trackConversions();  // Eventos de conversión personalizados
     trackScrollDepth();
     trackTimeOnPage();
     trackOutboundLinks();
