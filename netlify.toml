@@ -3,6 +3,17 @@
 [build]
   publish = "prototipo"
 
+# NO CACHE para HTML (siempre servir version fresca)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
 # Redirects
 [[redirects]]
   from = "/lista-espera"
