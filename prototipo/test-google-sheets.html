@@ -3,132 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Google Sheets - Eventify</title>
+    <title>Diagnostico Google Sheets - Eventify</title>
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
         .btn { background: #FF6B35; color: white; padding: 15px 30px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin: 10px 5px; }
         .btn:hover { background: #E55A25; }
-        .log { background: #1a1a1a; color: #0f0; padding: 15px; border-radius: 8px; margin-top: 20px; font-family: monospace; white-space: pre-wrap; max-height: 400px; overflow-y: auto; }
+        .btn.blue { background: #004E89; }
+        .btn.blue:hover { background: #003366; }
+        .btn.green { background: #2A9D8F; }
+        .btn.green:hover { background: #1F7A6F; }
+        .log { background: #1a1a1a; color: #0f0; padding: 15px; border-radius: 8px; margin-top: 20px; font-family: monospace; white-space: pre-wrap; max-height: 500px; overflow-y: auto; font-size: 13px; }
         .success { color: #4CAF50; }
         .error { color: #f44336; }
+        .warning { color: #FFC107; }
         h1 { color: #004E89; }
+        h2 { color: #FF6B35; margin-top: 30px; }
+        .info-box { background: #E3F2FD; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #004E89; }
+        .section { margin: 30px 0; padding: 20px; background: #f5f5f5; border-radius: 10px; }
     </style>
 </head>
 <body>
-    <h1>Test Google Sheets</h1>
-    <p>Prueba la conexion con Google Sheets</p>
+    <h1>Diagnostico de Google Sheets</h1>
 
-    <button class="btn" onclick="testLeads()">Probar hoja "Leads"</button>
-    <button class="btn" onclick="testProveedores()">Probar hoja "Proveedores"</button>
-    <button class="btn" onclick="testDirecto()">Test Directo (GET)</button>
+    <div class="info-box">
+        <strong>URL del Script:</strong><br>
+        <code id="scriptUrl"></code>
+    </div>
 
-    <div class="log" id="log">Esperando prueba...</div>
+    <div class="section">
+        <h2>Paso 1: Probar conexion basica</h2>
+        <p>Primero probemos si el script responde:</p>
+        <button class="btn blue" onclick="testGet()">Test GET (verificar script)</button>
+    </div>
+
+    <div class="section">
+        <h2>Paso 2: Probar envio de datos</h2>
+        <p>Prueba diferentes metodos de envio:</p>
+        <button class="btn" onclick="testPostNoCors()">Metodo 1: POST no-cors</button>
+        <button class="btn green" onclick="testPostCors()">Metodo 2: POST normal</button>
+        <button class="btn blue" onclick="testFormSubmit()">Metodo 3: Formulario</button>
+    </div>
+
+    <div class="section">
+        <h2>Paso 3: Limpiar y reintentar</h2>
+        <button class="btn" onclick="clearLog()">Limpiar Log</button>
+    </div>
+
+    <div class="log" id="log">Esperando prueba...\n\nHaz clic en los botones de arriba para diagnosticar el problema.</div>
+
+    <!-- Formulario oculto para metodo 3 -->
+    <iframe name="hiddenFrame" style="display:none;"></iframe>
+    <form id="hiddenForm" target="hiddenFrame" method="POST" style="display:none;">
+        <input type="hidden" name="payload" id="formPayload">
+    </form>
 
     <script>
         const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbyV2hSTxoxVqai73KxP43C9FMT9kfWFYoLoZi7RQEXnkK875ba9LPV6IFSZRWbH8AKv/exec';
 
+        document.getElementById('scriptUrl').textContent = GOOGLE_SHEETS_URL;
+
         function log(msg, type = 'info') {
             const logEl = document.getElementById('log');
             const time = new Date().toLocaleTimeString();
-            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : '';
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : type === 'warning' ? 'warning' : '';
             logEl.innerHTML += `<span class="${className}">[${time}] ${msg}</span>\n`;
             logEl.scrollTop = logEl.scrollHeight;
         }
 
-        async function testDirecto() {
-            log('=== TEST DIRECTO (GET) ===');
-            log('URL: ' + GOOGLE_SHEETS_URL);
-
-            try {
-                const response = await fetch(GOOGLE_SHEETS_URL);
-                const data = await response.json();
-                log('Respuesta: ' + JSON.stringify(data, null, 2), 'success');
-            } catch (error) {
-                log('Error: ' + error.message, 'error');
-                log('Nota: Si ves error CORS, es normal. El POST deberia funcionar.', 'info');
-            }
+        function clearLog() {
+            document.getElementById('log').innerHTML = 'Log limpiado. Listo para nuevas pruebas.\n';
         }
 
-        async function testLeads() {
-            log('=== TEST HOJA LEADS ===');
-
-            const testData = {
+        // Datos de prueba
+        function getTestData() {
+            return {
                 sheet: 'Leads',
                 data: {
                     id: 'TEST-' + Date.now(),
-                    nombre: 'Usuario Prueba',
-                    email: 'test@test.com',
+                    nombre: 'Usuario Test ' + new Date().toLocaleTimeString(),
+                    email: 'test@eventify.pe',
                     telefono: '999888777',
-                    tipo_usuario: 'organizador',
-                    fecha: new Date().toLocaleDateString('es-PE'),
-                    timestamp: new Date().toISOString(),
-                    source: 'test-page'
-                }
-            };
-
-            log('Datos a enviar: ' + JSON.stringify(testData, null, 2));
-
-            try {
-                const response = await fetch(GOOGLE_SHEETS_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
-                    body: JSON.stringify(testData)
-                });
-
-                log('Status: ' + response.status);
-
-                try {
-                    const result = await response.text();
-                    log('Respuesta: ' + result, 'success');
-                } catch (e) {
-                    log('Enviado (sin respuesta visible por CORS)', 'success');
-                }
-
-                log('Revisa tu Google Sheet para ver si llego el registro', 'info');
-
-            } catch (error) {
-                log('Error: ' + error.message, 'error');
-            }
-        }
-
-        async function testProveedores() {
-            log('=== TEST HOJA PROVEEDORES ===');
-
-            const testData = {
-                sheet: 'Proveedores',
-                data: {
-                    id: 'PRV-TEST-' + Date.now(),
-                    tipo: 'Local',
-                    nombre_negocio: 'Salon Test',
-                    propietario: 'Juan Prueba',
-                    email: 'proveedor@test.com',
-                    telefono: '999111222',
-                    categoria: 'salon',
-                    direccion: 'Av. Test 123, Sullana',
-                    capacidad: '100',
-                    precio_base: '1500',
-                    tipos_evento: 'matrimonio, cumpleanos',
-                    descripcion: 'Local de prueba',
+                    interes: 'organizador',
+                    origen: 'pagina-diagnostico',
+                    campania: 'test',
                     fecha: new Date().toLocaleDateString('es-PE'),
                     timestamp: new Date().toISOString()
                 }
             };
+        }
 
-            log('Datos a enviar: ' + JSON.stringify(testData, null, 2));
+        // TEST GET - Verificar si el script responde
+        async function testGet() {
+            log('========================================');
+            log('TEST GET - Verificando si el script existe');
+            log('========================================');
+            log('URL: ' + GOOGLE_SHEETS_URL);
+
+            try {
+                const response = await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'GET',
+                    mode: 'cors'
+                });
+
+                log('Status HTTP: ' + response.status, response.ok ? 'success' : 'error');
+
+                const text = await response.text();
+                log('Respuesta: ' + text, 'success');
+                log('El script EXISTE y responde correctamente!', 'success');
+
+            } catch (error) {
+                log('Error: ' + error.message, 'error');
+                log('');
+                log('POSIBLES CAUSAS:', 'warning');
+                log('1. El script NO esta publicado como "Cualquier persona"', 'warning');
+                log('2. La URL del script es incorrecta', 'warning');
+                log('3. Necesitas hacer una nueva implementacion', 'warning');
+            }
+            log('');
+        }
+
+        // METODO 1: POST con no-cors
+        async function testPostNoCors() {
+            log('========================================');
+            log('METODO 1: POST con mode: no-cors');
+            log('========================================');
+
+            const testData = getTestData();
+            log('Datos: ' + JSON.stringify(testData, null, 2));
 
             try {
                 const response = await fetch(GOOGLE_SHEETS_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' },
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
                     body: JSON.stringify(testData)
                 });
 
-                log('Status: ' + response.status);
-                log('Enviado. Revisa tu Google Sheet.', 'success');
+                log('Solicitud enviada (mode: no-cors)', 'success');
+                log('NOTA: Con no-cors no podemos ver la respuesta', 'warning');
+                log('');
+                log('>> REVISA TU GOOGLE SHEET AHORA <<', 'success');
+                log('Si aparecio un nuevo registro, este metodo FUNCIONA!', 'success');
 
             } catch (error) {
                 log('Error: ' + error.message, 'error');
             }
+            log('');
+        }
+
+        // METODO 2: POST normal (con cors)
+        async function testPostCors() {
+            log('========================================');
+            log('METODO 2: POST normal (con CORS)');
+            log('========================================');
+
+            const testData = getTestData();
+            log('Datos: ' + JSON.stringify(testData, null, 2));
+
+            try {
+                const response = await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain'
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                log('Status HTTP: ' + response.status, response.ok ? 'success' : 'error');
+
+                const text = await response.text();
+                log('Respuesta del servidor: ' + text, 'success');
+
+            } catch (error) {
+                log('Error CORS: ' + error.message, 'error');
+                log('Esto es NORMAL si el script no tiene headers CORS', 'warning');
+                log('Pero los datos PUEDEN haberse enviado igual', 'warning');
+                log('>> REVISA TU GOOGLE SHEET <<', 'warning');
+            }
+            log('');
+        }
+
+        // METODO 3: Formulario oculto
+        function testFormSubmit() {
+            log('========================================');
+            log('METODO 3: Envio por formulario HTML');
+            log('========================================');
+
+            const testData = getTestData();
+            log('Datos: ' + JSON.stringify(testData, null, 2));
+
+            try {
+                const form = document.getElementById('hiddenForm');
+                form.action = GOOGLE_SHEETS_URL;
+                document.getElementById('formPayload').value = JSON.stringify(testData);
+                form.submit();
+
+                log('Formulario enviado!', 'success');
+                log('');
+                log('>> REVISA TU GOOGLE SHEET EN 5 SEGUNDOS <<', 'success');
+
+            } catch (error) {
+                log('Error: ' + error.message, 'error');
+            }
+            log('');
         }
     </script>
 </body>

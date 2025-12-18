@@ -664,26 +664,22 @@
 
                     console.log('Enviando a Google Sheets:', payload);
 
-                    // Usar fetch con POST (metodo confiable)
+                    // Usar fetch con POST y mode: no-cors (necesario para Google Apps Script)
                     fetch(GOOGLE_SHEETS_URL, {
                         method: 'POST',
+                        mode: 'no-cors',
                         headers: {
                             'Content-Type': 'text/plain'
                         },
                         body: JSON.stringify(payload)
                     })
-                    .then(response => {
-                        console.log('Google Sheets - Status:', response.status);
-                        return response.text();
-                    })
-                    .then(result => {
-                        console.log('Google Sheets - Respuesta:', result);
+                    .then(() => {
+                        console.log('Google Sheets - Datos enviados correctamente');
                         resolve(true);
                     })
                     .catch(error => {
-                        // CORS puede bloquear la respuesta, pero los datos se envian igual
-                        console.log('Google Sheets - Enviado (CORS puede ocultar respuesta)');
-                        resolve(true);
+                        console.error('Google Sheets - Error:', error);
+                        resolve(false);
                     });
 
                 } catch (error) {
