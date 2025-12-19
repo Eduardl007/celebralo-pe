@@ -155,8 +155,8 @@ class Auth {
             if (typeof sendToGoogleSheets === 'function') {
                 sendToGoogleSheets('Logins', {
                     id: 'LOGIN-' + Date.now(),
-                    email: email,
-                    metodo: 'email',
+                    correo: email,
+                    metodo: 'correo',
                     fecha: new Date().toLocaleDateString('es-PE'),
                     hora: new Date().toLocaleTimeString('es-PE'),
                     timestamp: new Date().toISOString()
@@ -241,9 +241,9 @@ class Auth {
                     id: 'USR-' + Date.now(),
                     nombre: name,
                     apellido: lastname,
-                    email: email,
+                    correo: email,
                     telefono: phone,
-                    tipo_registro: 'email',
+                    tipo_registro: 'correo',
                     estado: 'activo',
                     fecha: new Date().toLocaleDateString('es-PE'),
                     hora: new Date().toLocaleTimeString('es-PE'),
@@ -286,7 +286,7 @@ class Auth {
         if (typeof sendToGoogleSheets === 'function') {
             sendToGoogleSheets('Logins', {
                 id: 'LOGIN-' + Date.now(),
-                email: 'usuario@gmail.com',
+                correo: 'usuario@gmail.com',
                 metodo: 'google',
                 fecha: new Date().toLocaleDateString('es-PE'),
                 hora: new Date().toLocaleTimeString('es-PE'),
@@ -322,7 +322,7 @@ class Auth {
         if (typeof sendToGoogleSheets === 'function') {
             sendToGoogleSheets('Logins', {
                 id: 'LOGIN-' + Date.now(),
-                email: 'usuario@facebook.com',
+                correo: 'usuario@facebook.com',
                 metodo: 'facebook',
                 fecha: new Date().toLocaleDateString('es-PE'),
                 hora: new Date().toLocaleTimeString('es-PE'),
