@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Header Component
+   CELÉBRALO PE - Header Component
    ======================================== */
 
 class Header {

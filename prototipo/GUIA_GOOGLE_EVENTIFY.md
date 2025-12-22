@@ -1,8 +1,8 @@
-# Guia de Integracion con Google - Eventify
+# Guia de Integracion con Google - Celébralo pe
 
 ## Resumen de Servicios Configurados
 
-Esta guia te ayudara a configurar y acceder a todos los servicios de Google para monitorear tu plataforma Eventify.
+Esta guia te ayudara a configurar y acceder a todos los servicios de Google para monitorear tu plataforma Celébralo pe.
 
 ---
 
@@ -22,7 +22,7 @@ Esta guia te ayudara a configurar y acceder a todos los servicios de Google para
 
 #### Paso 1: Crear la hoja de calculo
 1. Ve a [Google Sheets](https://sheets.google.com)
-2. Crea una nueva hoja: "Eventify - Base de Datos"
+2. Crea una nueva hoja: "Celébralo pe - Base de Datos"
 3. Crea estas pestanas (hojas):
    - Usuarios
    - Reservas
@@ -83,7 +83,7 @@ tipoEvento | fecha | invitados | categoria | fechaBusqueda | horaBusqueda | time
 3. Pega este codigo:
 
 ```javascript
-// EVENTIFY - Google Apps Script Web App
+// CELÉBRALO PE - Google Apps Script Web App
 
 const SPREADSHEET_ID = 'PEGA_TU_ID_AQUI';
 
@@ -119,7 +119,7 @@ function doPost(e) {
 function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify({
     status: 'ok',
-    message: 'Eventify API funcionando'
+    message: 'Celébralo pe API funcionando'
   })).setMimeType(ContentService.MimeType.JSON);
 }
 ```
@@ -133,7 +133,7 @@ function doGet(e) {
 10. Click en **Implementar**
 11. Copia la URL del Web App
 
-#### Paso 4: Configurar en Eventify
+#### Paso 4: Configurar en Celébralo pe
 
 Abre el archivo `js/services/googleSheets.js` y reemplaza:
 ```javascript
@@ -165,26 +165,26 @@ https://docs.google.com/spreadsheets/d/TU_ID/edit
 #### Paso 1: Crear cuenta
 1. Ve a [Google Analytics](https://analytics.google.com)
 2. Click en **Empezar a medir**
-3. Nombre de cuenta: `Eventify Peru`
+3. Nombre de cuenta: `Celébralo pe`
 4. Click **Siguiente**
 
 #### Paso 2: Crear propiedad
-1. Nombre: `Eventify Web`
+1. Nombre: `Celébralo pe Web`
 2. Zona horaria: **(GMT-05:00) Peru**
 3. Moneda: **Soles peruanos (PEN)**
 4. Click **Siguiente**
 
 #### Paso 3: Crear stream de datos
 1. Selecciona **Web**
-2. URL del sitio: tu dominio (ej: eventify.pe)
-3. Nombre del stream: `Eventify Website`
+2. URL del sitio: tu dominio (ej: celebralo.pe)
+3. Nombre del stream: `Celébralo pe Website`
 4. Click **Crear stream**
 
 #### Paso 4: Obtener Measurement ID
 - El ID tiene formato: `G-XXXXXXXXXX`
 - Copialo
 
-#### Paso 5: Configurar en Eventify
+#### Paso 5: Configurar en Celébralo pe
 Abre el archivo `js/services/analytics.js` y reemplaza:
 ```javascript
 measurementId: 'G-XXXXXXXXXX',
@@ -277,7 +277,7 @@ function sendDailyReport() {
   const consultas = ss.getSheetByName('Consultas').getLastRow() - 1;
 
   const mensaje = `
-    Reporte Diario Eventify
+    Reporte Diario Celébralo pe
     ========================
     Usuarios totales: ${usuarios}
     Reservas totales: ${reservas}
@@ -286,7 +286,7 @@ function sendDailyReport() {
     Fecha: ${new Date().toLocaleDateString('es-PE')}
   `;
 
-  MailApp.sendEmail('tu@email.com', 'Reporte Diario Eventify', mensaje);
+  MailApp.sendEmail('tu@email.com', 'Reporte Diario Celébralo pe', mensaje);
 }
 ```
 

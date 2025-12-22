@@ -1,4 +1,4 @@
-# Guia Paso a Paso - Lanzamiento Eventify
+# Guia Paso a Paso - Lanzamiento Celébralo pe
 
 ## PASO 1: CREAR ENCUESTAS EN GOOGLE FORMS
 
@@ -25,7 +25,7 @@
 1. Click en engranaje (Configuracion)
 2. Activa "Recopilar direcciones de correo" (opcional)
 3. Activa "Limitar a 1 respuesta" (opcional)
-4. Elige un tema de color (naranja para Eventify)
+4. Elige un tema de color (naranja para Celébralo pe)
 
 **Obtener link:**
 1. Click en "Enviar" (boton morado arriba)
@@ -77,8 +77,8 @@ https://[nombre-aleatorio].netlify.app
 **Cambiar nombre:**
 1. En tu sitio, click "Site settings"
 2. Click "Change site name"
-3. Escribe: `eventify-peru`
-4. Tu URL sera: `https://eventify-peru.netlify.app`
+3. Escribe: `celebralope-peru`
+4. Tu URL sera: `https://celebralope-peru.netlify.app`
 
 **Dominio propio (opcional, ~$12/ano):**
 1. Comprar dominio en Namecheap o GoDaddy
@@ -90,7 +90,7 @@ https://[nombre-aleatorio].netlify.app
 1. Abre: https://formspree.io
 2. Click "Get Started" > Crear cuenta gratis
 3. Click "New Form"
-4. Nombre: "Eventify Lista de Espera"
+4. Nombre: "Celébralo pe Lista de Espera"
 5. Copia tu Form ID (ej: `xpzvqwer`)
 6. En tu archivo `landing.html`, reemplaza:
    ```
@@ -111,21 +111,21 @@ https://[nombre-aleatorio].netlify.app
 **Crear pagina:**
 1. Abre: https://www.facebook.com/pages/create
 2. Elige "Negocio o marca"
-3. Nombre: `Eventify Peru - Locales para Eventos`
+3. Nombre: `Celébralo pe - Locales para Eventos`
 4. Categoria: `Servicio de planificacion de eventos`
 5. Click "Crear pagina"
 
 **Configurar:**
 ```
-Nombre de usuario: @eventifyperu
+Nombre de usuario: @celebralope
 Bio: Encuentra el local perfecto para tu evento en Sullana. Compara precios, ve fotos y reserva en minutos.
 Ubicacion: Sullana, Piura, Peru
 Telefono: [Tu WhatsApp]
-Sitio web: https://eventify-peru.netlify.app
+Sitio web: https://celebralope-peru.netlify.app
 Horario: Lun-Sab 9am-6pm
 ```
 
-**Foto de perfil:** Logo Eventify (crear en Canva)
+**Foto de perfil:** Logo Celébralo pe (crear en Canva)
 **Foto de portada:** Collage de locales o imagen del hero
 
 **Boton de accion:** "Registrarse" > Link a landing page
@@ -135,12 +135,12 @@ Horario: Lun-Sab 9am-6pm
 **Crear cuenta:**
 1. Descargar Instagram o abrir web
 2. Crear cuenta nueva
-3. Usuario: `eventify.peru`
+3. Usuario: `celebralo.peru`
 4. Convertir a cuenta profesional: Configuracion > Cuenta > Cambiar a cuenta profesional > Empresa
 
 **Configurar:**
 ```
-Nombre: Eventify Peru
+Nombre: Celébralo pe
 Bio:
 🎉 Locales para eventos en Sullana
 📍 Compara precios y disponibilidad
@@ -148,12 +148,12 @@ Bio:
 👇 Unete a la lista de espera
 ```
 
-**Link en bio:** https://eventify-peru.netlify.app
+**Link en bio:** https://celebralope-peru.netlify.app
 
 **Highlights sugeridos:**
 - "Locales" - Fotos de locales
 - "Tips" - Consejos para eventos
-- "Nosotros" - Sobre Eventify
+- "Nosotros" - Sobre Celébralo pe
 - "FAQ" - Preguntas frecuentes
 
 ### 3.3 WhatsApp Business
@@ -164,24 +164,24 @@ Bio:
 
 **Configurar perfil:**
 ```
-Nombre: Eventify Peru
+Nombre: Celébralo pe
 Categoria: Planificacion de eventos
 Descripcion: Plataforma para encontrar locales de eventos en Sullana. Compara precios, ve fotos reales y reserva facil.
 Direccion: Sullana, Piura
 Horario: Lun-Sab 9:00-18:00
 Email: [tu email]
-Sitio web: https://eventify-peru.netlify.app
+Sitio web: https://celebralope-peru.netlify.app
 ```
 
 **Mensaje de bienvenida:**
 ```
-Hola! 👋 Gracias por contactar a Eventify Peru.
+Hola! 👋 Gracias por contactar a Celébralo pe.
 
 Somos la plataforma para encontrar locales de eventos en Sullana.
 
 ¿En que podemos ayudarte?
 1️⃣ Buscar un local para mi evento
-2️⃣ Publicar mi local en Eventify
+2️⃣ Publicar mi local en Celébralo pe
 3️⃣ Ofrecer mis servicios (DJ, catering, etc)
 4️⃣ Otra consulta
 
@@ -195,14 +195,14 @@ Hola! Gracias por escribirnos.
 En este momento no podemos responder, pero te contactaremos pronto.
 
 Mientras tanto, puedes registrarte en nuestra lista de espera:
-👉 https://eventify-peru.netlify.app
+👉 https://celebralope-peru.netlify.app
 
 ¡Gracias por tu paciencia!
 ```
 
 **Respuestas rapidas:**
-1. `/gracias` - "¡Gracias por tu interes en Eventify! Te mantendremos informado sobre nuestro lanzamiento."
-2. `/landing` - "Registrate en nuestra lista de espera aqui: https://eventify-peru.netlify.app"
+1. `/gracias` - "¡Gracias por tu interes en Celébralo pe! Te mantendremos informado sobre nuestro lanzamiento."
+2. `/landing` - "Registrate en nuestra lista de espera aqui: https://celebralope-peru.netlify.app"
 3. `/local` - "¿Tienes un local para eventos? Registralo gratis aqui: [link]"
 
 ### 3.4 TikTok (Opcional)
@@ -210,7 +210,7 @@ Mientras tanto, puedes registrarte en nuestra lista de espera:
 **Crear cuenta:**
 1. Descargar TikTok
 2. Crear cuenta con email
-3. Usuario: `eventify.peru`
+3. Usuario: `celebralo.peru`
 
 **Bio:**
 ```
@@ -256,7 +256,7 @@ Si alguna vez organizaste un cumpleaños, matrimonio, XV años o cualquier event
 ```
 Hola! 👋
 
-Soy [Tu nombre] y estamos lanzando Eventify Peru, una plataforma para conectar locales de eventos con clientes en Sullana.
+Soy [Tu nombre] y estamos lanzando Celébralo pe, una plataforma para conectar locales de eventos con clientes en Sullana.
 
 Vi que tienes [nombre del local] y me gustaria invitarte a ser parte.
 
@@ -278,7 +278,7 @@ Hola! 👋
 
 ¿Ofreces servicios para eventos (DJ, catering, fotografia, decoracion)?
 
-Estamos creando Eventify Peru, una plataforma donde organizadores de eventos podran encontrar y contratar servicios como el tuyo.
+Estamos creando Celébralo pe, una plataforma donde organizadores de eventos podran encontrar y contratar servicios como el tuyo.
 
 Nos ayudaria mucho tu opinion:
 👉 [LINK ENCUESTA PROVEEDORES]
@@ -297,7 +297,7 @@ Solo toma 3 minutos. ¡Gracias! 🙏
 
 Eso se acaba. 🎉
 
-Estamos construyendo EVENTIFY PERU - la primera plataforma donde podras:
+Estamos construyendo CELÉBRALO PE - la primera plataforma donde podras:
 
 ✅ Ver TODOS los locales de Sullana en un solo lugar
 ✅ Comparar precios y capacidades
@@ -310,7 +310,7 @@ Estamos construyendo EVENTIFY PERU - la primera plataforma donde podras:
 
 ¿Conoces a alguien que organiza eventos? ¡Etiquetalo! 👇
 
-#EventosSullana #EventifyPeru #LocalesParaEventos
+#EventosSullana #Celébralo pePeru #LocalesParaEventos
 ```
 
 ### 4.5 Historia Instagram - Lanzamiento
@@ -328,7 +328,7 @@ Nosotros tambien.
 
 **Slide 2:**
 ```
-Por eso creamos EVENTIFY 🎉
+Por eso creamos CELÉBRALO PE 🎉
 
 ✨ Todos los locales de Sullana
 ✨ Precios claros
@@ -404,11 +404,11 @@ acceso anticipado GRATIS
 ## LINKS IMPORTANTES (Completar)
 
 ```
-LANDING PAGE:    https://eventify-peru.netlify.app
+LANDING PAGE:    https://celebralope-peru.netlify.app
 ENCUESTA 1:      https://forms.gle/_______________
 ENCUESTA 2:      https://forms.gle/_______________
 ENCUESTA 3:      https://forms.gle/_______________
-FACEBOOK:        https://facebook.com/eventifyperu
-INSTAGRAM:       https://instagram.com/eventify.peru
+FACEBOOK:        https://facebook.com/celebralope
+INSTAGRAM:       https://instagram.com/celebralo.peru
 WHATSAPP:        https://wa.me/51_________
 ```

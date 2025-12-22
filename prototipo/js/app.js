@@ -1,15 +1,15 @@
 /* ========================================
-   EVENTIFY - Main App Entry Point
+   CELÉBRALO PE - Main App Entry Point
    ======================================== */
 
 // App Configuration
 const APP_CONFIG = {
-    name: 'Eventify Perú',
+    name: 'Celébralo pe',
     version: '1.0.0',
     environment: 'prototype',
-    apiBaseUrl: 'https://api.eventify.pe', // Placeholder
+    apiBaseUrl: 'https://api.celebralo.pe', // Placeholder
     supportPhone: '+51 999 888 777',
-    supportEmail: 'hola@eventify.pe',
+    supportEmail: 'hola@celebralo.pe',
     whatsappNumber: '+51999888777'
 };
 
@@ -55,24 +55,24 @@ async function initApp() {
 // Load App State from Storage
 function loadAppState() {
     // Load favorites
-    appState.favorites.locales = storage.get('eventify_favorites_locales', []);
-    appState.favorites.services = storage.get('eventify_favorites_services', []);
+    appState.favorites.locales = storage.get('celebralope_favorites_locales', []);
+    appState.favorites.services = storage.get('celebralope_favorites_services', []);
 
     // Load cart
-    appState.cart = storage.get('eventify_cart', []);
+    appState.cart = storage.get('celebralope_cart', []);
 
     // Load user session
-    appState.currentUser = storage.get('eventify_user') || sessionStorage.get('eventify_user');
+    appState.currentUser = storage.get('celebralope_user') || sessionStorage.get('celebralope_user');
 
     // Load search filters from session
-    appState.searchFilters = sessionStorage.get('eventify_search_filters', {});
+    appState.searchFilters = sessionStorage.get('celebralope_search_filters', {});
 }
 
 // Save App State
 function saveAppState() {
-    storage.set('eventify_favorites_locales', appState.favorites.locales);
-    storage.set('eventify_favorites_services', appState.favorites.services);
-    storage.set('eventify_cart', appState.cart);
+    storage.set('celebralope_favorites_locales', appState.favorites.locales);
+    storage.set('celebralope_favorites_services', appState.favorites.services);
+    storage.set('celebralope_cart', appState.cart);
 }
 
 // Global Event Listeners
@@ -121,14 +121,14 @@ function handleUrlParams() {
     // Check for referral
     const ref = params.get('ref');
     if (ref) {
-        storage.set('eventify_referral', ref);
+        storage.set('celebralope_referral', ref);
         trackEvent('referral', { code: ref });
     }
 
     // Check for UTM parameters
     const utmSource = params.get('utm_source');
     if (utmSource) {
-        sessionStorage.set('eventify_utm', {
+        sessionStorage.set('celebralope_utm', {
             source: utmSource,
             medium: params.get('utm_medium'),
             campaign: params.get('utm_campaign')

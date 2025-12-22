@@ -1,4 +1,4 @@
-# Estrategia de Marketing - Eventify Peru
+# Estrategia de Marketing - Celébralo pe
 
 ## Resumen Ejecutivo
 
@@ -50,7 +50,7 @@
 ### 2.2 Estrategia por Canal
 
 #### FACEBOOK
-**Pagina:** Eventify Peru - Locales para Eventos Sullana
+**Pagina:** Celébralo pe - Locales para Eventos Sullana
 
 **Frecuencia:** 5-7 posts por semana
 
@@ -58,7 +58,7 @@
 1. **Showcase de locales** (3x semana)
    - Fotos profesionales del local
    - Precio, capacidad, ubicacion
-   - CTA: "Ver mas en Eventify"
+   - CTA: "Ver mas en Celébralo pe"
 
 2. **Tips para eventos** (2x semana)
    - "5 cosas que debes preguntar antes de alquilar un local"
@@ -81,7 +81,7 @@
 - Responder preguntas sobre locales
 
 #### INSTAGRAM
-**Usuario:** @eventify.peru
+**Usuario:** @celebralo.peru
 
 **Frecuencia:** 1 post diario + 3-5 stories
 
@@ -108,7 +108,7 @@
 ```
 #EventosSullana #BodasSullana #XVAnosSullana #LocalesParaEventos
 #SullanaEvents #PiuraEventos #MatrimoniosPiura #CumpleanosSullana
-#EventifyPeru #OrganizaTuEvento #LocalesEnSullana
+#Celébralo pePeru #OrganizaTuEvento #LocalesEnSullana
 ```
 
 #### WHATSAPP
@@ -126,13 +126,13 @@
    - Enviar 1-2 mensajes por semana max
 
 3. **Grupos (con cuidado):**
-   - "Eventos Sullana - Eventify" (comunidad)
+   - "Eventos Sullana - Celébralo pe" (comunidad)
    - Reglas claras, no spam
    - Compartir ofertas y tips
 
 **Mensaje tipo para difusion:**
 ```
-Hola! Somos Eventify Peru
+Hola! Somos Celébralo pe
 
 Estamos creando la primera plataforma para encontrar
 locales de eventos en Sullana.
@@ -143,11 +143,11 @@ que seas parte.
 Registrate gratis: [LINK]
 
 Saludos!
-El equipo Eventify
+El equipo Celébralo pe
 ```
 
 #### TIKTOK
-**Usuario:** @eventify.peru
+**Usuario:** @celebralo.peru
 
 **Frecuencia:** 3-5 videos por semana
 
@@ -181,7 +181,7 @@ El equipo Eventify
 | Mie | Video: Como funciona | Reel: Tutorial rapido | - |
 | Jue | Post: Para duenos de locales | Carrusel: Beneficios | Difusion: Duenos |
 | Vie | Milestone: "Ya somos 50!" | Story: Celebracion | - |
-| Sab | Engagement: Que esperas de Eventify? | Reel: Q&A | - |
+| Sab | Engagement: Que esperas de Celébralo pe? | Reel: Q&A | - |
 | Dom | Recap semanal | Story: Agradecimiento | - |
 
 ### Semana 3-4: CRECIMIENTO
@@ -388,7 +388,7 @@ Incluye:
 
 👉 Ver mas detalles: [LINK]
 
-#EventosSullana #LocalesParaEventos #EventifyPeru
+#EventosSullana #LocalesParaEventos #Celébralo pePeru
 ```
 
 ### Post Instagram - Tip
@@ -405,7 +405,7 @@ Incluye:
 
 ¿Que otra pregunta agregarias? 👇
 
-#TipsEventos #OrganizaTuEvento #EventifyPeru
+#TipsEventos #OrganizaTuEvento #Celébralo pePeru
 ```
 
 ### Mensaje WhatsApp - Invitacion
@@ -414,7 +414,7 @@ Hola [Nombre]! 👋
 
 Te escribo porque se que organizas eventos / tienes un local de eventos.
 
-Estamos lanzando *Eventify Peru* - una plataforma para conectar
+Estamos lanzando *Celébralo pe* - una plataforma para conectar
 organizadores con los mejores locales de Sullana.
 
 🎁 Por ser de los primeros, tendras:

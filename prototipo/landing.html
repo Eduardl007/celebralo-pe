@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eventify Peru - Lanzamiento Pronto | Lista de Espera</title>
-    <meta name="description" content="Se el primero en acceder a Eventify. La plataforma que revolucionara la organizacion de eventos en Sullana y Piura.">
+    <title>Celébralo pe - Lanzamiento Pronto | Lista de Espera</title>
+    <meta name="description" content="Se el primero en acceder a Celébralo pe. La plataforma que revolucionara la organizacion de eventos en Sullana y Piura.">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="Eventify Peru - Lanzamiento Pronto">
+    <meta property="og:title" content="Celébralo pe - Lanzamiento Pronto">
     <meta property="og:description" content="Unete a la lista de espera y se el primero en acceder">
     <meta property="og:type" content="website">
 
@@ -641,7 +641,7 @@
     <!-- EmailJS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script>
-        // Credenciales EmailJS - Eventify Peru
+        // Credenciales EmailJS - Celébralo pe
         const EMAILJS_PUBLIC_KEY = '0dYuscUBKL8b-TRsX';
         const EMAILJS_SERVICE_ID = 'service_ealwt3e';
         const EMAILJS_TEMPLATE_ID = 'template_x0x0gnu';
@@ -737,7 +737,7 @@
 
                 <form id="waitlistForm" data-netlify="false">
                     <!-- Campos ocultos para Formspree -->
-                    <input type="hidden" name="_subject" value="Nuevo registro en Lista de Espera - Eventify">
+                    <input type="hidden" name="_subject" value="Nuevo registro en Lista de Espera - Celébralo pe">
                     <input type="hidden" name="_template" value="table">
 
                     <div class="form-group">
@@ -773,7 +773,7 @@
 
                 <div class="success-message" id="successMessage">
                     <i class="fas fa-check-circle"></i>
-                    <h3>¡Bienvenido a Eventify!</h3>
+                    <h3>¡Bienvenido a Celébralo pe!</h3>
                     <p style="margin-bottom: 15px;">Tu registro fue exitoso. Ya eres parte de los primeros en acceder.</p>
                     <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 10px; text-align: left; margin-bottom: 15px;">
                         <p style="margin: 0 0 8px 0; font-size: 0.9rem;"><strong>¿Que sigue?</strong></p>
@@ -781,7 +781,7 @@
                         <p style="margin: 0 0 5px 0; font-size: 0.85rem;">✓ Acceso anticipado GRATIS</p>
                         <p style="margin: 0; font-size: 0.85rem;">✓ Ofertas exclusivas de lanzamiento</p>
                     </div>
-                    <p style="font-size: 0.85rem; opacity: 0.9;">Siguenos en redes: <strong>@eventify.peru</strong></p>
+                    <p style="font-size: 0.85rem; opacity: 0.9;">Siguenos en redes: <strong>@celebralo.peru</strong></p>
                 </div>
             </div>
         </div>
@@ -791,7 +791,7 @@
     <section class="benefits">
         <div class="section-container">
             <div class="section-header">
-                <h2>Por que Eventify?</h2>
+                <h2>Por que Celébralo pe?</h2>
                 <p>Simplificamos todo el proceso de organizar eventos</p>
             </div>
             <div class="benefits-grid">
@@ -845,7 +845,7 @@
     <section class="for-who">
         <div class="section-container">
             <div class="section-header">
-                <h2>Para Quien es Eventify?</h2>
+                <h2>Para Quien es Celébralo pe?</h2>
                 <p>Una plataforma, multiples beneficios</p>
             </div>
             <div class="audience-grid">
@@ -928,7 +928,7 @@
     <!-- Footer -->
     <footer>
         <div class="footer-container">
-            <div class="footer-brand">🎉 Eventify Peru</div>
+            <div class="footer-brand">🎉 Celébralo pe</div>
             <div class="footer-social">
                 <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
@@ -937,7 +937,7 @@
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2025 Eventify Peru - Sullana, Piura | Todos los derechos reservados</p>
+            <p>© 2025 Celébralo pe - Sullana, Piura | Todos los derechos reservados</p>
         </div>
     </footer>
 
@@ -973,9 +973,9 @@
                 console.log('Google Sheets OK');
 
                 // 2. Guardar localmente
-                let waitlist = JSON.parse(localStorage.getItem('eventify_waitlist') || '[]');
+                let waitlist = JSON.parse(localStorage.getItem('celebralope_waitlist') || '[]');
                 waitlist.push({ ...data, timestamp: new Date().toISOString() });
-                localStorage.setItem('eventify_waitlist', JSON.stringify(waitlist));
+                localStorage.setItem('celebralope_waitlist', JSON.stringify(waitlist));
 
                 // 3. Enviar a Formspree (opcional, no bloquea)
                 console.log('Enviando a Formspree...');

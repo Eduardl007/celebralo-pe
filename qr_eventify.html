@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code - Eventify</title>
+    <title>QR Code - Celébralo pe</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         * {
@@ -78,12 +78,12 @@
 </head>
 <body>
     <div class="container">
-        <h1>Eventify</h1>
+        <h1>Celébralo pe</h1>
         <p class="subtitle">Escanea para acceder al prototipo</p>
 
         <div id="qrcode"></div>
 
-        <div class="url">https://eduardl007.github.io/eventify-prototipo/prototipo/index.html</div>
+        <div class="url">https://eduardl007.github.io/celebralope-prototipo/prototipo/index.html</div>
 
         <button class="btn" onclick="downloadQR()">Descargar QR</button>
 
@@ -91,7 +91,7 @@
     </div>
 
     <script>
-        const url = "https://eduardl007.github.io/eventify-prototipo/prototipo/index.html";
+        const url = "https://eduardl007.github.io/celebralope-prototipo/prototipo/index.html";
 
         const qrcode = new QRCode(document.getElementById("qrcode"), {
             text: url,
@@ -106,7 +106,7 @@
             const canvas = document.querySelector('#qrcode canvas');
             if (canvas) {
                 const link = document.createElement('a');
-                link.download = 'eventify-qr.png';
+                link.download = 'celebralope-qr.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             }

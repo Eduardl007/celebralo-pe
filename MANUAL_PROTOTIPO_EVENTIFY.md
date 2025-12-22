@@ -1,4 +1,4 @@
-# Manual del Prototipo Eventify
+# Manual del Prototipo Celébralo pe
 
 ## Guia Completa para Principiantes
 
@@ -21,7 +21,7 @@
 
 ## 1. QUE ES ESTE PROYECTO?
 
-Eventify es una plataforma web para alquilar locales de eventos en Sullana, Peru.
+Celébralo pe es una plataforma web para alquilar locales de eventos en Sullana, Peru.
 
 ### Tecnologias usadas:
 - **HTML** = Estructura de las paginas (el esqueleto)
@@ -188,7 +188,7 @@ Luego abre en el celular: `http://192.168.0.11:8080`
 
 **Contenido:**
 - Proceso de reserva
-- Beneficios de Eventify
+- Beneficios de Celébralo pe
 - Video explicativo (placeholder)
 - Preguntas frecuentes
 
@@ -568,6 +568,6 @@ Si tienes dudas sobre el codigo, puedes:
 ---
 
 **Creado para:** Luis Zapata
-**Proyecto:** Eventify Peru
+**Proyecto:** Celébralo pe
 **Version:** 1.0
 **Fecha:** Diciembre 2024

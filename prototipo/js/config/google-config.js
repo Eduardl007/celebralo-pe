@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Configuración de Servicios Google
+   CELÉBRALO PE - Configuración de Servicios Google
    ======================================== */
 
 /**
@@ -8,10 +8,10 @@
  * =============================================
  *
  * Esta guía te ayudará a configurar todos los
- * servicios de Google para Eventify.
+ * servicios de Google para Celébralo pe.
  */
 
-const EVENTIFY_GOOGLE_CONFIG = {
+const CELÉBRALO PE_GOOGLE_CONFIG = {
 
     // =========================================
     // 1. GOOGLE SHEETS (Base de Datos)
@@ -20,7 +20,7 @@ const EVENTIFY_GOOGLE_CONFIG = {
         /**
          * PASO 1: Crear la hoja de cálculo
          * 1. Ve a https://sheets.google.com
-         * 2. Crea una nueva hoja llamada "Eventify - Base de Datos"
+         * 2. Crea una nueva hoja llamada "Celébralo pe - Base de Datos"
          * 3. Crea las siguientes pestañas (hojas):
          *    - Usuarios
          *    - Reservas
@@ -43,7 +43,7 @@ const EVENTIFY_GOOGLE_CONFIG = {
          * PASO 4: Crear el Web App con Google Apps Script
          * 1. En tu Google Sheet, ve a Extensiones > Apps Script
          * 2. Borra el código existente y pega el código de APPS_SCRIPT_CODE (abajo)
-         * 3. Guarda el proyecto con nombre "Eventify API"
+         * 3. Guarda el proyecto con nombre "Celébralo pe API"
          * 4. Click en "Implementar" > "Nueva implementación"
          * 5. Tipo: "Aplicación web"
          * 6. Ejecutar como: "Yo"
@@ -65,19 +65,19 @@ const EVENTIFY_GOOGLE_CONFIG = {
          * PASO 1: Crear cuenta de Analytics
          * 1. Ve a https://analytics.google.com
          * 2. Click en "Empezar a medir"
-         * 3. Nombre de cuenta: "Eventify Peru"
+         * 3. Nombre de cuenta: "Celébralo pe"
          * 4. Click en "Siguiente"
          *
          * PASO 2: Crear propiedad
-         * 1. Nombre de propiedad: "Eventify Web"
+         * 1. Nombre de propiedad: "Celébralo pe Web"
          * 2. Zona horaria: Peru
          * 3. Moneda: Soles peruanos (PEN)
          * 4. Click en "Siguiente"
          *
          * PASO 3: Configurar stream de datos
          * 1. Selecciona "Web"
-         * 2. URL: tu dominio (ej: eventify.pe)
-         * 3. Nombre: "Eventify Website"
+         * 2. URL: tu dominio (ej: celebralo.pe)
+         * 3. Nombre: "Celébralo pe Website"
          * 4. Click en "Crear stream"
          *
          * PASO 4: Obtener Measurement ID
@@ -189,7 +189,7 @@ const ESTRUCTURA_HOJAS = {
  */
 const APPS_SCRIPT_CODE = `
 // ========================================
-// EVENTIFY - Google Apps Script Web App
+// CELÉBRALO PE - Google Apps Script Web App
 // Pegar este código en Apps Script
 // ========================================
 
@@ -235,7 +235,7 @@ function doPost(e) {
 function doGet(e) {
   return ContentService.createTextOutput(JSON.stringify({
     status: 'ok',
-    message: 'Eventify API está funcionando',
+    message: 'Celébralo pe API está funcionando',
     timestamp: new Date().toISOString()
   })).setMimeType(ContentService.MimeType.JSON);
 }
@@ -270,7 +270,7 @@ function generateDailyReport() {
   };
 
   // Enviar por email (opcional)
-  // MailApp.sendEmail('tu@email.com', 'Reporte Diario Eventify', JSON.stringify(report, null, 2));
+  // MailApp.sendEmail('tu@email.com', 'Reporte Diario Celébralo pe', JSON.stringify(report, null, 2));
 
   return report;
 }
@@ -294,7 +294,7 @@ function countTodayEntries(sheetName) {
  * KPIs E INDICADORES A MONITOREAR
  * =============================================
  */
-const KPIS_EVENTIFY = {
+const KPIS_CELÉBRALO PE = {
     // Adquisición
     adquisicion: {
         visitasWeb: 'GA4 > Informes > Adquisición > Visión general',
@@ -335,8 +335,8 @@ const KPIS_EVENTIFY = {
 };
 
 // Exportar configuración
-window.EVENTIFY_GOOGLE_CONFIG = EVENTIFY_GOOGLE_CONFIG;
+window.CELÉBRALO PE_GOOGLE_CONFIG = CELÉBRALO PE_GOOGLE_CONFIG;
 window.ESTRUCTURA_HOJAS = ESTRUCTURA_HOJAS;
-window.KPIS_EVENTIFY = KPIS_EVENTIFY;
+window.KPIS_CELÉBRALO PE = KPIS_CELÉBRALO PE;
 
-console.log('📋 Configuración de Google cargada. Ver EVENTIFY_GOOGLE_CONFIG en consola.');
+console.log('📋 Configuración de Google cargada. Ver CELÉBRALO PE_GOOGLE_CONFIG en consola.');

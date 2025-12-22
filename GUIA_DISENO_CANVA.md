@@ -1,4 +1,4 @@
-# Guia de Diseno - Eventify Peru (Canva)
+# Guia de Diseno - Celébralo pe (Canva)
 
 ## COLORES DE MARCA
 
@@ -30,17 +30,17 @@ En Canva usar:
 
 ### Opcion 1: Logo con emoji
 ```
-🎉 Eventify
+🎉 Celébralo pe
 ```
 - Emoji: 🎉 tamano grande
-- Texto "Eventify" en Poppins Bold
+- Texto "Celébralo pe" en Poppins Bold
 - Color naranja #FF6B35
 - Sublinea "Peru" en azul #004E89
 
 ### Opcion 2: Logo con icono
 1. Buscar icono: "party" o "celebration" o "event"
 2. Color del icono: #FF6B35
-3. Texto "Eventify" al lado
+3. Texto "Celébralo pe" al lado
 4. Agregar "Peru" debajo en tamano menor
 
 ### Exportar:
@@ -87,7 +87,7 @@ Estructura:
 │  👥 Capacidad: XXX      │
 │  💰 Desde S/ XXX        │
 │                         │
-│  [Ver mas en Eventify]  │
+│  [Ver mas en Celébralo pe]  │
 └─────────────────────────┘
 ```
 
@@ -102,7 +102,7 @@ Estructura:
 │  3. Punto tres          │
 │                         │
 │  ¡Guarda este post!     │
-│  @eventify.peru         │
+│  @celebralo.peru         │
 └─────────────────────────┘
 ```
 
@@ -117,7 +117,7 @@ Estructura:
 │                         │
 │  👉 [CTA / Link]        │
 │                         │
-│  🎉 Eventify Peru       │
+│  🎉 Celébralo pe       │
 └─────────────────────────┘
 ```
 
@@ -148,7 +148,7 @@ En Canva buscar:
 ## PRIMEROS DISENOS A CREAR
 
 ### Prioridad Alta:
-1. [ ] Logo de Eventify (500x500)
+1. [ ] Logo de Celébralo pe (500x500)
 2. [ ] Foto de perfil circular (400x400)
 3. [ ] Portada de Facebook (820x312)
 4. [ ] 5 posts de lanzamiento (1080x1080)
@@ -165,7 +165,7 @@ En Canva buscar:
 1. **Menos es mas** - No sobrecargues de texto
 2. **Consistencia** - Usa siempre los mismos colores
 3. **Legibilidad** - Texto grande, contraste alto
-4. **Marca** - Logo o @eventify.peru en cada post
+4. **Marca** - Logo o @celebralo.peru en cada post
 5. **CTA claro** - Siempre di que hacer (link en bio, etc)
 
 ## EJEMPLOS DE TEXTO PARA POSTS

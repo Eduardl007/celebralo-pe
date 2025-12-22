@@ -1,17 +1,17 @@
-# Plantilla de Correo - Lista de Espera Eventify
+# Plantilla de Correo - Lista de Espera Celébralo pe
 
 ## COPIAR EN FORMSPREE (Autoresponder)
 
 ### Asunto del correo:
 ```
-¡Bienvenido a Eventify Peru! Estas en la lista
+¡Bienvenido a Celébralo pe! Estas en la lista
 ```
 
 ### Cuerpo del correo:
 ```
 ¡Hola {{name}}!
 
-Gracias por unirte a la lista de espera de Eventify Peru.
+Gracias por unirte a la lista de espera de Celébralo pe.
 
 Ya eres parte de los primeros en conocer la plataforma que revolucionara
 la forma de organizar eventos en Sullana.
@@ -23,18 +23,18 @@ la forma de organizar eventos en Sullana.
 3. Recibiras ofertas exclusivas de lanzamiento
 
 Mientras tanto, siguenos en redes sociales para novedades:
-- Facebook: facebook.com/eventifyperu
-- Instagram: @eventify.peru
+- Facebook: facebook.com/celebralope
+- Instagram: @celebralo.peru
 
 ¿Tienes alguna pregunta? Responde a este correo y te ayudamos.
 
 ¡Gracias por confiar en nosotros!
 
-El equipo de Eventify Peru
+El equipo de Celébralo pe
 Sullana, Piura
 
 ---
-© 2025 Eventify Peru
+© 2025 Celébralo pe
 Organizando eventos perfectos, juntos.
 ```
 
@@ -69,7 +69,7 @@ Para personalizarlo:
 1. En Formspree > Settings > Emails
 2. Seccion "Notification emails"
 3. Puedes cambiar el asunto a algo como:
-   "Nuevo registro en Eventify: {{name}}"
+   "Nuevo registro en Celébralo pe: {{name}}"
 
 ---
 
@@ -78,7 +78,7 @@ Para personalizarlo:
 Si quieres correos mas elaborados con diseno HTML:
 
 1. Crear cuenta en Mailchimp (gratis hasta 500 contactos)
-2. Crear lista/audiencia "Lista de Espera Eventify"
+2. Crear lista/audiencia "Lista de Espera Celébralo pe"
 3. Crear "Automation" > "Welcome email"
 4. Integrar Formspree con Mailchimp via Zapier
 

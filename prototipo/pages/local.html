@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="google-site-verification" content="-WivQeeMjDJ48477slxQm1V3g5Z4kxukvV6vjRAfXcc" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detalle del Local | Eventify Perú</title>
+    <title>Detalle del Local | Celébralo pe</title>
     <meta name="description" content="Información detallada del local para eventos">
 
     <!-- Favicon -->
@@ -554,7 +554,7 @@
                 <nav class="nav">
                     <a href="../index.html" class="logo">
                         <span class="logo-icon">🎉</span>
-                        <span class="logo-text">Eventify</span>
+                        <span class="logo-text">Celébralo pe</span>
                         <span class="logo-badge">Perú</span>
                     </a>
                     <ul class="nav-menu" id="navMenu">
@@ -606,7 +606,7 @@
         <footer class="footer">
             <div class="container">
                 <div class="footer-bottom" style="border: none; padding: var(--spacing-6) 0;">
-                    <p>&copy; 2025 Eventify Perú. Todos los derechos reservados.</p>
+                    <p>&copy; 2025 Celébralo pe. Todos los derechos reservados.</p>
                 </div>
             </div>
         </footer>
@@ -664,7 +664,7 @@
                 <div class="auth-form hidden" id="registerForm">
                     <div class="auth-header">
                         <h2>Crea tu cuenta</h2>
-                        <p>Únete a Eventify</p>
+                        <p>Únete a Celébralo pe</p>
                     </div>
                     <form id="registerFormElement">
                         <div class="form-row-2">
@@ -849,9 +849,9 @@
                     console.error('Error en fallback:', e);
 
                     // Guardar localmente para sincronizar después
-                    const pendingData = JSON.parse(localStorage.getItem('eventify_pending_' + sheetName) || '[]');
+                    const pendingData = JSON.parse(localStorage.getItem('celebralope_pending_' + sheetName) || '[]');
                     pendingData.push({ ...data, _timestamp: new Date().toISOString() });
-                    localStorage.setItem('eventify_pending_' + sheetName, JSON.stringify(pendingData));
+                    localStorage.setItem('celebralope_pending_' + sheetName, JSON.stringify(pendingData));
                     console.log('Guardado localmente para sincronizar después');
                     return false;
                 }
@@ -896,7 +896,7 @@
             }
 
             // Update page title
-            document.title = `${currentLocale.name} | Eventify Perú`;
+            document.title = `${currentLocale.name} | Celébralo pe`;
 
             // Render sections
             renderGallery();
@@ -1149,7 +1149,7 @@
                             <span>${formatPrice(currentLocale.price.deposit)}</span>
                         </div>
                         <div class="price-row">
-                            <span>Comisión Eventify</span>
+                            <span>Comisión Celébralo pe</span>
                             <span>${formatPrice(currentLocale.price.base * 0.12)}</span>
                         </div>
                         <div class="price-row total">
@@ -1285,7 +1285,7 @@
         }
 
         function contactOwner() {
-            const message = `Hola, me interesa el local "${currentLocale.name}" publicado en Eventify. ¿Podrían darme más información?`;
+            const message = `Hola, me interesa el local "${currentLocale.name}" publicado en Celébralo pe. ¿Podrían darme más información?`;
             const url = formatWhatsAppLink(currentLocale.contact.whatsapp, message);
             window.open(url, '_blank');
         }
@@ -1345,9 +1345,9 @@
                     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
                         to_email: userEmail,
                         to_name: userName,
-                        from_name: 'Eventify Peru',
+                        from_name: 'Celébralo pe',
                         subject: 'Solicitud de visita recibida - ' + currentLocale.name,
-                        message: `Hola ${userName},\n\nHemos recibido tu solicitud de visita para el local "${currentLocale.name}".\n\nFecha preferida: ${preferredDate}\nTelefono: ${userPhone}\n\nNos pondremos en contacto contigo pronto para coordinar la visita.\n\nGracias por confiar en Eventify Peru.`
+                        message: `Hola ${userName},\n\nHemos recibido tu solicitud de visita para el local "${currentLocale.name}".\n\nFecha preferida: ${preferredDate}\nTelefono: ${userPhone}\n\nNos pondremos en contacto contigo pronto para coordinar la visita.\n\nGracias por confiar en Celébralo pe.`
                     });
                     console.log('Correo de confirmacion enviado al usuario');
                 } catch (emailError) {
@@ -1357,8 +1357,8 @@
                 // 3. Enviar notificacion al administrador
                 try {
                     await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-                        to_email: 'eventifyperu@gmail.com',
-                        to_name: 'Eventify Peru',
+                        to_email: 'hola@celebralo.pe',
+                        to_name: 'Celébralo pe',
                         from_name: userName,
                         subject: 'Nueva solicitud de visita - ' + currentLocale.name,
                         message: `Nueva solicitud de visita:\n\nLocal: ${currentLocale.name}\nNombre: ${userName}\nEmail: ${userEmail}\nTelefono: ${userPhone}\nFecha preferida: ${preferredDate}\n\nFecha de solicitud: ${formData.fecha} ${formData.hora}`

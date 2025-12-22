@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Home Page Logic
+   CELÉBRALO PE - Home Page Logic
    ======================================== */
 
 document.addEventListener('DOMContentLoaded', () => {

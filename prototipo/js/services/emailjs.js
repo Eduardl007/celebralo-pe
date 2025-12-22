@@ -1,5 +1,5 @@
 /**
- * EmailJS Service - Eventify Peru
+ * EmailJS Service - Celébralo pe
  * Servicio centralizado para envio de emails
  *
  * Configuracion:

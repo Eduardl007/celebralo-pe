@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Chatbot Component (EventBot)
+   CELÉBRALO PE - Chatbot Component (EventBot)
    ======================================== */
 
 class EventBot {
@@ -225,7 +225,7 @@ class EventBot {
         // Price related queries
         if (this.matchKeywords(message, ['precio', 'costo', 'cuanto', 'cuánto', 'tarifa', 'cobran'])) {
             return {
-                text: `<strong>💰 Rangos de Precios en Eventify:</strong><br><br>
+                text: `<strong>💰 Rangos de Precios en Celébralo pe:</strong><br><br>
                     <strong>Locales:</strong><br>
                     • Económicos: S/ 600 - S/ 900<br>
                     • Estándar: S/ 900 - S/ 1,500<br>
@@ -404,7 +404,7 @@ class EventBot {
                 text: `<strong>📞 ¿Necesitas ayuda personalizada?</strong><br><br>
                     Puedo asistirte aquí 24/7, pero si prefieres hablar con un asesor:<br><br>
                     📱 <strong>WhatsApp:</strong> +51 999 888 777<br>
-                    📧 <strong>Email:</strong> hola@eventify.pe<br>
+                    📧 <strong>Email:</strong> hola@celebralo.pe<br>
                     📍 <strong>Horario:</strong> Lun-Sáb 9am-7pm<br><br>
                     También puedes dejarnos tus datos y te contactamos:`,
                 options: {
@@ -480,7 +480,7 @@ class EventBot {
         else if (hour >= 12 && hour < 19) greeting = '¡Buenas tardes';
         else greeting = '¡Buenas noches';
 
-        return `${greeting}! 👋 Soy <strong>EventBot</strong>, tu asistente virtual de Eventify.<br><br>
+        return `${greeting}! 👋 Soy <strong>EventBot</strong>, tu asistente virtual de Celébralo pe.<br><br>
             Estoy aquí para ayudarte a encontrar el local perfecto y los mejores servicios para tu evento en Sullana. 🎉<br><br>
             ¿Qué tipo de evento estás organizando?`;
     }

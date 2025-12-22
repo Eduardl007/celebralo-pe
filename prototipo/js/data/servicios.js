@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Servicios Data
+   CELÉBRALO PE - Servicios Data
    ======================================== */
 
 const SERVICIOS_DATA = [

@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Google Sheets Integration
+   CELÉBRALO PE - Google Sheets Integration
    Base de datos en Google Sheets
    ======================================== */
 
@@ -95,7 +95,7 @@ class GoogleSheetsService {
      * Guardar localmente como fallback
      */
     saveLocally(sheetName, data) {
-        const key = `eventify_offline_${sheetName}`;
+        const key = `celebralope_offline_${sheetName}`;
         const existing = JSON.parse(localStorage.getItem(key) || '[]');
         existing.push({
             ...data,
@@ -265,7 +265,7 @@ class GoogleSheetsService {
         const sheets = Object.values(GOOGLE_SHEETS_CONFIG.sheets);
 
         for (const sheetName of sheets) {
-            const key = `eventify_offline_${sheetName}`;
+            const key = `celebralope_offline_${sheetName}`;
             const pending = JSON.parse(localStorage.getItem(key) || '[]');
 
             if (pending.length > 0) {

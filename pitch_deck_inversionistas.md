@@ -9,7 +9,7 @@
 ```
 ╔════════════════════════════════════════════════════════════╗
 ║                                                            ║
-║                    🎉 EVENTIFY PERÚ                        ║
+║                    🎉 CELÉBRALO PE                        ║
 ║                                                            ║
 ║        Tu Asistente Inteligente para Eventos Perfectos    ║
 ║                                                            ║
@@ -28,8 +28,8 @@
 ```
 
 **Contacto:**
-- Email: founders@eventifyperu.com
-- Web: www.eventifyperu.com
+- Email: founders@celebralo.pe
+- Web: www.celebralo.pe
 - Tel: +51 XXX XXX XXX
 
 ---
@@ -84,7 +84,7 @@ por WhatsApp. Uno nunca llegó"
 
 # ✅ SLIDE 3: LA SOLUCIÓN
 
-## Eventify: **Tu Asistente Inteligente para Eventos Perfectos**
+## Celébralo pe: **Tu Asistente Inteligente para Eventos Perfectos**
 
 ### Plataforma Móvil que Conecta Organizadores con Locales y Servicios
 
@@ -328,7 +328,7 @@ Costo de migrar = ALTO
 
 ## 🆚 Análisis Competitivo
 
-| | Eventify | Facebook | WhatsApp | Agentes |
+| | Celébralo pe | Facebook | WhatsApp | Agentes |
 |---|----------|----------|----------|---------|
 | Búsqueda centralizada | ✅ | ❌ | ❌ | ❌ |
 | Comparación de precios | ✅ | ❌ | ❌ | ⚠️ |
@@ -986,7 +986,7 @@ CAC muy alto, runway se acaba antes de PMF
 ║                                                    ║
 ║         "En 5 años, cuando alguien en Piura        ║
 ║          quiera organizar un evento, su            ║
-║          primera acción será abrir Eventify"       ║
+║          primera acción será abrir Celébralo pe"       ║
 ║                                                    ║
 ║                                                    ║
 ║    🎯 Nuestra Misión:                              ║
@@ -1017,10 +1017,10 @@ CAC muy alto, runway se acaba antes de PMF
 
 ## 📞 CONTACTO
 
-**Email:** founders@eventifyperu.com
+**Email:** founders@celebralo.pe
 **WhatsApp:** +51 XXX XXX XXX
-**LinkedIn:** /company/eventify-peru
-**Deck & Anexos:** drive.google.com/eventify-deck
+**LinkedIn:** /company/celebralope-peru
+**Deck & Anexos:** drive.google.com/celebralope-deck
 
 ---
 
@@ -1038,4 +1038,4 @@ CAC muy alto, runway se acaba antes de PMF
 **¡GRACIAS POR SU TIEMPO!**
 
 *"El mejor momento para organizar un evento es ahora.*
-*El mejor lugar para hacerlo es Eventify."*
+*El mejor lugar para hacerlo es Celébralo pe."*

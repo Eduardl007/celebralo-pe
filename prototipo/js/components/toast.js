@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Toast Notifications Component
+   CELÉBRALO PE - Toast Notifications Component
    ======================================== */
 
 class ToastManager {

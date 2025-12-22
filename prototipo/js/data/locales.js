@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Locales Data
+   CELÉBRALO PE - Locales Data
    ======================================== */
 
 const LOCALES_DATA = [

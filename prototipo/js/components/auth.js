@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Auth Component
+   CELÉBRALO PE - Auth Component
    ======================================== */
 
 class Auth {
@@ -146,9 +146,9 @@ class Auth {
 
             // Save to storage
             if (remember) {
-                storage.set('eventify_user', this.currentUser);
+                storage.set('celebralope_user', this.currentUser);
             } else {
-                sessionStorage.set('eventify_user', this.currentUser);
+                sessionStorage.set('celebralope_user', this.currentUser);
             }
 
             // Registrar login en Google Sheets
@@ -233,7 +233,7 @@ class Auth {
                 role: 'user'
             };
 
-            storage.set('eventify_user', this.currentUser);
+            storage.set('celebralope_user', this.currentUser);
 
             // Registrar usuario en Google Sheets
             if (typeof sendToGoogleSheets === 'function') {
@@ -254,7 +254,7 @@ class Auth {
                 analytics.trackUserRegistration('email');
             }
 
-            showToast('success', '¡Cuenta creada!', 'Bienvenido a Eventify');
+            showToast('success', '¡Cuenta creada!', 'Bienvenido a Celébralo pe');
             this.closeModal();
             this.updateUIForLoggedInUser();
 
@@ -280,7 +280,7 @@ class Auth {
             role: 'user'
         };
 
-        storage.set('eventify_user', this.currentUser);
+        storage.set('celebralope_user', this.currentUser);
 
         // Registrar en Google Sheets
         if (typeof sendToGoogleSheets === 'function') {
@@ -316,7 +316,7 @@ class Auth {
             role: 'user'
         };
 
-        storage.set('eventify_user', this.currentUser);
+        storage.set('celebralope_user', this.currentUser);
 
         // Registrar en Google Sheets
         if (typeof sendToGoogleSheets === 'function') {
@@ -340,7 +340,7 @@ class Auth {
 
     checkSession() {
         // Check localStorage first, then sessionStorage
-        this.currentUser = storage.get('eventify_user') || sessionStorage.get('eventify_user');
+        this.currentUser = storage.get('celebralope_user') || sessionStorage.get('celebralope_user');
 
         if (this.currentUser) {
             this.updateUIForLoggedInUser();
@@ -371,8 +371,8 @@ class Auth {
 
     logout() {
         this.currentUser = null;
-        storage.remove('eventify_user');
-        sessionStorage.set('eventify_user', null);
+        storage.remove('celebralope_user');
+        sessionStorage.set('celebralope_user', null);
 
         showToast('info', 'Sesión cerrada', 'Has cerrado sesión correctamente');
 

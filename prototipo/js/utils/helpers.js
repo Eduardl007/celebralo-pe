@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Helper Functions
+   CELÉBRALO PE - Helper Functions
    ======================================== */
 
 // Format price in Peruvian Soles

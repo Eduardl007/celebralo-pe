@@ -1,6 +1,6 @@
 /**
  * ========================================
- * EVENTIFY ANALYTICS - Sistema de Tracking
+ * CELÉBRALO PE ANALYTICS - Sistema de Tracking
  * ========================================
  *
  * Este archivo contiene toda la configuración de Google Analytics 4
@@ -72,9 +72,9 @@ function setupUserProperties() {
     const deviceType = getDeviceType();
 
     // Detectar si es visitante recurrente
-    let visitCount = parseInt(localStorage.getItem('eventify_visit_count') || '0');
+    let visitCount = parseInt(localStorage.getItem('celebralope_visit_count') || '0');
     visitCount++;
-    localStorage.setItem('eventify_visit_count', visitCount.toString());
+    localStorage.setItem('celebralope_visit_count', visitCount.toString());
     const isReturning = visitCount > 1;
 
     // Detectar fuente de tráfico
@@ -130,10 +130,10 @@ function updateUserEngagement() {
 // Actualizar interés del usuario basado en acciones
 function updateUserInterest(interest) {
     // Guardar intereses en localStorage
-    let interests = JSON.parse(localStorage.getItem('eventify_interests') || '[]');
+    let interests = JSON.parse(localStorage.getItem('celebralope_interests') || '[]');
     if (!interests.includes(interest)) {
         interests.push(interest);
-        localStorage.setItem('eventify_interests', JSON.stringify(interests));
+        localStorage.setItem('celebralope_interests', JSON.stringify(interests));
     }
 
     if (window.gtag) {
@@ -885,10 +885,10 @@ function getDeviceType() {
 }
 
 function getSessionId() {
-    let sessionId = sessionStorage.getItem('eventify_session_id');
+    let sessionId = sessionStorage.getItem('celebralope_session_id');
     if (!sessionId) {
         sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        sessionStorage.setItem('eventify_session_id', sessionId);
+        sessionStorage.setItem('celebralope_session_id', sessionId);
     }
     return sessionId;
 }
@@ -923,7 +923,7 @@ function logDebug(message, data = null) {
 // DASHBOARD DE EVENTOS (Para Debug)
 // ============================================
 function showAnalyticsDashboard() {
-    const events = JSON.parse(localStorage.getItem('eventify_events') || '[]');
+    const events = JSON.parse(localStorage.getItem('celebralope_events') || '[]');
     console.table(events.slice(-20));
 }
 
@@ -931,9 +931,9 @@ function showAnalyticsDashboard() {
 const originalTrackEvent = trackEvent;
 window.trackEvent = function(eventName, eventParams = {}) {
     if (ANALYTICS_CONFIG.DEBUG_MODE) {
-        const events = JSON.parse(localStorage.getItem('eventify_events') || '[]');
+        const events = JSON.parse(localStorage.getItem('celebralope_events') || '[]');
         events.push({ event: eventName, params: eventParams, time: new Date().toISOString() });
-        localStorage.setItem('eventify_events', JSON.stringify(events.slice(-100)));
+        localStorage.setItem('celebralope_events', JSON.stringify(events.slice(-100)));
     }
     originalTrackEvent(eventName, eventParams);
 };
@@ -977,7 +977,7 @@ function setupTracking() {
         page_type: getPageType()
     });
 
-    console.log('🎉 Eventify Analytics inicializado correctamente');
+    console.log('🎉 Celébralo pe Analytics inicializado correctamente');
     if (ANALYTICS_CONFIG.GA4_MEASUREMENT_ID === 'G-XXXXXXXXXX') {
         console.log('⚠️ Recuerda configurar tu GA4_MEASUREMENT_ID en js/analytics.js');
     }
@@ -1000,7 +1000,7 @@ function getPageType() {
 initAnalytics();
 
 // Exponer funciones para uso manual
-window.EventifyAnalytics = {
+window.Celébralo peAnalytics = {
     trackEvent,
     showAnalyticsDashboard,
     config: ANALYTICS_CONFIG

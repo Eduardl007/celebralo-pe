@@ -1,4 +1,4 @@
-# Configuracion de Netlify para Eventify Peru
+# Configuracion de Netlify para Celébralo pe
 
 [build]
   publish = "."

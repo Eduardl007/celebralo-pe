@@ -1,4 +1,4 @@
-# Video Demo Eventify - Guion Completo y Storyboard
+# Video Demo Celébralo pe - Guion Completo y Storyboard
 
 ## HERRAMIENTAS DE IA RECOMENDADAS
 
@@ -51,10 +51,10 @@
 
 ### INTRO (0:00 - 0:15)
 
-**[PANTALLA: Logo Eventify animado]**
+**[PANTALLA: Logo Celébralo pe animado]**
 
 **NARRADOR:**
-> "Eventify Peru. La plataforma que conecta a organizadores de eventos con los mejores locales y servicios de Sullana."
+> "Celébralo pe. La plataforma que conecta a organizadores de eventos con los mejores locales y servicios de Sullana."
 
 **[TRANSICION: Fade a pantalla de inicio]**
 
@@ -65,7 +65,7 @@
 **[PANTALLA: Pagina de inicio - index.html]**
 
 **NARRADOR:**
-> "Imagina que Maria quiere organizar el cumpleanos de 15 de su hija. Veamos como Eventify le ayuda a encontrar todo lo que necesita."
+> "Imagina que Maria quiere organizar el cumpleanos de 15 de su hija. Veamos como Celébralo pe le ayuda a encontrar todo lo que necesita."
 
 ---
 
@@ -74,7 +74,7 @@
 - **Duracion:** 10 seg
 
 **NARRADOR:**
-> "Maria entra a Eventify y ve inmediatamente el buscador principal."
+> "Maria entra a Celébralo pe y ve inmediatamente el buscador principal."
 
 **[CURSOR: Mueve hacia el buscador]**
 
@@ -188,7 +188,7 @@
 **[PANTALLA: Transicion con texto "Para Duenos de Locales"]**
 
 **NARRADOR:**
-> "Ahora veamos como Carlos, dueno de un salon de eventos, puede publicar su local en Eventify."
+> "Ahora veamos como Carlos, dueno de un salon de eventos, puede publicar su local en Celébralo pe."
 
 ---
 
@@ -248,7 +248,7 @@
 **[PANTALLA: Transicion con texto "Para Proveedores de Servicios"]**
 
 **NARRADOR:**
-> "Finalmente, veamos como Ana, fotografa profesional, registra sus servicios en Eventify."
+> "Finalmente, veamos como Ana, fotografa profesional, registra sus servicios en Celébralo pe."
 
 ---
 
@@ -297,7 +297,7 @@
 - **Duracion:** 10 seg
 
 **NARRADOR:**
-> "Listo. El servicio de Ana ahora aparece en Eventify, disponible para todos los usuarios que buscan fotografia para sus eventos."
+> "Listo. El servicio de Ana ahora aparece en Celébralo pe, disponible para todos los usuarios que buscan fotografia para sus eventos."
 
 **[PANTALLA: Confirmacion + preview de como se vera su tarjeta]**
 
@@ -305,15 +305,15 @@
 
 ### CIERRE (3:45 - 4:00)
 
-**[PANTALLA: Logo Eventify + slogan]**
+**[PANTALLA: Logo Celébralo pe + slogan]**
 
 **NARRADOR:**
-> "Eventify Peru. Encuentra el local perfecto, agrega los mejores servicios, y organiza tu evento en minutos."
+> "Celébralo pe. Encuentra el local perfecto, agrega los mejores servicios, y organiza tu evento en minutos."
 
 **[PANTALLA: Informacion de contacto]**
 
 **NARRADOR:**
-> "Visitanos en eventify peru punto com. Tu evento perfecto comienza aqui."
+> "Visitanos en celebralo punto pe. Tu evento perfecto comienza aqui."
 
 **[PANTALLA: Logo final + redes sociales]**
 
@@ -325,7 +325,7 @@
 +------------------+------------------+------------------+
 |    ESCENA 1      |    ESCENA 2      |    ESCENA 3      |
 |                  |                  |                  |
-|  [Logo Eventify] | [Pagina Inicio]  | [Buscador]       |
+|  [Logo Celébralo pe] | [Pagina Inicio]  | [Buscador]       |
 |                  |                  |                  |
 |  Fade in logo    |  Hero completo   |  Cursor llenando |
 |  Musica intro    |  con buscador    |  formulario      |

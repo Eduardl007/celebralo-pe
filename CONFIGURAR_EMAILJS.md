@@ -1,4 +1,4 @@
-# Configurar EmailJS - Eventify Peru
+# Configurar EmailJS - Celébralo pe
 
 ## Estado Actual
 
@@ -45,7 +45,7 @@ prototipo/
 3. Selecciona **Gmail**
 4. Click **Connect Account**
 5. Inicia sesion con tu Gmail y autoriza
-6. Ponle nombre: `Eventify Peru`
+6. Ponle nombre: `Celébralo pe`
 7. Click **Create Service**
 
 **GUARDA TU SERVICE ID:** `service_xxxxxxx`
@@ -62,7 +62,7 @@ prototipo/
 
 **Subject (Asunto):**
 ```
-¡Bienvenido a Eventify Peru, {{to_name}}!
+¡Bienvenido a Celébralo pe, {{to_name}}!
 ```
 
 **Content (Cuerpo del email):**
@@ -81,7 +81,7 @@ Cambia a modo **Code** (icono </>) y pega este HTML:
         <!-- Header -->
         <tr>
             <td style="background: linear-gradient(135deg, #004E89 0%, #FF6B35 100%); padding: 30px; text-align: center;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 28px;">🎉 Eventify Peru</h1>
+                <h1 style="color: #ffffff; margin: 0; font-size: 28px;">🎉 Celébralo pe</h1>
                 <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0;">Tu plataforma de eventos en Sullana</p>
             </td>
         </tr>
@@ -91,7 +91,7 @@ Cambia a modo **Code** (icono </>) y pega este HTML:
             <td style="padding: 40px 30px 20px 30px;">
                 <h2 style="color: #004E89; margin: 0 0 15px 0;">¡Hola {{to_name}}!</h2>
                 <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0;">
-                    Gracias por unirte a la lista de espera de <strong>Eventify Peru</strong>.
+                    Gracias por unirte a la lista de espera de <strong>Celébralo pe</strong>.
                 </p>
                 <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 15px 0 0 0;">
                     Eres parte de un grupo exclusivo que tendra <strong>acceso anticipado</strong> a la plataforma que esta cambiando la forma de organizar eventos en Sullana.
@@ -111,10 +111,10 @@ Cambia a modo **Code** (icono </>) y pega este HTML:
             </td>
         </tr>
 
-        <!-- Que es Eventify -->
+        <!-- Que es Celébralo pe -->
         <tr>
             <td style="padding: 0 30px 30px 30px;">
-                <h3 style="color: #004E89; margin: 0 0 15px 0;">¿Que es Eventify?</h3>
+                <h3 style="color: #004E89; margin: 0 0 15px 0;">¿Que es Celébralo pe?</h3>
                 <p style="color: #333; font-size: 15px; line-height: 1.6; margin: 0;">
                     Somos la primera plataforma en Sullana donde podras:
                 </p>
@@ -130,8 +130,8 @@ Cambia a modo **Code** (icono </>) y pega este HTML:
         <tr>
             <td style="padding: 0 30px 40px 30px; text-align: center;">
                 <p style="color: #666; font-size: 14px; margin: 0 0 20px 0;">Mientras tanto, siguenos en redes:</p>
-                <a href="https://facebook.com/eventifyperu" style="display: inline-block; margin: 0 10px; color: #004E89; text-decoration: none;">Facebook</a>
-                <a href="https://instagram.com/eventify.peru" style="display: inline-block; margin: 0 10px; color: #004E89; text-decoration: none;">Instagram</a>
+                <a href="https://facebook.com/celebralope" style="display: inline-block; margin: 0 10px; color: #004E89; text-decoration: none;">Facebook</a>
+                <a href="https://instagram.com/celebralo.peru" style="display: inline-block; margin: 0 10px; color: #004E89; text-decoration: none;">Instagram</a>
             </td>
         </tr>
 
@@ -142,7 +142,7 @@ Cambia a modo **Code** (icono </>) y pega este HTML:
                     ¿Tienes preguntas? Responde a este correo.
                 </p>
                 <p style="color: rgba(255,255,255,0.7); font-size: 12px; margin: 0;">
-                    © 2025 Eventify Peru | Sullana, Piura
+                    © 2025 Celébralo pe | Sullana, Piura
                 </p>
             </td>
         </tr>
@@ -166,7 +166,7 @@ Si quieres un email personalizado para proveedores:
 
 **Subject:**
 ```
-¡Bienvenido a Eventify Peru, {{to_name}}! - Tu negocio: {{business_name}}
+¡Bienvenido a Celébralo pe, {{to_name}}! - Tu negocio: {{business_name}}
 ```
 
 **Content (HTML):**
@@ -183,7 +183,7 @@ Si quieres un email personalizado para proveedores:
         <!-- Header -->
         <tr>
             <td style="background: linear-gradient(135deg, #004E89 0%, #FF6B35 100%); padding: 30px; text-align: center;">
-                <h1 style="color: #ffffff; margin: 0; font-size: 28px;">🎉 Eventify Peru</h1>
+                <h1 style="color: #ffffff; margin: 0; font-size: 28px;">🎉 Celébralo pe</h1>
                 <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0;">Plataforma de Proveedores</p>
             </td>
         </tr>
@@ -193,7 +193,7 @@ Si quieres un email personalizado para proveedores:
             <td style="padding: 40px 30px 20px 30px;">
                 <h2 style="color: #004E89; margin: 0 0 15px 0;">¡Hola {{to_name}}!</h2>
                 <p style="color: #333; font-size: 16px; line-height: 1.6; margin: 0;">
-                    Hemos recibido tu solicitud para registrar <strong>{{business_name}}</strong> en Eventify Peru.
+                    Hemos recibido tu solicitud para registrar <strong>{{business_name}}</strong> en Celébralo pe.
                 </p>
             </td>
         </tr>
@@ -228,7 +228,7 @@ Si quieres un email personalizado para proveedores:
                     ¿Tienes preguntas? Responde a este correo.
                 </p>
                 <p style="color: rgba(255,255,255,0.7); font-size: 12px; margin: 0;">
-                    © 2025 Eventify Peru | Sullana, Piura
+                    © 2025 Celébralo pe | Sullana, Piura
                 </p>
             </td>
         </tr>
@@ -239,7 +239,7 @@ Si quieres un email personalizado para proveedores:
 
 3. En **Settings**:
    - **To Email:** `{{to_email}}`
-   - **From Name:** `Eventify Peru`
+   - **From Name:** `Celébralo pe`
 
 4. Click **Save**
 
@@ -252,7 +252,7 @@ Si quieres un email personalizado para proveedores:
 En cada plantilla, ve a la pestaña **Settings**:
 
 - **To Email:** `{{to_email}}`
-- **From Name:** `Eventify Peru`
+- **From Name:** `Celébralo pe`
 - **Reply To:** `tu-email@gmail.com` (tu email real)
 
 Click **Save**

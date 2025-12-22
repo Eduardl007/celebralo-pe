@@ -1,4 +1,4 @@
-# Encuestas de Validacion - Eventify Peru
+# Encuestas de Validacion - Celébralo pe
 
 ## Como Usar Este Documento
 
@@ -153,7 +153,7 @@ ________
 ### SECCION 5: Contacto (Opcional)
 
 **Pregunta 5.1** (Respuesta corta - opcional)
-> Si quieres ser de los primeros en probar Eventify, dejanos tu WhatsApp o correo:
+> Si quieres ser de los primeros en probar Celébralo pe, dejanos tu WhatsApp o correo:
 
 ________
 

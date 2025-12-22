@@ -1,6 +1,6 @@
-# Robots.txt para Eventify Prototipo
+# Robots.txt para Celébralo pe Prototipo
 User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://eduardl007.github.io/eventify-prototipo/prototipo/sitemap.xml
+Sitemap: https://eduardl007.github.io/celebralope-prototipo/prototipo/sitemap.xml

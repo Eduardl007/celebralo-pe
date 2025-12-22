@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Google Analytics 4 Integration
+   CELÉBRALO PE - Google Analytics 4 Integration
    Métricas y KPIs para monitoreo
    ======================================== */
 
@@ -92,7 +92,7 @@ class AnalyticsService {
      * Guardar evento localmente
      */
     saveEventLocally(eventName, data) {
-        const key = 'eventify_analytics_events';
+        const key = 'celebralope_analytics_events';
         const events = JSON.parse(localStorage.getItem(key) || '[]');
 
         // Mantener solo los últimos 100 eventos
@@ -354,7 +354,7 @@ class AnalyticsService {
      * Obtener resumen de eventos locales
      */
     getLocalEventsSummary() {
-        const events = JSON.parse(localStorage.getItem('eventify_analytics_events') || '[]');
+        const events = JSON.parse(localStorage.getItem('celebralope_analytics_events') || '[]');
 
         const summary = {
             totalEvents: events.length,
@@ -384,13 +384,13 @@ class AnalyticsService {
      * Exportar eventos para análisis
      */
     exportEvents() {
-        const events = JSON.parse(localStorage.getItem('eventify_analytics_events') || '[]');
+        const events = JSON.parse(localStorage.getItem('celebralope_analytics_events') || '[]');
         const blob = new Blob([JSON.stringify(events, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
 
         const a = document.createElement('a');
         a.href = url;
-        a.download = `eventify_analytics_${new Date().toISOString().split('T')[0]}.json`;
+        a.download = `celebralope_analytics_${new Date().toISOString().split('T')[0]}.json`;
         a.click();
 
         URL.revokeObjectURL(url);

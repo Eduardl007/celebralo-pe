@@ -1,4 +1,4 @@
-# Guía de Configuración de Analytics para Eventify
+# Guía de Configuración de Analytics para Celébralo pe
 
 Esta guía te ayudará a configurar Google Analytics 4 (GA4) y Google Tag Manager (GTM) para monitorear todas las métricas de tu prototipo.
 
@@ -12,12 +12,12 @@ Esta guía te ayudará a configurar Google Analytics 4 (GA4) y Google Tag Manage
 3. Clic en **"Empezar a medir"** o **"Crear cuenta"**
 
 ### 1.2 Configurar la cuenta
-1. **Nombre de la cuenta:** `Eventify Peru`
+1. **Nombre de la cuenta:** `Celébralo pe`
 2. Marca las casillas de uso compartido de datos según prefieras
 3. Clic en **"Siguiente"**
 
 ### 1.3 Crear propiedad
-1. **Nombre de la propiedad:** `Eventify Prototipo`
+1. **Nombre de la propiedad:** `Celébralo pe Prototipo`
 2. **Zona horaria:** Perú (GMT-5)
 3. **Moneda:** Sol peruano (PEN)
 4. Clic en **"Siguiente"**
@@ -30,7 +30,7 @@ Esta guía te ayudará a configurar Google Analytics 4 (GA4) y Google Tag Manage
 ### 1.5 Configurar flujo de datos
 1. Selecciona **"Web"**
 2. **URL del sitio web:** `https://eduardl007.github.io`
-3. **Nombre del flujo:** `Eventify Web`
+3. **Nombre del flujo:** `Celébralo pe Web`
 4. Clic en **"Crear flujo"**
 
 ### 1.6 Obtener tu ID de medición
@@ -48,9 +48,9 @@ Esta guía te ayudará a configurar Google Analytics 4 (GA4) y Google Tag Manage
 
 ### 2.2 Crear contenedor
 1. Clic en **"Crear cuenta"**
-2. **Nombre de la cuenta:** `Eventify`
+2. **Nombre de la cuenta:** `Celébralo pe`
 3. **País:** Perú
-4. **Nombre del contenedor:** `Eventify Web`
+4. **Nombre del contenedor:** `Celébralo pe Web`
 5. **Plataforma de destino:** Web
 6. Clic en **"Crear"**
 
@@ -203,7 +203,7 @@ Para ver los eventos en la consola del navegador:
 
 Para ver historial de eventos:
 ```javascript
-EventifyAnalytics.showAnalyticsDashboard()
+Celébralo peAnalytics.showAnalyticsDashboard()
 ```
 
 ---

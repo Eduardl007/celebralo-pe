@@ -356,7 +356,7 @@ TRIGGERS:
 TIMING: Mes 6-12
 
 ESCENARIO:
-Municipalidad de Sullana adopta Eventify como plataforma
+Municipalidad de Sullana adopta Celébralo pe como plataforma
 oficial para eventos en espacios públicos
 
 BENEFICIOS:

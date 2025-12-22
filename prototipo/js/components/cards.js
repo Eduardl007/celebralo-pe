@@ -1,5 +1,5 @@
 /* ========================================
-   EVENTIFY - Cards Component
+   CELÉBRALO PE - Cards Component
    ======================================== */
 
 // Generate locale card HTML
@@ -194,7 +194,7 @@ function toggleFavorite(type, id, button) {
     const isFavorite = icon.classList.contains('fas');
 
     // Get current favorites from storage
-    const key = `eventify_favorites_${type}s`;
+    const key = `celebralope_favorites_${type}s`;
     let favorites = storage.get(key, []);
 
     if (isFavorite) {
@@ -250,8 +250,8 @@ function requestQuote(serviceId) {
 
 // Check and mark favorites on load
 function checkFavorites() {
-    const localesFavorites = storage.get('eventify_favorites_locales', []);
-    const servicesFavorites = storage.get('eventify_favorites_services', []);
+    const localesFavorites = storage.get('celebralope_favorites_locales', []);
+    const servicesFavorites = storage.get('celebralope_favorites_services', []);
 
     // Mark locale cards
     document.querySelectorAll('.locale-card').forEach(card => {
