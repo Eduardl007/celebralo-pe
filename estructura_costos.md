@@ -1,5 +1,27 @@
-# ESTRUCTURA DE COSTOS - APLICATIVO DE EVENTOS
+# ESTRUCTURA DE COSTOS - CELÉBRALO PE
 ## Modelo Detallado 2025 | Sullana, Piura
+### Estado: ACTUALIZADO con Prototipo MVP Funcional
+
+---
+
+## 📊 RESUMEN EJECUTIVO - COSTOS OPTIMIZADOS (MODELO LEAN)
+
+| Categoría | Modelo Original | Modelo Optimizado | Ahorro |
+|-----------|-----------------|-------------------|--------|
+| **Desarrollo inicial** | S/ 29,000-37,000 | S/ 8,000-12,000 | 68% |
+| **Costos legales** | S/ 2,935-4,035 | S/ 2,935-4,035 | 0% |
+| **Marketing lanzamiento** | S/ 11,500-15,500 | S/ 6,000-8,000 | 48% |
+| **TOTAL INVERSIÓN** | **S/ 43,435-56,535** | **S/ 16,935-24,035** | **57%** |
+
+### Costos Operativos Mensuales Optimizados
+
+| Concepto | Original | Optimizado | Ahorro |
+|----------|----------|------------|--------|
+| Tecnología | S/ 760-1,410 | S/ 150-300 | 80% |
+| Equipo (Fase 1) | S/ 3,700-7,300 | S/ 2,000-4,000 | 45% |
+| Marketing | S/ 5,100-8,500 | S/ 3,000-5,000 | 41% |
+| Operaciones | S/ 1,250-2,750 | S/ 500-1,000 | 60% |
+| **TOTAL MENSUAL** | **S/ 10,810-19,960** | **S/ 5,650-10,300** | **48%** |
 
 ---
 
@@ -300,11 +322,76 @@ Legal/Admin:           4% (S/ 9,000)
 
 ---
 
-## ✅ CONCLUSIÓN - ESTRUCTURA DE COSTOS
+## ✅ CONCLUSIÓN - ESTRUCTURA DE COSTOS (ACTUALIZADO)
 
-**Inversión Inicial Recomendada:** S/ 55,000 - 70,000
-**Burn Rate Mensual (Año 1):** S/ 13,000 - 16,000
-**Runway:** 12-15 meses
-**Break-even:** 200-250 reservas/mes (Mes 10-12)
+### Comparativa: Modelo Original vs Modelo Lean
 
-**Siguiente paso:** Validar modelo de ingresos para asegurar viabilidad financiera
+```
+                           MODELO ORIGINAL      MODELO LEAN (ACTUAL)
+─────────────────────────────────────────────────────────────────────
+Inversión Inicial:         S/ 55,000-70,000     S/ 20,000-24,000
+Burn Rate Mensual:         S/ 13,000-16,000     S/ 6,000-10,000
+Runway (sin ingresos):     12-15 meses          24-36 meses
+Break-even:                Mes 10-12            Mes 4-5
+Reservas para BE:          200-250/mes          80-100/mes
+─────────────────────────────────────────────────────────────────────
+```
+
+### Desglose de Ahorros del Modelo Lean
+
+| Categoría | Ahorro | Cómo se logra |
+|-----------|--------|---------------|
+| **Desarrollo** | S/ 25,000 | HTML/CSS/JS vs React Native |
+| **Backend** | S/ 7,000 | localStorage + Google Sheets |
+| **Hosting** | S/ 3,600/año | Netlify/Vercel gratuito |
+| **Imágenes** | S/ 2,000 | Unsplash gratuito |
+| **Marketing** | S/ 5,000 | Orgánico + validación primero |
+| **Equipo** | S/ 24,000/año | Founder solo + freelancers |
+
+### Modelo de Costos Lean - Año 1
+
+```
+INVERSIÓN INICIAL: S/ 20,000
+├── Desarrollo prototipo: S/ 10,000
+├── Legal/Constitución: S/ 3,500
+├── Marketing inicial: S/ 5,000
+└── Contingencia: S/ 1,500
+
+COSTOS MENSUALES: S/ 8,000 promedio
+├── Founder (sweat equity): S/ 0-2,000
+├── Marketing digital: S/ 3,000-4,000
+├── Tecnología: S/ 200-400
+├── Operaciones: S/ 800-1,000
+└── Contingencia: S/ 1,000
+
+COSTO TOTAL AÑO 1: S/ 20,000 + (S/ 8,000 x 12) = S/ 116,000
+```
+
+### Viabilidad Financiera Mejorada
+
+| Métrica | Modelo Original | Modelo Lean | Mejora |
+|---------|-----------------|-------------|--------|
+| Capital requerido | S/ 188,600 | S/ 116,000 | -39% |
+| Riesgo de capital | Alto | Bajo | Significativo |
+| Time to market | 4-6 meses | 0 (MVP listo) | -100% |
+| Punto equilibrio | Mes 10-12 | Mes 4-5 | -50% |
+
+### Recomendaciones para Maximizar Rentabilidad
+
+1. **Fase Validación (Mes 1-3):**
+   - Gastar máximo S/ 2,000/mes
+   - Enfoque en onboarding de locales reales
+   - Marketing orgánico únicamente
+
+2. **Fase Crecimiento (Mes 4-12):**
+   - Reinvertir 40% del EBITDA en marketing
+   - Solo escalar si CAC < S/ 30
+   - Mantener margen > 50%
+
+3. **Fase Escala (Año 2+):**
+   - Considerar backend real si >500 reservas/mes
+   - App móvil solo si usuarios lo demandan
+   - Expansión geográfica con modelo replicado
+
+**Estado Actual:** MVP funcional con S/ 0 costos de hosting
+**Siguiente Paso:** Lanzamiento beta y validación con usuarios reales
