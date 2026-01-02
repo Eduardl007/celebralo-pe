@@ -363,6 +363,264 @@
             min-height: 100px;
             resize: vertical;
         }
+
+        /* Availability Grid */
+        .availability-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .availability-day {
+            text-align: center;
+            padding: 12px 8px;
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            transition: all var(--transition-fast);
+        }
+
+        .availability-day.available {
+            background: var(--success-50);
+            border: 1px solid var(--success-100);
+        }
+
+        .availability-day.unavailable {
+            background: var(--gray-100);
+            opacity: 0.6;
+        }
+
+        .availability-day .day-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .availability-day .day-hours {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .availability-day.available .day-hours {
+            color: var(--success);
+        }
+
+        /* Policies */
+        .policies-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .policy-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+        }
+
+        .policy-item i {
+            color: var(--primary);
+            font-size: 20px;
+            margin-top: 2px;
+        }
+
+        .policy-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .policy-item p {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .policy-rules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .policy-rules .rule {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-full);
+            font-size: 13px;
+        }
+
+        .policy-rules .rule i {
+            color: var(--primary);
+            font-size: 12px;
+        }
+
+        /* Reviews */
+        .reviews-summary {
+            margin-bottom: 24px;
+        }
+
+        .reviews-score {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .score-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .score-stars {
+            color: var(--warning);
+            font-size: 20px;
+        }
+
+        .score-count {
+            color: var(--text-secondary);
+        }
+
+        .reviews-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .review-card {
+            padding: 20px;
+            background: var(--gray-50);
+            border-radius: var(--radius-xl);
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .review-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .review-info {
+            flex: 1;
+        }
+
+        .review-info strong {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .review-info .verified-badge {
+            font-size: 12px;
+            color: var(--success);
+        }
+
+        .review-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .review-stars {
+            color: var(--warning);
+        }
+
+        .review-text {
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .review-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .review-event {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .review-helpful {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .reviews-empty {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .reviews-empty i {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        /* Booking Calendar */
+        .booking-calendar {
+            margin-bottom: 16px;
+        }
+
+        .booking-selection {
+            background: var(--success-50);
+            border: 1px solid var(--success);
+            border-radius: var(--radius-lg);
+            padding: 12px 16px;
+            margin-bottom: 16px;
+        }
+
+        .selection-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .availability-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .reviews-score {
+                flex-wrap: wrap;
+            }
+
+            .score-number {
+                font-size: 36px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -437,6 +695,54 @@
                             <h2><i class="fas fa-map-marker-alt" style="color: var(--secondary); margin-right: 8px;"></i>Cobertura</h2>
                             <div class="coverage-list" id="coverageList"></div>
                         </div>
+
+                        <!-- Availability Section -->
+                        <div class="service-section">
+                            <h2><i class="fas fa-clock" style="color: var(--info); margin-right: 8px;"></i>Disponibilidad</h2>
+                            <div class="availability-grid" id="availabilityGrid"></div>
+                            <p style="margin-top: 16px; font-size: 14px; color: var(--text-muted);">
+                                <i class="fas fa-info-circle"></i> Reserva con minimo <span id="advanceBooking">-</span> de anticipacion
+                            </p>
+                        </div>
+
+                        <!-- Policies Section -->
+                        <div class="service-section" id="policiesSection">
+                            <h2><i class="fas fa-file-contract" style="color: var(--warning); margin-right: 8px;"></i>Politicas</h2>
+                            <div class="policies-list">
+                                <div class="policy-item" id="policyCancellation">
+                                    <i class="fas fa-calendar-times"></i>
+                                    <div>
+                                        <strong>Cancelacion</strong>
+                                        <p></p>
+                                    </div>
+                                </div>
+                                <div class="policy-item" id="policyDeposit">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                    <div>
+                                        <strong>Deposito</strong>
+                                        <p></p>
+                                    </div>
+                                </div>
+                                <div class="policy-rules" id="policyRules"></div>
+                            </div>
+                        </div>
+
+                        <!-- Reviews Section -->
+                        <div class="service-section">
+                            <h2><i class="fas fa-star" style="color: var(--warning); margin-right: 8px;"></i>Resenas</h2>
+                            <div class="reviews-summary" id="reviewsSummary">
+                                <div class="reviews-score">
+                                    <span class="score-number" id="avgRating">4.9</span>
+                                    <div class="score-stars" id="scoreStars"></div>
+                                    <span class="score-count" id="totalReviews">0 resenas</span>
+                                </div>
+                            </div>
+                            <div class="reviews-list" id="reviewsList"></div>
+                            <div class="reviews-empty" id="reviewsEmpty" style="display: none;">
+                                <i class="fas fa-comments"></i>
+                                <p>Aun no hay resenas para este servicio.</p>
+                            </div>
+                        </div>
                     </div>
 
                     <!-- Booking Card -->
@@ -447,9 +753,19 @@
                                 <span class="unit" id="bookingUnit">/servicio</span>
                             </div>
 
+                            <!-- Calendar -->
+                            <div class="booking-calendar" id="bookingCalendar"></div>
+
+                            <div class="booking-selection" id="bookingSelection" style="display: none;">
+                                <div class="selection-item">
+                                    <i class="fas fa-calendar-check"></i>
+                                    <span id="selectedDateText">Selecciona una fecha</span>
+                                </div>
+                            </div>
+
                             <div class="booking-actions">
-                                <button class="btn btn-primary btn-lg" onclick="openContactModal()">
-                                    <i class="fas fa-paper-plane"></i> Solicitar Cotización
+                                <button class="btn btn-primary btn-lg" id="btnReservar" onclick="openContactModal()" disabled>
+                                    <i class="fas fa-calendar-check"></i> Reservar Ahora
                                 </button>
                                 <button class="btn btn-outline btn-lg" onclick="contactOwner()">
                                     <i class="fas fa-comments"></i> Contactar Proveedor
@@ -471,7 +787,7 @@
                             <div style="margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 1px solid var(--border-light);">
                                 <div style="display: flex; align-items: center; gap: var(--spacing-2); color: var(--text-secondary); font-size: var(--font-size-sm);">
                                     <i class="fas fa-shield-alt" style="color: var(--success);"></i>
-                                    <span>Pago seguro a través de la plataforma</span>
+                                    <span>Pago seguro a traves de la plataforma</span>
                                 </div>
                             </div>
                         </div>
@@ -576,8 +892,16 @@
     <div class="toast-container" id="toastContainer"></div>
 
     <!-- Scripts -->
+    <script src="../js/data/locales.js"></script>
     <script src="../js/data/servicios.js"></script>
+    <script src="../js/utils/helpers.js"></script>
+    <script src="../js/components/header.js"></script>
     <script src="../js/components/chatbot.js"></script>
+    <script src="../js/components/auth.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/components/user.js"></script>
+    <script src="../js/components/calendar.js"></script>
+    <script src="../js/components/reservations.js"></script>
     <script src="../js/app.js"></script>
 
     <script>
@@ -679,6 +1003,173 @@
                 `<span class="coverage-tag"><i class="fas fa-map-marker-alt" style="margin-right: 4px;"></i>${city}</span>`
             ).join('');
             document.getElementById('coverageList').innerHTML = coverageHtml;
+
+            // Availability
+            renderAvailability(s);
+
+            // Policies
+            renderPolicies(s);
+
+            // Reviews
+            renderReviews(s);
+
+            // Initialize Calendar
+            initCalendar(s);
+
+            // Track recently viewed
+            if (window.userManager) {
+                userManager.addToRecentlyViewed({
+                    id: s.id,
+                    slug: s.slug,
+                    name: s.name,
+                    icon: s.icon,
+                    rating: s.rating,
+                    price: s.pricing.basePrice
+                }, 'servicios');
+            }
+        }
+
+        function renderAvailability(s) {
+            const days = [
+                { key: 'monday', name: 'Lun' },
+                { key: 'tuesday', name: 'Mar' },
+                { key: 'wednesday', name: 'Mie' },
+                { key: 'thursday', name: 'Jue' },
+                { key: 'friday', name: 'Vie' },
+                { key: 'saturday', name: 'Sab' },
+                { key: 'sunday', name: 'Dom' }
+            ];
+
+            if (!s.availability) return;
+
+            const html = days.map(day => {
+                const avail = s.availability[day.key];
+                const isAvailable = avail && avail.available;
+                return `
+                    <div class="availability-day ${isAvailable ? 'available' : 'unavailable'}">
+                        <div class="day-name">${day.name}</div>
+                        <div class="day-hours">${isAvailable ? avail.hours : 'Cerrado'}</div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('availabilityGrid').innerHTML = html;
+            document.getElementById('advanceBooking').textContent = s.availability.advanceBooking || '3 dias';
+        }
+
+        function renderPolicies(s) {
+            if (!s.policies) {
+                document.getElementById('policiesSection').style.display = 'none';
+                return;
+            }
+
+            // Cancellation
+            if (s.policies.cancellation) {
+                document.querySelector('#policyCancellation p').textContent = s.policies.cancellation;
+            }
+
+            // Deposit
+            if (s.policies.deposit) {
+                document.querySelector('#policyDeposit p').textContent = s.policies.deposit;
+            }
+
+            // Rules
+            if (s.policies.rules && s.policies.rules.length > 0) {
+                const rulesHtml = s.policies.rules.map(rule =>
+                    `<span class="rule"><i class="fas fa-check"></i>${rule}</span>`
+                ).join('');
+                document.getElementById('policyRules').innerHTML = rulesHtml;
+            }
+        }
+
+        function renderReviews(s) {
+            const reviews = s.reviews || [];
+
+            // Summary
+            document.getElementById('avgRating').textContent = s.rating || '0';
+            document.getElementById('totalReviews').textContent = `${s.reviewsCount || reviews.length} resenas`;
+
+            // Stars
+            const fullStars = Math.floor(s.rating || 0);
+            const hasHalf = (s.rating || 0) % 1 >= 0.5;
+            let starsHtml = '';
+            for (let i = 0; i < fullStars; i++) {
+                starsHtml += '<i class="fas fa-star"></i>';
+            }
+            if (hasHalf) starsHtml += '<i class="fas fa-star-half-alt"></i>';
+            document.getElementById('scoreStars').innerHTML = starsHtml;
+
+            // Reviews list
+            if (reviews.length === 0) {
+                document.getElementById('reviewsList').style.display = 'none';
+                document.getElementById('reviewsEmpty').style.display = 'block';
+                return;
+            }
+
+            const reviewsHtml = reviews.map(review => `
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">${review.userAvatar}</div>
+                        <div class="review-info">
+                            <strong>
+                                ${review.userName}
+                                ${review.verified ? '<span class="verified-badge"><i class="fas fa-check-circle"></i></span>' : ''}
+                            </strong>
+                            <div class="review-meta">
+                                <span class="review-stars">${'<i class="fas fa-star"></i>'.repeat(review.rating)}</span>
+                                <span>${formatReviewDate(review.date)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="review-text">${review.comment}</p>
+                    <div class="review-footer">
+                        <span class="review-event">
+                            <i class="fas fa-tag"></i>
+                            ${review.eventType}
+                        </span>
+                        <span class="review-helpful">
+                            <i class="fas fa-thumbs-up"></i>
+                            ${review.helpful || 0} util
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('reviewsList').innerHTML = reviewsHtml;
+        }
+
+        function formatReviewDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('es-PE', { year: 'numeric', month: 'long' });
+        }
+
+        let serviceCalendar = null;
+        let selectedDate = null;
+
+        function initCalendar(s) {
+            if (!s.availability) return;
+
+            serviceCalendar = new EventCalendar('#bookingCalendar', {
+                availability: s.availability,
+                blockedDates: s.blockedDates || [],
+                showLegend: true,
+                onDateSelect: (date, dateStr) => {
+                    selectedDate = dateStr;
+                    document.getElementById('bookingSelection').style.display = 'block';
+                    document.getElementById('selectedDateText').textContent = formatSelectedDate(date);
+                    document.getElementById('btnReservar').disabled = false;
+                    document.getElementById('contactDate').value = dateStr;
+                }
+            });
+        }
+
+        function formatSelectedDate(date) {
+            return date.toLocaleDateString('es-PE', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
         }
 
         function initNav() {
@@ -716,30 +1207,56 @@
             e.preventDefault();
 
             const formData = {
-                name: document.getElementById('contactName').value,
-                phone: document.getElementById('contactPhone').value,
-                email: document.getElementById('contactEmail').value,
-                event: document.getElementById('contactEvent').value,
-                date: document.getElementById('contactDate').value,
-                message: document.getElementById('contactMessage').value,
-                service: currentService.name,
-                serviceId: currentService.id
+                clienteNombre: document.getElementById('contactName').value,
+                clienteTelefono: document.getElementById('contactPhone').value,
+                clienteEmail: document.getElementById('contactEmail').value,
+                tipoEvento: document.getElementById('contactEvent').value,
+                fechaEvento: document.getElementById('contactDate').value || selectedDate,
+                clienteMensaje: document.getElementById('contactMessage').value,
+                providerName: currentService.name,
+                providerId: currentService.id,
+                providerSlug: currentService.slug,
+                providerIcon: currentService.icon,
+                tipo: 'servicio',
+                paquete: null,
+                precioBase: currentService.pricing.basePrice || 0,
+                precioEstimado: currentService.pricing.basePrice || 0
             };
 
-            // Enviar a Google Sheets si está disponible
+            // Crear reserva usando el manager
+            if (window.reservationManager) {
+                const reservation = reservationManager.createReservation(formData);
+                reservationManager.syncToGoogleSheets(reservation);
+            }
+
+            // Enviar a Google Sheets si esta disponible
             if (typeof sendToGoogleSheets === 'function') {
                 sendToGoogleSheets('Cotizaciones', {
                     id: 'COT-' + Date.now(),
-                    ...formData,
+                    nombre: formData.clienteNombre,
+                    telefono: formData.clienteTelefono,
+                    email: formData.clienteEmail,
+                    tipoEvento: formData.tipoEvento,
+                    fecha: formData.fechaEvento,
+                    mensaje: formData.clienteMensaje,
+                    servicio: currentService.name,
                     tipo: 'servicio',
-                    fecha: new Date().toLocaleDateString('es-PE'),
+                    fechaCreacion: new Date().toLocaleDateString('es-PE'),
                     timestamp: new Date().toISOString()
                 });
             }
 
-            showToast('success', 'Solicitud enviada', 'Te contactaremos pronto para darte una cotización personalizada.');
+            showToast('success', 'Reserva enviada', 'Tu solicitud ha sido registrada. Te contactaremos pronto.');
             closeContactModal();
             document.getElementById('contactForm').reset();
+
+            // Reset calendar selection
+            if (serviceCalendar) {
+                serviceCalendar.clearSelection();
+            }
+            document.getElementById('bookingSelection').style.display = 'none';
+            document.getElementById('btnReservar').disabled = true;
+            selectedDate = null;
         }
 
         function showToast(type, title, message) {

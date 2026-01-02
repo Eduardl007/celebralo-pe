@@ -1,0 +1,1631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cuenta | Celébralo pe</title>
+    <meta name="description" content="Gestiona tu cuenta, reservas, mensajes y favoritos en Celébralo pe">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .account-page {
+            padding-top: var(--header-height);
+            min-height: 100vh;
+            background: var(--gray-50);
+        }
+
+        /* Account Header */
+        .account-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: var(--spacing-8) 0;
+            color: var(--white);
+        }
+
+        .account-profile {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-6);
+        }
+
+        .account-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius-full);
+            background: var(--white);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            border: 4px solid rgba(255,255,255,0.3);
+        }
+
+        .account-info h1 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .account-info p {
+            opacity: 0.9;
+            margin: 0;
+        }
+
+        .account-stats {
+            display: flex;
+            gap: var(--spacing-8);
+            margin-top: var(--spacing-4);
+        }
+
+        .account-stat {
+            text-align: center;
+        }
+
+        .account-stat strong {
+            display: block;
+            font-size: var(--font-size-xl);
+        }
+
+        .account-stat span {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
+        }
+
+        /* Account Layout */
+        .account-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: var(--spacing-6);
+            padding: var(--spacing-6) 0;
+        }
+
+        /* Sidebar */
+        .account-sidebar {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-4);
+            height: fit-content;
+            position: sticky;
+            top: calc(var(--header-height) + var(--spacing-6));
+            box-shadow: var(--shadow-sm);
+        }
+
+        .account-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .account-nav li {
+            margin-bottom: var(--spacing-1);
+        }
+
+        .account-nav a {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            padding: var(--spacing-3) var(--spacing-4);
+            border-radius: var(--radius-lg);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .account-nav a:hover {
+            background: var(--gray-50);
+            color: var(--text-primary);
+        }
+
+        .account-nav a.active {
+            background: var(--primary-50);
+            color: var(--primary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .account-nav a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-badge {
+            position: absolute;
+            right: var(--spacing-3);
+            background: var(--primary);
+            color: var(--white);
+            font-size: var(--font-size-xs);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .account-nav .logout-link {
+            margin-top: var(--spacing-4);
+            padding-top: var(--spacing-4);
+            border-top: 1px solid var(--border-light);
+        }
+
+        .account-nav .logout-link a {
+            color: var(--error);
+        }
+
+        .account-nav .logout-link a:hover {
+            background: var(--error-50);
+        }
+
+        /* Main Content */
+        .account-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-6);
+            box-shadow: var(--shadow-sm);
+            min-height: 500px;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-6);
+            padding-bottom: var(--spacing-4);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .content-header h2 {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            font-size: var(--font-size-xl);
+            margin: 0;
+        }
+
+        .content-header h2 i {
+            color: var(--primary);
+        }
+
+        /* Section content */
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Messages Section */
+        .conversations-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-3);
+        }
+
+        .conversation-card {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-4);
+            padding: var(--spacing-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            border: 2px solid transparent;
+        }
+
+        .conversation-card:hover {
+            background: var(--white);
+            border-color: var(--primary-100);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .conversation-card.unread {
+            background: var(--primary-50);
+            border-color: var(--primary-100);
+        }
+
+        .conversation-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-full);
+            background: var(--primary);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+            font-size: var(--font-size-lg);
+            flex-shrink: 0;
+        }
+
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-1);
+        }
+
+        .conversation-name {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .conversation-time {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        .conversation-preview {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-type {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            margin-top: var(--spacing-1);
+        }
+
+        .conversation-badge {
+            background: var(--primary);
+            color: var(--white);
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+        }
+
+        /* Reservations Section */
+        .reservations-filters {
+            display: flex;
+            gap: var(--spacing-2);
+            margin-bottom: var(--spacing-4);
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: var(--spacing-2) var(--spacing-4);
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-color);
+            background: var(--white);
+            cursor: pointer;
+            font-size: var(--font-size-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .reservation-card {
+            background: var(--gray-50);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-5);
+            margin-bottom: var(--spacing-4);
+            border-left: 4px solid var(--primary);
+        }
+
+        .reservation-card.pendiente {
+            border-left-color: var(--warning);
+        }
+
+        .reservation-card.confirmada {
+            border-left-color: var(--success);
+        }
+
+        .reservation-card.completada {
+            border-left-color: var(--info);
+        }
+
+        .reservation-card.cancelada {
+            border-left-color: var(--error);
+            opacity: 0.7;
+        }
+
+        .reservation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-4);
+        }
+
+        .reservation-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            margin-bottom: var(--spacing-1);
+        }
+
+        .reservation-id {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        .reservation-status {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-2) var(--spacing-3);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .reservation-status.pendiente {
+            background: var(--warning-50);
+            color: var(--warning);
+        }
+
+        .reservation-status.confirmada {
+            background: var(--success-50);
+            color: var(--success);
+        }
+
+        .reservation-status.completada {
+            background: var(--info-50);
+            color: var(--info);
+        }
+
+        .reservation-status.cancelada {
+            background: var(--error-50);
+            color: var(--error);
+        }
+
+        .reservation-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-4);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .detail-item i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        .detail-item span {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .reservation-countdown {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-2) var(--spacing-4);
+            background: var(--primary-50);
+            color: var(--primary);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .reservation-actions {
+            display: flex;
+            gap: var(--spacing-3);
+            padding-top: var(--spacing-4);
+            border-top: 1px solid var(--border-light);
+        }
+
+        /* Favorites Section */
+        .favorites-tabs {
+            display: flex;
+            gap: var(--spacing-2);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .favorites-tabs button {
+            padding: var(--spacing-3) var(--spacing-6);
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--border-color);
+            background: var(--white);
+            cursor: pointer;
+            font-weight: var(--font-weight-medium);
+            transition: all var(--transition-fast);
+        }
+
+        .favorites-tabs button.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .favorites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-4);
+        }
+
+        .favorite-card {
+            background: var(--gray-50);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--transition-fast);
+        }
+
+        .favorite-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .favorite-image {
+            height: 140px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .favorite-remove {
+            position: absolute;
+            top: var(--spacing-3);
+            right: var(--spacing-3);
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            background: var(--white);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--error);
+            transition: all var(--transition-fast);
+        }
+
+        .favorite-remove:hover {
+            background: var(--error);
+            color: var(--white);
+        }
+
+        .favorite-content {
+            padding: var(--spacing-4);
+        }
+
+        .favorite-content h4 {
+            margin-bottom: var(--spacing-2);
+        }
+
+        .favorite-content p {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .favorite-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .favorite-rating {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-1);
+            color: var(--accent);
+        }
+
+        .favorite-price {
+            font-weight: var(--font-weight-semibold);
+            color: var(--primary);
+        }
+
+        /* User Data Section */
+        .user-form {
+            max-width: 600px;
+        }
+
+        .form-section {
+            margin-bottom: var(--spacing-6);
+        }
+
+        .form-section h3 {
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-4);
+            padding-bottom: var(--spacing-2);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-4);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-2);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: var(--spacing-3) var(--spacing-4);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            font-size: var(--font-size-base);
+            transition: all var(--transition-fast);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-100);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-12) var(--spacing-6);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            color: var(--gray-300);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .empty-state h3 {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-6);
+        }
+
+        /* Login Required */
+        .login-required {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            text-align: center;
+            padding: var(--spacing-8);
+        }
+
+        .login-required i {
+            font-size: 5rem;
+            color: var(--gray-300);
+            margin-bottom: var(--spacing-6);
+        }
+
+        .login-required h2 {
+            margin-bottom: var(--spacing-3);
+        }
+
+        .login-required p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-6);
+            max-width: 400px;
+        }
+
+        .login-required .btn-group {
+            display: flex;
+            gap: var(--spacing-4);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .account-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .account-sidebar {
+                position: static;
+            }
+
+            .account-nav {
+                display: flex;
+                flex-wrap: wrap;
+                gap: var(--spacing-2);
+            }
+
+            .account-nav li {
+                margin-bottom: 0;
+            }
+
+            .account-nav .logout-link {
+                margin-top: 0;
+                padding-top: 0;
+                border-top: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .account-profile {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .account-stats {
+                justify-content: center;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .reservation-header {
+                flex-direction: column;
+                gap: var(--spacing-3);
+            }
+
+            .reservation-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="account-page">
+        <!-- Header -->
+        <header class="header" id="header">
+            <div class="container">
+                <nav class="nav">
+                    <a href="../index.html" class="logo">
+                        <span class="logo-icon">🎉</span>
+                        <span class="logo-text">Celébralo pe</span>
+                        <span class="logo-badge">Perú</span>
+                    </a>
+                    <ul class="nav-menu" id="navMenu">
+                        <li><a href="../index.html" class="nav-link">Inicio</a></li>
+                        <li><a href="locales.html" class="nav-link">Locales</a></li>
+                        <li><a href="servicios.html" class="nav-link">Servicios</a></li>
+                        <li><a href="paquetes.html" class="nav-link">Paquetes</a></li>
+                    </ul>
+                    <div class="nav-actions">
+                        <button class="btn btn-ghost" id="headerUserBtn">
+                            <i class="fas fa-user"></i>
+                            <span>Ingresar</span>
+                        </button>
+                        <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                            <span></span><span></span><span></span>
+                        </button>
+                    </div>
+                </nav>
+            </div>
+        </header>
+
+        <!-- Content for logged in users -->
+        <div id="accountContent" style="display: none;">
+            <!-- Account Header -->
+            <section class="account-header">
+                <div class="container">
+                    <div class="account-profile">
+                        <div class="account-avatar" id="userAvatar">UD</div>
+                        <div class="account-info">
+                            <h1 id="userName">Usuario Demo</h1>
+                            <p id="userEmail">usuario@correo.com</p>
+                            <div class="account-stats">
+                                <div class="account-stat">
+                                    <strong id="statReservations">0</strong>
+                                    <span>Reservas</span>
+                                </div>
+                                <div class="account-stat">
+                                    <strong id="statMessages">0</strong>
+                                    <span>Mensajes</span>
+                                </div>
+                                <div class="account-stat">
+                                    <strong id="statFavorites">0</strong>
+                                    <span>Favoritos</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Account Layout -->
+            <div class="container">
+                <div class="account-layout">
+                    <!-- Sidebar -->
+                    <aside class="account-sidebar">
+                        <ul class="account-nav">
+                            <li>
+                                <a href="#mensajes" class="active" data-section="mensajes">
+                                    <i class="fas fa-comments"></i>
+                                    Mis Mensajes
+                                    <span class="nav-badge" id="unreadBadge" style="display: none;">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#reservas" data-section="reservas">
+                                    <i class="fas fa-calendar-check"></i>
+                                    Mis Reservas
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#favoritos" data-section="favoritos">
+                                    <i class="fas fa-heart"></i>
+                                    Mis Favoritos
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#datos" data-section="datos">
+                                    <i class="fas fa-user-edit"></i>
+                                    Mis Datos
+                                </a>
+                            </li>
+                            <li class="logout-link">
+                                <a href="#" id="logoutBtn">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
+                    </aside>
+
+                    <!-- Main Content -->
+                    <main class="account-content">
+                        <!-- Messages Section -->
+                        <section class="section-content active" id="section-mensajes">
+                            <div class="content-header">
+                                <h2><i class="fas fa-comments"></i> Mis Mensajes</h2>
+                                <div class="filters">
+                                    <select id="messageFilter" class="form-control" style="padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+                                        <option value="all">Todos</option>
+                                        <option value="unread">No leídos</option>
+                                        <option value="local">Locales</option>
+                                        <option value="servicio">Servicios</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="conversations-list" id="conversationsList">
+                                <!-- Conversations loaded via JS -->
+                            </div>
+                            <div class="empty-state" id="emptyMessages" style="display: none;">
+                                <i class="fas fa-comments"></i>
+                                <h3>No tienes mensajes</h3>
+                                <p>Cuando contactes a un proveedor, tus conversaciones apareceran aqui.</p>
+                                <a href="locales.html" class="btn btn-primary">Explorar Locales</a>
+                            </div>
+                        </section>
+
+                        <!-- Reservations Section -->
+                        <section class="section-content" id="section-reservas">
+                            <div class="content-header">
+                                <h2><i class="fas fa-calendar-check"></i> Mis Reservas</h2>
+                            </div>
+                            <div class="reservations-filters">
+                                <button class="filter-btn active" data-filter="all">Todas</button>
+                                <button class="filter-btn" data-filter="pendiente">Pendientes</button>
+                                <button class="filter-btn" data-filter="confirmada">Confirmadas</button>
+                                <button class="filter-btn" data-filter="completada">Completadas</button>
+                            </div>
+                            <div class="reservations-list" id="reservationsList">
+                                <!-- Reservations loaded via JS -->
+                            </div>
+                            <div class="empty-state" id="emptyReservations" style="display: none;">
+                                <i class="fas fa-calendar-alt"></i>
+                                <h3>No tienes reservas</h3>
+                                <p>Explora locales y servicios para hacer tu primera reserva.</p>
+                                <a href="locales.html" class="btn btn-primary">Explorar Locales</a>
+                            </div>
+                        </section>
+
+                        <!-- Favorites Section -->
+                        <section class="section-content" id="section-favoritos">
+                            <div class="content-header">
+                                <h2><i class="fas fa-heart"></i> Mis Favoritos</h2>
+                            </div>
+                            <div class="favorites-tabs">
+                                <button class="active" data-type="locales">
+                                    <i class="fas fa-building"></i> Locales
+                                </button>
+                                <button data-type="servicios">
+                                    <i class="fas fa-concierge-bell"></i> Servicios
+                                </button>
+                            </div>
+                            <div class="favorites-grid" id="favoritesGrid">
+                                <!-- Favorites loaded via JS -->
+                            </div>
+                            <div class="empty-state" id="emptyFavorites" style="display: none;">
+                                <i class="fas fa-heart"></i>
+                                <h3>No tienes favoritos</h3>
+                                <p>Guarda tus locales y servicios favoritos para encontrarlos facilmente.</p>
+                                <a href="locales.html" class="btn btn-primary">Explorar Locales</a>
+                            </div>
+                        </section>
+
+                        <!-- User Data Section -->
+                        <section class="section-content" id="section-datos">
+                            <div class="content-header">
+                                <h2><i class="fas fa-user-edit"></i> Mis Datos</h2>
+                            </div>
+                            <form class="user-form" id="userDataForm">
+                                <div class="form-section">
+                                    <h3>Informacion Personal</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="editName">Nombre</label>
+                                            <input type="text" id="editName" placeholder="Tu nombre">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="editLastname">Apellido</label>
+                                            <input type="text" id="editLastname" placeholder="Tu apellido">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editEmail">Correo electronico</label>
+                                        <input type="email" id="editEmail" placeholder="tu@correo.com" readonly style="background: var(--gray-100);">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editPhone">Telefono</label>
+                                        <input type="tel" id="editPhone" placeholder="999 888 777">
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h3>Preferencias de Eventos</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="editCity">Ciudad</label>
+                                            <select id="editCity">
+                                                <option value="">Selecciona...</option>
+                                                <option value="sullana">Sullana</option>
+                                                <option value="piura">Piura</option>
+                                                <option value="talara">Talara</option>
+                                                <option value="paita">Paita</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="editEventType">Tipo de eventos frecuentes</label>
+                                            <select id="editEventType">
+                                                <option value="">Selecciona...</option>
+                                                <option value="familiar">Familiar</option>
+                                                <option value="corporativo">Corporativo</option>
+                                                <option value="social">Social</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h3>Notificaciones</h3>
+                                    <label class="checkbox" style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                                        <input type="checkbox" id="notifyEmail" checked>
+                                        <span>Recibir notificaciones por correo</span>
+                                    </label>
+                                    <label class="checkbox" style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                                        <input type="checkbox" id="notifyOffers" checked>
+                                        <span>Recibir ofertas y promociones</span>
+                                    </label>
+                                    <label class="checkbox" style="display: flex; align-items: center; gap: 10px;">
+                                        <input type="checkbox" id="notifyReminders" checked>
+                                        <span>Recordatorios de reservas</span>
+                                    </label>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-save"></i> Guardar Cambios
+                                </button>
+                            </form>
+                        </section>
+                    </main>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content for non-logged in users -->
+        <div id="loginRequired" class="login-required">
+            <i class="fas fa-user-lock"></i>
+            <h2>Inicia sesion para continuar</h2>
+            <p>Necesitas una cuenta para acceder a tu perfil, mensajes, reservas y favoritos.</p>
+            <div class="btn-group">
+                <button class="btn btn-primary btn-lg" onclick="openAuthModal('login')">
+                    <i class="fas fa-sign-in-alt"></i> Iniciar Sesion
+                </button>
+                <button class="btn btn-outline btn-lg" onclick="openAuthModal('register')">
+                    <i class="fas fa-user-plus"></i> Crear Cuenta
+                </button>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-bottom" style="border: none; padding: var(--spacing-6) 0;">
+                    <p>&copy; 2025 Celebralo pe. Todos los derechos reservados.</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Chatbot -->
+        <div class="chatbot" id="chatbot">
+            <button class="chatbot-trigger" id="chatbotTrigger"><i class="fas fa-comments"></i></button>
+            <div class="chatbot-window" id="chatbotWindow">
+                <div class="chatbot-header">
+                    <div class="chatbot-avatar"><img src="../assets/images/eventbot-avatar.svg" alt="Cele"><span class="status-dot"></span></div>
+                    <div class="chatbot-info"><strong>Cele</strong><span>Tu asistente festivo</span></div>
+                    <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="chatbot-messages" id="chatbotMessages"></div>
+                <div class="chatbot-quick-actions" id="quickActions">
+                    <button class="quick-action" data-action="ayuda">Ayuda</button>
+                </div>
+                <form class="chatbot-input" id="chatbotForm">
+                    <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Auth Modal -->
+        <div class="modal" id="authModal">
+            <div class="modal-overlay"></div>
+            <div class="modal-content auth-modal">
+                <button class="modal-close" aria-label="Cerrar"><i class="fas fa-times"></i></button>
+                <div class="auth-form" id="loginForm">
+                    <div class="auth-header">
+                        <h2>Bienvenido de vuelta</h2>
+                        <p>Ingresa a tu cuenta para continuar</p>
+                    </div>
+                    <form id="loginFormElement">
+                        <div class="form-group">
+                            <label for="loginEmail">Correo electronico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="loginEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="loginPassword">Contrasena</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="loginPassword" placeholder="********" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Ingresar</button>
+                    </form>
+                    <p class="auth-switch">No tienes cuenta? <a href="#" onclick="switchAuthForm('register')">Registrate</a></p>
+                </div>
+                <div class="auth-form hidden" id="registerForm">
+                    <div class="auth-header">
+                        <h2>Crea tu cuenta</h2>
+                        <p>Unete a Celebralo pe</p>
+                    </div>
+                    <form id="registerFormElement">
+                        <div class="form-row-2">
+                            <div class="form-group">
+                                <label for="registerName">Nombre</label>
+                                <input type="text" id="registerName" placeholder="Tu nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="registerLastname">Apellido</label>
+                                <input type="text" id="registerLastname" placeholder="Tu apellido" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerEmail">Correo electronico</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="registerEmail" placeholder="tu@correo.com" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPhone">Telefono</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="registerPhone" placeholder="999 888 777" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">Contrasena</label>
+                            <div class="input-icon">
+                                <i class="fas fa-lock"></i>
+                                <input type="password" id="registerPassword" placeholder="Minimo 8 caracteres" required>
+                            </div>
+                        </div>
+                        <label class="checkbox">
+                            <input type="checkbox" id="acceptTerms" required>
+                            <span>Acepto los <a href="terminos-condiciones.html">Terminos y Condiciones</a></span>
+                        </label>
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Crear cuenta</button>
+                    </form>
+                    <p class="auth-switch">Ya tienes cuenta? <a href="#" onclick="switchAuthForm('login')">Inicia sesion</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/data/locales.js"></script>
+    <script src="../js/data/servicios.js"></script>
+    <script src="../js/utils/helpers.js"></script>
+    <script src="../js/components/header.js"></script>
+    <script src="../js/components/chatbot.js"></script>
+    <script src="../js/components/auth.js"></script>
+    <script src="../js/components/toast.js"></script>
+    <script src="../js/app.js"></script>
+
+    <script>
+        // Mi Cuenta Page Logic
+        class MiCuenta {
+            constructor() {
+                this.currentSection = 'mensajes';
+                this.currentUser = null;
+                this.conversations = {};
+                this.reservations = [];
+                this.favorites = { locales: [], servicios: [] };
+
+                this.init();
+            }
+
+            init() {
+                // Check if user is logged in
+                this.currentUser = storage.get('celebralope_user') || sessionStorage.get('celebralope_user');
+
+                if (this.currentUser) {
+                    this.showAccountContent();
+                    this.loadUserData();
+                    this.setupEventListeners();
+                    this.handleHashChange();
+                } else {
+                    this.showLoginRequired();
+                }
+
+                // Listen for hash changes
+                window.addEventListener('hashchange', () => this.handleHashChange());
+            }
+
+            showAccountContent() {
+                document.getElementById('loginRequired').style.display = 'none';
+                document.getElementById('accountContent').style.display = 'block';
+
+                // Update header
+                document.getElementById('userAvatar').textContent = this.currentUser.avatar || 'UD';
+                document.getElementById('userName').textContent = this.currentUser.name || 'Usuario';
+                document.getElementById('userEmail').textContent = this.currentUser.email || '';
+
+                // Update header button
+                const headerBtn = document.getElementById('headerUserBtn');
+                if (headerBtn) {
+                    headerBtn.innerHTML = `
+                        <div class="avatar avatar-sm" style="background: var(--primary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px;">
+                            ${this.currentUser.avatar || 'UD'}
+                        </div>
+                        <span>${this.currentUser.name?.split(' ')[0] || 'Usuario'}</span>
+                    `;
+                }
+            }
+
+            showLoginRequired() {
+                document.getElementById('loginRequired').style.display = 'flex';
+                document.getElementById('accountContent').style.display = 'none';
+            }
+
+            loadUserData() {
+                // Load conversations from localStorage
+                this.loadConversations();
+
+                // Load reservations
+                this.loadReservations();
+
+                // Load favorites
+                this.loadFavorites();
+
+                // Update stats
+                this.updateStats();
+
+                // Load user form data
+                this.loadUserFormData();
+            }
+
+            loadConversations() {
+                const stored = storage.get('celebralo_conversations') || {};
+                this.conversations = stored;
+
+                const list = document.getElementById('conversationsList');
+                const empty = document.getElementById('emptyMessages');
+
+                const conversationKeys = Object.keys(this.conversations);
+
+                if (conversationKeys.length === 0) {
+                    list.innerHTML = '';
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                empty.style.display = 'none';
+
+                // Sort by last message time
+                conversationKeys.sort((a, b) => {
+                    const timeA = new Date(this.conversations[a].lastMessageTime || 0);
+                    const timeB = new Date(this.conversations[b].lastMessageTime || 0);
+                    return timeB - timeA;
+                });
+
+                let html = '';
+                let unreadCount = 0;
+
+                conversationKeys.forEach(key => {
+                    const conv = this.conversations[key];
+                    const isUnread = conv.unreadCount > 0;
+                    if (isUnread) unreadCount += conv.unreadCount;
+
+                    const avatar = conv.providerName ? conv.providerName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase() : 'PR';
+                    const timeAgo = this.getTimeAgo(conv.lastMessageTime);
+
+                    html += `
+                        <div class="conversation-card ${isUnread ? 'unread' : ''}"
+                             data-provider-id="${conv.providerId}"
+                             data-provider-type="${conv.providerType}"
+                             data-provider-slug="${conv.providerSlug}"
+                             onclick="miCuenta.openConversation('${key}')">
+                            <div class="conversation-avatar">${avatar}</div>
+                            <div class="conversation-info">
+                                <div class="conversation-header">
+                                    <span class="conversation-name">${conv.providerName || 'Proveedor'}</span>
+                                    <span class="conversation-time">${timeAgo}</span>
+                                </div>
+                                <p class="conversation-preview">${conv.lastMessage || 'Sin mensajes'}</p>
+                                <span class="conversation-type">
+                                    <i class="fas fa-${conv.providerType === 'local' ? 'building' : 'concierge-bell'}"></i>
+                                    ${conv.providerType === 'local' ? 'Local' : 'Servicio'}
+                                </span>
+                            </div>
+                            ${isUnread ? `<span class="conversation-badge">${conv.unreadCount}</span>` : ''}
+                        </div>
+                    `;
+                });
+
+                list.innerHTML = html;
+
+                // Update unread badge
+                const badge = document.getElementById('unreadBadge');
+                if (unreadCount > 0) {
+                    badge.textContent = unreadCount;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+
+            loadReservations() {
+                // Load from localStorage (demo data)
+                this.reservations = storage.get('celebralo_reservations') || [];
+
+                // Add demo reservation if empty
+                if (this.reservations.length === 0) {
+                    // Show empty state
+                    document.getElementById('emptyReservations').style.display = 'block';
+                    document.getElementById('reservationsList').innerHTML = '';
+                    return;
+                }
+
+                this.renderReservations();
+            }
+
+            renderReservations(filter = 'all') {
+                const list = document.getElementById('reservationsList');
+                const empty = document.getElementById('emptyReservations');
+
+                let filtered = this.reservations;
+                if (filter !== 'all') {
+                    filtered = this.reservations.filter(r => r.estado === filter);
+                }
+
+                if (filtered.length === 0) {
+                    list.innerHTML = '';
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                empty.style.display = 'none';
+
+                let html = '';
+                filtered.forEach(res => {
+                    const daysUntil = this.getDaysUntil(res.fechaEvento);
+                    const statusLabels = {
+                        'pendiente': 'Pendiente',
+                        'confirmada': 'Confirmada',
+                        'completada': 'Completada',
+                        'cancelada': 'Cancelada'
+                    };
+                    const statusIcons = {
+                        'pendiente': 'clock',
+                        'confirmada': 'check-circle',
+                        'completada': 'flag-checkered',
+                        'cancelada': 'times-circle'
+                    };
+
+                    html += `
+                        <div class="reservation-card ${res.estado}">
+                            <div class="reservation-header">
+                                <div>
+                                    <h3 class="reservation-title">${res.local || res.servicio || 'Reserva'}</h3>
+                                    <span class="reservation-id">${res.id}</span>
+                                </div>
+                                <span class="reservation-status ${res.estado}">
+                                    <i class="fas fa-${statusIcons[res.estado]}"></i>
+                                    ${statusLabels[res.estado]}
+                                </span>
+                            </div>
+                            <div class="reservation-details">
+                                <div class="detail-item">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>${res.fechaEvento || 'Por definir'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-users"></i>
+                                    <span>${res.invitados || '0'} invitados</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-tag"></i>
+                                    <span>${res.tipoEvento || 'Evento'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <i class="fas fa-money-bill"></i>
+                                    <span>S/ ${res.precioEstimado || '0'}</span>
+                                </div>
+                            </div>
+                            ${daysUntil !== null && res.estado !== 'cancelada' && res.estado !== 'completada' ? `
+                                <span class="reservation-countdown">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    ${daysUntil > 0 ? `Faltan ${daysUntil} dias` : daysUntil === 0 ? 'Es hoy!' : 'Ya paso'}
+                                </span>
+                            ` : ''}
+                            <div class="reservation-actions">
+                                <button class="btn btn-outline btn-sm" onclick="miCuenta.viewReservation('${res.id}')">
+                                    <i class="fas fa-eye"></i> Ver Detalles
+                                </button>
+                                ${res.estado === 'pendiente' || res.estado === 'confirmada' ? `
+                                    <button class="btn btn-ghost btn-sm" onclick="miCuenta.cancelReservation('${res.id}')" style="color: var(--error);">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </button>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                list.innerHTML = html;
+            }
+
+            loadFavorites() {
+                this.favorites = storage.get('celebralo_favorites') || { locales: [], servicios: [] };
+                this.renderFavorites('locales');
+            }
+
+            renderFavorites(type = 'locales') {
+                const grid = document.getElementById('favoritesGrid');
+                const empty = document.getElementById('emptyFavorites');
+
+                const ids = this.favorites[type] || [];
+                const data = type === 'locales'
+                    ? (typeof LOCALES_DATA !== 'undefined' ? LOCALES_DATA : [])
+                    : (typeof SERVICIOS_DATA !== 'undefined' ? SERVICIOS_DATA : []);
+
+                const items = data.filter(item => ids.includes(item.id));
+
+                if (items.length === 0) {
+                    grid.innerHTML = '';
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                empty.style.display = 'none';
+
+                let html = '';
+                items.forEach(item => {
+                    const url = type === 'locales'
+                        ? `local.html?slug=${item.slug}`
+                        : `servicio.html?slug=${item.slug}`;
+
+                    html += `
+                        <div class="favorite-card">
+                            <div class="favorite-image">
+                                ${item.icon || '🎉'}
+                                <button class="favorite-remove" onclick="miCuenta.removeFavorite(${item.id}, '${type}')" title="Quitar de favoritos">
+                                    <i class="fas fa-heart-broken"></i>
+                                </button>
+                            </div>
+                            <div class="favorite-content">
+                                <h4>${item.name}</h4>
+                                <p>${item.shortDescription || item.description?.substring(0, 60) + '...' || ''}</p>
+                                <div class="favorite-meta">
+                                    <span class="favorite-rating">
+                                        <i class="fas fa-star"></i>
+                                        ${item.rating || '4.5'}
+                                    </span>
+                                    <span class="favorite-price">
+                                        ${item.price?.base ? `S/ ${item.price.base.toLocaleString()}` : item.priceRange || 'Consultar'}
+                                    </span>
+                                </div>
+                                <a href="${url}" class="btn btn-primary btn-sm btn-block" style="margin-top: 12px;">
+                                    Ver Detalles
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                grid.innerHTML = html;
+            }
+
+            loadUserFormData() {
+                if (!this.currentUser) return;
+
+                const nameParts = (this.currentUser.name || '').split(' ');
+                document.getElementById('editName').value = nameParts[0] || '';
+                document.getElementById('editLastname').value = nameParts.slice(1).join(' ') || '';
+                document.getElementById('editEmail').value = this.currentUser.email || '';
+                document.getElementById('editPhone').value = this.currentUser.phone || '';
+            }
+
+            updateStats() {
+                const conversationCount = Object.keys(this.conversations).length;
+                const reservationCount = this.reservations.length;
+                const favoritesCount = (this.favorites.locales?.length || 0) + (this.favorites.servicios?.length || 0);
+
+                document.getElementById('statMessages').textContent = conversationCount;
+                document.getElementById('statReservations').textContent = reservationCount;
+                document.getElementById('statFavorites').textContent = favoritesCount;
+            }
+
+            setupEventListeners() {
+                // Navigation
+                document.querySelectorAll('.account-nav a[data-section]').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const section = link.dataset.section;
+                        this.switchSection(section);
+                        window.location.hash = section;
+                    });
+                });
+
+                // Logout
+                document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.logout();
+                });
+
+                // Message filter
+                document.getElementById('messageFilter').addEventListener('change', (e) => {
+                    this.filterMessages(e.target.value);
+                });
+
+                // Reservation filters
+                document.querySelectorAll('.reservations-filters .filter-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.reservations-filters .filter-btn').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.renderReservations(btn.dataset.filter);
+                    });
+                });
+
+                // Favorites tabs
+                document.querySelectorAll('.favorites-tabs button').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.favorites-tabs button').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.renderFavorites(btn.dataset.type);
+                    });
+                });
+
+                // User data form
+                document.getElementById('userDataForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveUserData();
+                });
+            }
+
+            handleHashChange() {
+                const hash = window.location.hash.replace('#', '') || 'mensajes';
+                const validSections = ['mensajes', 'reservas', 'favoritos', 'datos'];
+
+                if (validSections.includes(hash)) {
+                    this.switchSection(hash);
+                }
+            }
+
+            switchSection(section) {
+                this.currentSection = section;
+
+                // Update nav
+                document.querySelectorAll('.account-nav a').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.section === section) {
+                        link.classList.add('active');
+                    }
+                });
+
+                // Update content
+                document.querySelectorAll('.section-content').forEach(sec => {
+                    sec.classList.remove('active');
+                });
+                document.getElementById(`section-${section}`).classList.add('active');
+            }
+
+            openConversation(key) {
+                const conv = this.conversations[key];
+                if (!conv) return;
+
+                // Mark as read
+                if (conv.unreadCount > 0) {
+                    conv.unreadCount = 0;
+                    storage.set('celebralo_conversations', this.conversations);
+                    this.loadConversations();
+                }
+
+                // Navigate to provider page with chat open
+                const url = conv.providerType === 'local'
+                    ? `local.html?slug=${conv.providerSlug}&chat=open`
+                    : `servicio.html?slug=${conv.providerSlug}&chat=open`;
+
+                window.location.href = url;
+            }
+
+            filterMessages(filter) {
+                const cards = document.querySelectorAll('.conversation-card');
+
+                cards.forEach(card => {
+                    const type = card.dataset.providerType;
+                    const isUnread = card.classList.contains('unread');
+
+                    let show = true;
+                    if (filter === 'unread' && !isUnread) show = false;
+                    if (filter === 'local' && type !== 'local') show = false;
+                    if (filter === 'servicio' && type !== 'servicio') show = false;
+
+                    card.style.display = show ? 'flex' : 'none';
+                });
+            }
+
+            removeFavorite(id, type) {
+                if (!confirm('¿Quitar de favoritos?')) return;
+
+                const index = this.favorites[type].indexOf(id);
+                if (index > -1) {
+                    this.favorites[type].splice(index, 1);
+                    storage.set('celebralo_favorites', this.favorites);
+                    this.renderFavorites(type);
+                    this.updateStats();
+                    showToast('info', 'Eliminado', 'Se quito de favoritos');
+                }
+            }
+
+            viewReservation(id) {
+                const res = this.reservations.find(r => r.id === id);
+                if (!res) return;
+
+                alert(`Reserva: ${res.id}\nLocal: ${res.local || res.servicio}\nFecha: ${res.fechaEvento}\nEstado: ${res.estado}\nTotal: S/ ${res.precioEstimado}`);
+            }
+
+            cancelReservation(id) {
+                if (!confirm('¿Estas seguro de cancelar esta reserva?')) return;
+
+                const res = this.reservations.find(r => r.id === id);
+                if (res) {
+                    res.estado = 'cancelada';
+                    storage.set('celebralo_reservations', this.reservations);
+                    this.renderReservations();
+                    showToast('info', 'Reserva cancelada', 'Tu reserva ha sido cancelada');
+                }
+            }
+
+            saveUserData() {
+                const name = document.getElementById('editName').value;
+                const lastname = document.getElementById('editLastname').value;
+                const phone = document.getElementById('editPhone').value;
+                const city = document.getElementById('editCity').value;
+
+                this.currentUser.name = `${name} ${lastname}`.trim();
+                this.currentUser.phone = phone;
+                this.currentUser.city = city;
+                this.currentUser.avatar = this.getInitials(`${name} ${lastname}`);
+
+                storage.set('celebralope_user', this.currentUser);
+
+                // Update UI
+                document.getElementById('userName').textContent = this.currentUser.name;
+                document.getElementById('userAvatar').textContent = this.currentUser.avatar;
+
+                showToast('success', 'Guardado', 'Tus datos han sido actualizados');
+            }
+
+            logout() {
+                if (!confirm('¿Deseas cerrar sesion?')) return;
+
+                storage.remove('celebralope_user');
+                sessionStorage.clear();
+                showToast('info', 'Sesion cerrada', 'Has cerrado sesion correctamente');
+
+                setTimeout(() => {
+                    window.location.href = '../index.html';
+                }, 1000);
+            }
+
+            getTimeAgo(dateString) {
+                if (!dateString) return '';
+
+                const date = new Date(dateString);
+                const now = new Date();
+                const seconds = Math.floor((now - date) / 1000);
+
+                if (seconds < 60) return 'Ahora';
+                if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
+                if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
+                if (seconds < 604800) return `${Math.floor(seconds / 86400)}d`;
+
+                return date.toLocaleDateString('es-PE', { day: 'numeric', month: 'short' });
+            }
+
+            getDaysUntil(dateString) {
+                if (!dateString) return null;
+
+                const date = new Date(dateString);
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                date.setHours(0, 0, 0, 0);
+
+                const diff = Math.ceil((date - now) / (1000 * 60 * 60 * 24));
+                return diff;
+            }
+
+            getInitials(name) {
+                return name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+            }
+        }
+
+        // Initialize when DOM is ready
+        let miCuenta;
+        document.addEventListener('DOMContentLoaded', () => {
+            miCuenta = new MiCuenta();
+        });
+    </script>
+</body>
+</html>

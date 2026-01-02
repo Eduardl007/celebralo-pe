@@ -150,11 +150,46 @@ const LOCALES_DATA = [
         },
         verified: true,
         featured: true,
-        badges: ["Verificado", "Top Rated", "Respuesta Rápida"],
+        badges: ["Verificado", "Top Rated", "Respuesta Rapida"],
         createdAt: "2024-01-15",
+        reviews: [
+            {
+                id: 1,
+                userName: "Carmen Lucia Vega",
+                userAvatar: "CV",
+                rating: 5,
+                comment: "Celebramos el matrimonio de mi hija aqui y fue magico. El jardin es precioso y todo el personal muy atento. Totalmente recomendado.",
+                date: "2024-12-20",
+                eventType: "Matrimonio",
+                verified: true,
+                helpful: 28
+            },
+            {
+                id: 2,
+                userName: "Roberto Mendoza",
+                userAvatar: "RM",
+                rating: 5,
+                comment: "Excelente local para eventos corporativos. Amplio, elegante y con todas las comodidades. La atencion de Maria Elena es de primera.",
+                date: "2024-11-15",
+                eventType: "Corporativo",
+                verified: true,
+                helpful: 15
+            },
+            {
+                id: 3,
+                userName: "Patricia Sanchez",
+                userAvatar: "PS",
+                rating: 4,
+                comment: "Muy buen local para los XV de mi hija. El unico detalle fue el aire acondicionado que tardo en enfriar, pero todo lo demas perfecto.",
+                date: "2024-10-28",
+                eventType: "XV Anos",
+                verified: true,
+                helpful: 8
+            }
+        ],
         owner: {
             id: 101,
-            name: "María Elena Rodríguez",
+            name: "Maria Elena Rodriguez",
             avatar: "ME",
             responseRate: 98,
             responseTime: "< 1 hora"
@@ -162,7 +197,7 @@ const LOCALES_DATA = [
     },
     {
         id: 2,
-        name: "Quinta El Paraíso",
+        name: "Quinta El Paraiso",
         slug: "quinta-el-paraiso",
         category: "quinta",
         location: {
@@ -224,6 +259,41 @@ const LOCALES_DATA = [
         featured: true,
         badges: ["Verificado", "Familiar"],
         createdAt: "2024-02-20",
+        reviews: [
+            {
+                id: 1,
+                userName: "Ana Maria Torres",
+                userAvatar: "AT",
+                rating: 5,
+                comment: "Celebramos el cumple de mi hijo aqui y los ninos la pasaron increible. La piscina y los juegos fueron un exito. Carlos siempre atento a todo.",
+                date: "2024-12-10",
+                eventType: "Cumpleanos",
+                verified: true,
+                helpful: 22
+            },
+            {
+                id: 2,
+                userName: "Luis Fernando Zapata",
+                userAvatar: "LZ",
+                rating: 4,
+                comment: "Muy bonita quinta para eventos familiares. El unico detalle es que el estacionamiento es algo pequeno para eventos grandes.",
+                date: "2024-11-05",
+                eventType: "Familiar",
+                verified: true,
+                helpful: 10
+            },
+            {
+                id: 3,
+                userName: "Gabriela Ruiz",
+                userAvatar: "GR",
+                rating: 5,
+                comment: "Hicimos el baby shower de mi hermana y quedo perfecto. El ambiente campestre le da un toque muy especial. 100% recomendado.",
+                date: "2024-10-20",
+                eventType: "Baby Shower",
+                verified: true,
+                helpful: 18
+            }
+        ],
         owner: {
             id: 102,
             name: "Carlos Mendoza",
@@ -299,6 +369,52 @@ const LOCALES_DATA = [
         featured: true,
         badges: ["Verificado", "Premium", "Top Rated", "Coordinador Incluido"],
         createdAt: "2023-11-10",
+        reviews: [
+            {
+                id: 1,
+                userName: "Jorge Alejandro Medina",
+                userAvatar: "JM",
+                rating: 5,
+                comment: "El mejor local de Sullana sin duda. El matrimonio de mi hija fue un cuento de hadas. El coordinador incluido vale cada sol. Perfecto.",
+                date: "2024-12-28",
+                eventType: "Matrimonio",
+                verified: true,
+                helpful: 45
+            },
+            {
+                id: 2,
+                userName: "Empresa Agroexport Norte SAC",
+                userAvatar: "AN",
+                rating: 5,
+                comment: "Realizamos nuestra cena de fin de ano empresarial aqui. Instalaciones de lujo, servicio impecable. El valet parking fue un plus para nuestros ejecutivos.",
+                date: "2024-12-18",
+                eventType: "Corporativo",
+                verified: true,
+                helpful: 32
+            },
+            {
+                id: 3,
+                userName: "Rosa Elena Cordova",
+                userAvatar: "RC",
+                rating: 5,
+                comment: "Los quince de mi sobrina quedaron espectaculares. La decoracion incluida es hermosa. Vale la pena invertir en este local.",
+                date: "2024-11-22",
+                eventType: "XV Anos",
+                verified: true,
+                helpful: 28
+            },
+            {
+                id: 4,
+                userName: "Fernando Castillo",
+                userAvatar: "FC",
+                rating: 4,
+                comment: "Excelente local premium. El unico detalle es que se llena rapido, hay que reservar con meses de anticipacion.",
+                date: "2024-10-15",
+                eventType: "Matrimonio",
+                verified: true,
+                helpful: 19
+            }
+        ],
         owner: {
             id: 103,
             name: "Grupo Eventos Premium SAC",
@@ -370,6 +486,41 @@ const LOCALES_DATA = [
         featured: false,
         badges: ["Verificado", "Económico"],
         createdAt: "2024-03-05",
+        reviews: [
+            {
+                id: 1,
+                userName: "Mirtha Coloma",
+                userAvatar: "MC",
+                rating: 5,
+                comment: "Excelente opcion economica! Celebre el cumple de mi esposo y no nos falto nada. Rosa es muy amable y flexible con la decoracion.",
+                date: "2024-12-08",
+                eventType: "Cumpleanos",
+                verified: true,
+                helpful: 14
+            },
+            {
+                id: 2,
+                userName: "Javier Palacios",
+                userAvatar: "JP",
+                rating: 4,
+                comment: "Buen salon para eventos pequenos. Precio justo para lo que ofrece. El equipo de sonido es basico pero cumple.",
+                date: "2024-11-15",
+                eventType: "Reunion",
+                verified: true,
+                helpful: 8
+            },
+            {
+                id: 3,
+                userName: "Luciana Chavez",
+                userAvatar: "LC",
+                rating: 4,
+                comment: "Hicimos una reunion familiar y estuvo bien. El local es sencillo pero limpio y bien mantenido.",
+                date: "2024-09-20",
+                eventType: "Familiar",
+                verified: true,
+                helpful: 6
+            }
+        ],
         owner: {
             id: 104,
             name: "Rosa Sánchez",
@@ -443,6 +594,41 @@ const LOCALES_DATA = [
         featured: true,
         badges: ["Verificado", "Corporativo", "Deportivo"],
         createdAt: "2024-01-08",
+        reviews: [
+            {
+                id: 1,
+                userName: "Banco del Norte - RRHH",
+                userAvatar: "BN",
+                rating: 5,
+                comment: "Organizamos nuestro team building anual aqui. Las instalaciones deportivas son excelentes. Los empleados quedaron encantados. Muy recomendado para empresas.",
+                date: "2024-12-05",
+                eventType: "Team Building",
+                verified: true,
+                helpful: 35
+            },
+            {
+                id: 2,
+                userName: "Maria del Carmen Flores",
+                userAvatar: "MF",
+                rating: 5,
+                comment: "Celebramos la graduacion de mi hijo con sus companeros. El restaurante tiene buena comida y los chicos disfrutaron las canchas y piscina.",
+                date: "2024-11-28",
+                eventType: "Graduacion",
+                verified: true,
+                helpful: 21
+            },
+            {
+                id: 3,
+                userName: "Roberto Guerrero",
+                userAvatar: "RG",
+                rating: 4,
+                comment: "Muy buen club para eventos familiares grandes. El espacio es amplio y los ninos tienen donde jugar. El precio es justo.",
+                date: "2024-10-12",
+                eventType: "Familiar",
+                verified: true,
+                helpful: 15
+            }
+        ],
         owner: {
             id: 105,
             name: "Club El Bosque SAC",
@@ -514,6 +700,41 @@ const LOCALES_DATA = [
         featured: false,
         badges: ["Verificado", "Romántico"],
         createdAt: "2024-04-12",
+        reviews: [
+            {
+                id: 1,
+                userName: "Carlos y Mariana",
+                userAvatar: "CM",
+                rating: 5,
+                comment: "Mi esposo me pidio matrimonio aqui al atardecer. La vista es impresionante y Patricia nos ayudo a organizar todo. Momento inolvidable.",
+                date: "2024-12-15",
+                eventType: "Pedida de Mano",
+                verified: true,
+                helpful: 28
+            },
+            {
+                id: 2,
+                userName: "Sandra Vilchez",
+                userAvatar: "SV",
+                rating: 5,
+                comment: "Celebramos nuestro aniversario de 25 anos con vista a la ciudad. Romantico y perfecto para eventos intimos. El bar incluido es un plus.",
+                date: "2024-11-10",
+                eventType: "Aniversario",
+                verified: true,
+                helpful: 19
+            },
+            {
+                id: 3,
+                userName: "Diego Alvarado",
+                userAvatar: "DA",
+                rating: 4,
+                comment: "Linda terraza para cumpleanos intimos. Los atardeceres son espectaculares. Solo que el aforo es limitado, no es para eventos muy grandes.",
+                date: "2024-10-05",
+                eventType: "Cumpleanos",
+                verified: true,
+                helpful: 12
+            }
+        ],
         owner: {
             id: 106,
             name: "Patricia Vargas",

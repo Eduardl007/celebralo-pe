@@ -122,23 +122,44 @@ class EventBot {
         }
     }
 
-    // Guardar conversaciones con propietarios
+    // Guardar conversaciones con propietarios (integrado con UserManager)
     saveOwnerChat(ownerId, message, type) {
         try {
+            // Guardar en formato local
             const chats = JSON.parse(localStorage.getItem(this.OWNER_CHATS_KEY) || '{}');
             if (!chats[ownerId]) {
                 chats[ownerId] = [];
             }
-            chats[ownerId].push({
+
+            const messageObj = {
                 text: message,
                 type: type,
                 timestamp: new Date().toISOString()
-            });
-            // Mantener últimos 100 mensajes por propietario
+            };
+
+            chats[ownerId].push(messageObj);
+
+            // Mantener ultimos 100 mensajes por propietario
             if (chats[ownerId].length > 100) {
                 chats[ownerId] = chats[ownerId].slice(-100);
             }
             localStorage.setItem(this.OWNER_CHATS_KEY, JSON.stringify(chats));
+
+            // Sincronizar con UserManager para la bandeja de mensajes
+            if (window.userManager && this.currentOwner && this.currentLocal) {
+                const providerData = {
+                    name: this.currentOwner.name,
+                    type: this.providerType || 'local',
+                    slug: this.currentLocal.slug
+                };
+
+                // Solo incrementar no leidos si es mensaje del bot (proveedor)
+                if (type === 'bot') {
+                    providerData.incrementUnread = true;
+                }
+
+                userManager.addMessageToConversation(ownerId, messageObj, providerData);
+            }
         } catch (e) {
             console.warn('Error saving owner chat:', e);
         }
@@ -146,10 +167,49 @@ class EventBot {
 
     loadOwnerChat(ownerId) {
         try {
+            // Intentar cargar desde UserManager primero
+            if (window.userManager) {
+                const conversation = userManager.getConversation(ownerId);
+                if (conversation && conversation.messages && conversation.messages.length > 0) {
+                    // Marcar como leido al abrir
+                    userManager.markConversationAsRead(ownerId);
+                    return conversation.messages;
+                }
+            }
+
+            // Fallback a localStorage directo
             const chats = JSON.parse(localStorage.getItem(this.OWNER_CHATS_KEY) || '{}');
             return chats[ownerId] || [];
         } catch (e) {
             return [];
+        }
+    }
+
+    // Obtener conteo de mensajes no leidos
+    getUnreadCount() {
+        if (window.userManager) {
+            return userManager.getUnreadCount();
+        }
+        return 0;
+    }
+
+    // Actualizar badge de mensajes no leidos
+    updateUnreadBadge() {
+        const unread = this.getUnreadCount();
+        const badge = this.trigger?.querySelector('.chatbot-badge');
+
+        if (badge) {
+            if (unread > 0) {
+                badge.textContent = unread > 9 ? '9+' : unread;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        // Tambien actualizar en auth dropdown si existe
+        if (window.auth && typeof auth.updateMessageBadge === 'function') {
+            auth.updateMessageBadge();
         }
     }
 
@@ -355,6 +415,12 @@ class EventBot {
         this.window.classList.add('active');
         this.hideBadge();
         setTimeout(() => this.input.focus(), 300);
+
+        // Si estamos en modo owner, marcar como leido
+        if (this.mode === 'owner' && this.currentOwner && window.userManager) {
+            userManager.markConversationAsRead(this.currentOwner.id);
+            this.updateUnreadBadge();
+        }
 
         if (window.analytics) {
             analytics.trackChatbotOpen();

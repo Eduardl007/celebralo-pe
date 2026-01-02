@@ -42,8 +42,48 @@ const SERVICIOS_DATA = [
         eventTypes: ["matrimonio", "quinceanos", "corporativo", "cumpleanos", "graduacion"],
         availability: {
             advanceBooking: "7 días",
-            operatingDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+            monday: { available: true, hours: "09:00-20:00" },
+            tuesday: { available: true, hours: "09:00-20:00" },
+            wednesday: { available: true, hours: "09:00-20:00" },
+            thursday: { available: true, hours: "09:00-20:00" },
+            friday: { available: true, hours: "09:00-22:00" },
+            saturday: { available: true, hours: "09:00-23:00" },
+            sunday: { available: true, hours: "10:00-18:00" }
         },
+        blockedDates: [],
+        policies: {
+            cancellation: "Cancelacion gratuita hasta 5 dias antes del evento. 50% de devolucion hasta 3 dias antes.",
+            deposit: "Se requiere 30% de adelanto para confirmar la reserva.",
+            rules: [
+                "Confirmar menu final 3 dias antes del evento",
+                "Acceso al local 3 horas antes para montaje",
+                "Vajilla incluida en todos los paquetes"
+            ]
+        },
+        reviews: [
+            {
+                id: 1,
+                userName: "Patricia Mendoza",
+                userAvatar: "PM",
+                rating: 5,
+                comment: "Excelente servicio de catering. La comida estuvo deliciosa y el personal muy atento. Mis invitados quedaron encantados.",
+                date: "2024-12-10",
+                eventType: "Matrimonio",
+                verified: true,
+                helpful: 15
+            },
+            {
+                id: 2,
+                userName: "Roberto Castillo",
+                userAvatar: "RC",
+                rating: 5,
+                comment: "El Chef Miguel es un profesional. Personalizo todo el menu para nuestro evento corporativo. 100% recomendado.",
+                date: "2024-11-28",
+                eventType: "Corporativo",
+                verified: true,
+                helpful: 8
+            }
+        ],
         contact: {
             phone: null,
             whatsapp: null,
@@ -51,10 +91,10 @@ const SERVICIOS_DATA = [
         },
         verified: true,
         featured: true,
-        badges: ["Verificado", "Top Rated", "Más Pedido"],
+        badges: ["Verificado", "Top Rated", "Mas Pedido"],
         owner: {
             id: 201,
-            name: "Chef Miguel Ángel Ramos",
+            name: "Chef Miguel Angel Ramos",
             avatar: "MR",
             responseRate: 99,
             responseTime: "< 1 hora"
@@ -98,9 +138,38 @@ const SERVICIOS_DATA = [
         ],
         eventTypes: ["matrimonio", "quinceanos", "cumpleanos", "corporativo", "graduacion"],
         availability: {
-            advanceBooking: "5 días",
-            operatingDays: ["Jueves", "Viernes", "Sábado", "Domingo"]
+            advanceBooking: "5 dias",
+            monday: { available: false, hours: null },
+            tuesday: { available: false, hours: null },
+            wednesday: { available: false, hours: null },
+            thursday: { available: true, hours: "18:00-02:00" },
+            friday: { available: true, hours: "18:00-04:00" },
+            saturday: { available: true, hours: "18:00-05:00" },
+            sunday: { available: true, hours: "17:00-00:00" }
         },
+        blockedDates: [],
+        policies: {
+            cancellation: "Cancelacion con 72 horas de anticipacion sin costo. Despues se cobra 50%.",
+            deposit: "50% de adelanto para reservar fecha.",
+            rules: [
+                "Confirmar playlist 48 horas antes",
+                "Requiere alimentacion para el DJ",
+                "Tomas electricas de 220V disponibles"
+            ]
+        },
+        reviews: [
+            {
+                id: 1,
+                userName: "Carolina Silva",
+                userAvatar: "CS",
+                rating: 5,
+                comment: "DJ Luis puso a bailar a todos! Excelente musica y muy profesional. La iluminacion estuvo espectacular.",
+                date: "2024-12-01",
+                eventType: "XV Anos",
+                verified: true,
+                helpful: 12
+            }
+        ],
         contact: {
             phone: null,
             whatsapp: null,
@@ -119,7 +188,7 @@ const SERVICIOS_DATA = [
     },
     {
         id: 103,
-        name: "Fotografía y Video 'Momentos'",
+        name: "Fotografia y Video 'Momentos'",
         slug: "fotografia-momentos",
         category: "fotografia",
         location: {
@@ -155,9 +224,49 @@ const SERVICIOS_DATA = [
         ],
         eventTypes: ["matrimonio", "quinceanos", "cumpleanos", "bautizo", "corporativo", "graduacion"],
         availability: {
-            advanceBooking: "10 días",
-            operatingDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+            advanceBooking: "10 dias",
+            monday: { available: true, hours: "09:00-20:00" },
+            tuesday: { available: true, hours: "09:00-20:00" },
+            wednesday: { available: true, hours: "09:00-20:00" },
+            thursday: { available: true, hours: "09:00-20:00" },
+            friday: { available: true, hours: "08:00-23:00" },
+            saturday: { available: true, hours: "08:00-23:00" },
+            sunday: { available: true, hours: "09:00-20:00" }
         },
+        blockedDates: [],
+        policies: {
+            cancellation: "Reprogramacion gratuita hasta 7 dias antes. Cancelacion con 5 dias: 70% devolucion.",
+            deposit: "40% de adelanto al confirmar.",
+            rules: [
+                "Sesion pre-evento incluida en paquete Premium",
+                "Entrega de fotos en 15 dias habiles",
+                "Video en 30 dias habiles"
+            ]
+        },
+        reviews: [
+            {
+                id: 1,
+                userName: "Maria Elena Torres",
+                userAvatar: "MT",
+                rating: 5,
+                comment: "Las fotos quedaron hermosas! Capturaron cada momento especial de mi boda. El video cinematografico es una obra de arte.",
+                date: "2024-11-20",
+                eventType: "Matrimonio",
+                verified: true,
+                helpful: 22
+            },
+            {
+                id: 2,
+                userName: "Jorge Ramirez",
+                userAvatar: "JR",
+                rating: 5,
+                comment: "Profesionales de primera. El drone capturo tomas increibles de nuestra fiesta de XV anos.",
+                date: "2024-10-15",
+                eventType: "XV Anos",
+                verified: true,
+                helpful: 10
+            }
+        ],
         contact: {
             phone: null,
             whatsapp: null,
@@ -176,7 +285,7 @@ const SERVICIOS_DATA = [
     },
     {
         id: 104,
-        name: "Decoración Temática 'Eventos Mágicos'",
+        name: "Decoracion Tematica 'Eventos Magicos'",
         slug: "decoracion-eventos-magicos",
         category: "decoracion",
         location: {
@@ -212,9 +321,38 @@ const SERVICIOS_DATA = [
         ],
         eventTypes: ["cumpleanos", "quinceanos", "baby-shower", "bautizo", "matrimonio"],
         availability: {
-            advanceBooking: "7 días",
-            operatingDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+            advanceBooking: "7 dias",
+            monday: { available: true, hours: "09:00-18:00" },
+            tuesday: { available: true, hours: "09:00-18:00" },
+            wednesday: { available: true, hours: "09:00-18:00" },
+            thursday: { available: true, hours: "09:00-18:00" },
+            friday: { available: true, hours: "09:00-20:00" },
+            saturday: { available: true, hours: "08:00-22:00" },
+            sunday: { available: false, hours: null }
         },
+        blockedDates: [],
+        policies: {
+            cancellation: "50% de devolucion hasta 5 dias antes del evento.",
+            deposit: "50% de adelanto para iniciar el diseno.",
+            rules: [
+                "Reunion previa para definir tematica",
+                "Montaje 4 horas antes del evento",
+                "Desmontaje incluido el mismo dia"
+            ]
+        },
+        reviews: [
+            {
+                id: 1,
+                userName: "Lucia Paredes",
+                userAvatar: "LP",
+                rating: 5,
+                comment: "Ana Lucia transformo el local en un castillo de princesas. Mi hija quedo fascinada. Muy creativa y profesional.",
+                date: "2024-11-30",
+                eventType: "Cumpleanos",
+                verified: true,
+                helpful: 8
+            }
+        ],
         contact: {
             phone: null,
             whatsapp: null,
@@ -225,7 +363,7 @@ const SERVICIOS_DATA = [
         badges: ["Verificado", "Creativo"],
         owner: {
             id: 204,
-            name: "Ana Lucía Fernández",
+            name: "Ana Lucia Fernandez",
             avatar: "AF",
             responseRate: 95,
             responseTime: "< 3 horas"
@@ -233,7 +371,7 @@ const SERVICIOS_DATA = [
     },
     {
         id: 105,
-        name: "Animación Infantil 'Fiesta Kids'",
+        name: "Animacion Infantil 'Fiesta Kids'",
         slug: "animacion-fiesta-kids",
         category: "animacion",
         location: {
@@ -268,9 +406,38 @@ const SERVICIOS_DATA = [
         ],
         eventTypes: ["cumpleanos", "baby-shower", "familiar"],
         availability: {
-            advanceBooking: "3 días",
-            operatingDays: ["Viernes", "Sábado", "Domingo"]
+            advanceBooking: "3 dias",
+            monday: { available: false, hours: null },
+            tuesday: { available: false, hours: null },
+            wednesday: { available: false, hours: null },
+            thursday: { available: false, hours: null },
+            friday: { available: true, hours: "15:00-21:00" },
+            saturday: { available: true, hours: "10:00-22:00" },
+            sunday: { available: true, hours: "10:00-20:00" }
         },
+        blockedDates: [],
+        policies: {
+            cancellation: "Cancelacion gratuita 48 horas antes.",
+            deposit: "30% para reservar fecha.",
+            rules: [
+                "Espacio minimo de 4x4 metros",
+                "Toma electrica disponible",
+                "Snacks para los animadores"
+            ]
+        },
+        reviews: [
+            {
+                id: 1,
+                userName: "Andrea Gomez",
+                userAvatar: "AG",
+                rating: 5,
+                comment: "Los ninos se divirtieron muchisimo! El show de magia fue increible. Super recomendados.",
+                date: "2024-12-05",
+                eventType: "Cumpleanos",
+                verified: true,
+                helpful: 6
+            }
+        ],
         contact: {
             phone: null,
             whatsapp: null,
@@ -289,7 +456,7 @@ const SERVICIOS_DATA = [
     },
     {
         id: 106,
-        name: "Tortas y Bocaditos 'Dulce Tentación'",
+        name: "Tortas y Bocaditos 'Dulce Tentacion'",
         slug: "tortas-dulce-tentacion",
         category: "pasteleria",
         location: {
@@ -325,9 +492,49 @@ const SERVICIOS_DATA = [
         ],
         eventTypes: ["cumpleanos", "quinceanos", "matrimonio", "baby-shower", "bautizo"],
         availability: {
-            advanceBooking: "5 días",
-            operatingDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+            advanceBooking: "5 dias",
+            monday: { available: true, hours: "08:00-18:00" },
+            tuesday: { available: true, hours: "08:00-18:00" },
+            wednesday: { available: true, hours: "08:00-18:00" },
+            thursday: { available: true, hours: "08:00-18:00" },
+            friday: { available: true, hours: "08:00-20:00" },
+            saturday: { available: true, hours: "08:00-16:00" },
+            sunday: { available: false, hours: null }
         },
+        blockedDates: [],
+        policies: {
+            cancellation: "Cancelacion con 3 dias: 80% devolucion.",
+            deposit: "50% al hacer el pedido.",
+            rules: [
+                "Recojo el dia anterior al evento",
+                "Disenos personalizados +48 horas de anticipacion",
+                "Delivery disponible en Sullana y Piura"
+            ]
+        },
+        reviews: [
+            {
+                id: 1,
+                userName: "Rosa Martinez",
+                userAvatar: "RM",
+                rating: 5,
+                comment: "La torta de XV anos quedo espectacular! El sabor exquisito y la decoracion perfecta. Carmen es muy talentosa.",
+                date: "2024-11-25",
+                eventType: "XV Anos",
+                verified: true,
+                helpful: 14
+            },
+            {
+                id: 2,
+                userName: "Fernando Diaz",
+                userAvatar: "FD",
+                rating: 4,
+                comment: "Muy buena torta y bocaditos. La mesa de dulces fue un exito. El unico detalle fue que llegaron un poco tarde.",
+                date: "2024-10-20",
+                eventType: "Bautizo",
+                verified: true,
+                helpful: 5
+            }
+        ],
         contact: {
             phone: null,
             whatsapp: null,
@@ -382,9 +589,38 @@ const SERVICIOS_DATA = [
         ],
         eventTypes: ["matrimonio", "quinceanos", "corporativo", "familiar", "graduacion"],
         availability: {
-            advanceBooking: "3 días",
-            operatingDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+            advanceBooking: "3 dias",
+            monday: { available: true, hours: "08:00-18:00" },
+            tuesday: { available: true, hours: "08:00-18:00" },
+            wednesday: { available: true, hours: "08:00-18:00" },
+            thursday: { available: true, hours: "08:00-18:00" },
+            friday: { available: true, hours: "08:00-20:00" },
+            saturday: { available: true, hours: "08:00-20:00" },
+            sunday: { available: true, hours: "08:00-14:00" }
         },
+        blockedDates: [],
+        policies: {
+            cancellation: "Devolucion completa hasta 48 horas antes.",
+            deposit: "30% al confirmar pedido.",
+            rules: [
+                "Recojo y devolucion por el cliente o con delivery (costo adicional)",
+                "Responsabilidad por danos: costo de reposicion",
+                "Inventario al recojo y devolucion"
+            ]
+        },
+        reviews: [
+            {
+                id: 1,
+                userName: "Carlos Vega",
+                userAvatar: "CV",
+                rating: 4,
+                comment: "Buen servicio y mobiliario en buen estado. El transporte fue puntual.",
+                date: "2024-11-10",
+                eventType: "Corporativo",
+                verified: true,
+                helpful: 4
+            }
+        ],
         contact: {
             phone: null,
             whatsapp: null,
@@ -438,9 +674,49 @@ const SERVICIOS_DATA = [
         ],
         eventTypes: ["matrimonio", "quinceanos", "corporativo", "aniversario"],
         availability: {
-            advanceBooking: "15 días",
-            operatingDays: ["Viernes", "Sábado", "Domingo"]
+            advanceBooking: "15 dias",
+            monday: { available: false, hours: null },
+            tuesday: { available: false, hours: null },
+            wednesday: { available: false, hours: null },
+            thursday: { available: false, hours: null },
+            friday: { available: true, hours: "20:00-04:00" },
+            saturday: { available: true, hours: "20:00-05:00" },
+            sunday: { available: true, hours: "18:00-01:00" }
         },
+        blockedDates: ["2025-02-14", "2025-02-15"],
+        policies: {
+            cancellation: "50% devolucion hasta 10 dias antes. Sin devolucion despues.",
+            deposit: "50% al confirmar fecha, resto 3 dias antes del evento.",
+            rules: [
+                "Escenario minimo 4x3 metros",
+                "Camerino o espacio privado para descanso",
+                "Alimentacion para los 8 musicos"
+            ]
+        },
+        reviews: [
+            {
+                id: 1,
+                userName: "Juan Carlos Mendoza",
+                userAvatar: "JM",
+                rating: 5,
+                comment: "Los Sullaneros hicieron de nuestra boda una fiesta inolvidable! Todos bailaron hasta el amanecer. Musica de primera.",
+                date: "2024-12-08",
+                eventType: "Matrimonio",
+                verified: true,
+                helpful: 25
+            },
+            {
+                id: 2,
+                userName: "Martha Salazar",
+                userAvatar: "MS",
+                rating: 5,
+                comment: "Excelente orquesta! El repertorio es muy variado y la hora loca estuvo espectacular. Vale cada sol invertido.",
+                date: "2024-11-15",
+                eventType: "XV Anos",
+                verified: true,
+                helpful: 18
+            }
+        ],
         contact: {
             phone: null,
             whatsapp: null,

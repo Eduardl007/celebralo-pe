@@ -299,6 +299,21 @@
             </div>
         </section>
 
+        <!-- Recently Viewed Section -->
+        <section class="section recently-viewed-section" id="recentlyViewedSection" style="display: none;">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Continua explorando</span>
+                    <h2 class="section-title">Vistos recientemente</h2>
+                    <p class="section-subtitle">Locales y servicios que has visitado</p>
+                </div>
+
+                <div class="recently-viewed-grid" id="recentlyViewedGrid">
+                    <!-- Items loaded via JavaScript -->
+                </div>
+            </div>
+        </section>
+
         <!-- How It Works Section -->
         <section class="section how-it-works-section">
             <div class="container">
@@ -900,7 +915,60 @@
     <script src="js/components/auth.js"></script>
     <script src="js/components/cards.js"></script>
     <script src="js/components/toast.js"></script>
+    <script src="js/components/user.js"></script>
     <script src="js/pages/home.js"></script>
     <script src="js/app.js"></script>
+
+    <!-- Recently Viewed Functionality -->
+    <script>
+        function loadRecentlyViewed() {
+            if (!window.userManager) return;
+
+            const recentLocales = userManager.getRecentlyViewed('locales') || [];
+            const recentServices = userManager.getRecentlyViewed('servicios') || [];
+            const allRecent = [...recentLocales, ...recentServices];
+
+            if (allRecent.length === 0) {
+                document.getElementById('recentlyViewedSection').style.display = 'none';
+                return;
+            }
+
+            // Sort by viewedAt
+            allRecent.sort((a, b) => new Date(b.viewedAt) - new Date(a.viewedAt));
+
+            // Take only first 4
+            const toShow = allRecent.slice(0, 4);
+
+            const html = toShow.map(item => {
+                const type = recentLocales.some(l => l.id === item.id) ? 'locales' : 'servicios';
+                const url = type === 'locales'
+                    ? `pages/local.html?slug=${item.slug}`
+                    : `pages/servicio.html?slug=${item.slug}`;
+
+                return `
+                    <a href="${url}" class="recently-viewed-card">
+                        <div class="rv-icon">${item.icon || '🎉'}</div>
+                        <div class="rv-info">
+                            <h4>${item.name}</h4>
+                            <div class="rv-meta">
+                                <span class="rv-rating"><i class="fas fa-star"></i> ${item.rating || '4.5'}</span>
+                                <span class="rv-price">${typeof item.price === 'number' ? 'S/ ' + item.price.toLocaleString() : item.price || 'Consultar'}</span>
+                            </div>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+
+            document.getElementById('recentlyViewedGrid').innerHTML = html;
+            document.getElementById('recentlyViewedSection').style.display = 'block';
+        }
+
+        // Load on page ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => setTimeout(loadRecentlyViewed, 500));
+        } else {
+            setTimeout(loadRecentlyViewed, 500);
+        }
+    </script>
 </body>
 </html>

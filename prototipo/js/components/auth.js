@@ -8,6 +8,7 @@ class Auth {
         this.loginForm = document.getElementById('loginForm');
         this.registerForm = document.getElementById('registerForm');
         this.currentUser = null;
+        this.dropdownOpen = false;
 
         this.init();
     }
@@ -351,21 +352,116 @@ class Auth {
         // Update header buttons
         const loginBtn = document.querySelector('.nav-actions .btn-ghost');
         if (loginBtn && this.currentUser) {
-            loginBtn.innerHTML = `
-                <div class="avatar avatar-sm" style="background: var(--primary);">
-                    ${this.currentUser.avatar}
+            // Create user menu container
+            const userMenuContainer = document.createElement('div');
+            userMenuContainer.className = 'user-menu-container';
+            userMenuContainer.innerHTML = `
+                <button class="user-menu-trigger btn btn-ghost">
+                    <div class="avatar avatar-sm" style="background: var(--primary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 600;">
+                        ${this.currentUser.avatar}
+                    </div>
+                    <span>${this.currentUser.name.split(' ')[0]}</span>
+                    <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i>
+                </button>
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-header">
+                        <div class="avatar" style="background: var(--primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                            ${this.currentUser.avatar}
+                        </div>
+                        <div class="dropdown-user-info">
+                            <strong>${this.currentUser.name}</strong>
+                            <span>${this.currentUser.email}</span>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="${this.getBasePath()}pages/mi-cuenta.html#mensajes" class="dropdown-item">
+                        <i class="fas fa-comments"></i>
+                        Mis Mensajes
+                        <span class="dropdown-badge" id="msgBadge" style="display: none;">0</span>
+                    </a>
+                    <a href="${this.getBasePath()}pages/mi-cuenta.html#reservas" class="dropdown-item">
+                        <i class="fas fa-calendar-check"></i>
+                        Mis Reservas
+                    </a>
+                    <a href="${this.getBasePath()}pages/mi-cuenta.html#favoritos" class="dropdown-item">
+                        <i class="fas fa-heart"></i>
+                        Mis Favoritos
+                    </a>
+                    <a href="${this.getBasePath()}pages/mi-cuenta.html#datos" class="dropdown-item">
+                        <i class="fas fa-user-edit"></i>
+                        Mis Datos
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item dropdown-logout" id="dropdownLogout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar Sesion
+                    </button>
                 </div>
-                <span>${this.currentUser.name.split(' ')[0]}</span>
             `;
-            loginBtn.onclick = () => this.showUserMenu();
+
+            // Replace login button
+            loginBtn.parentNode.replaceChild(userMenuContainer, loginBtn);
+
+            // Add event listeners
+            const trigger = userMenuContainer.querySelector('.user-menu-trigger');
+            const dropdown = userMenuContainer.querySelector('.user-dropdown');
+            const logoutBtn = userMenuContainer.querySelector('#dropdownLogout');
+
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleDropdown(dropdown);
+            });
+
+            logoutBtn.addEventListener('click', () => {
+                this.logout();
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userMenuContainer.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                    this.dropdownOpen = false;
+                }
+            });
+
+            // Update message badge
+            this.updateMessageBadge();
+        }
+    }
+
+    getBasePath() {
+        const path = window.location.pathname;
+        if (path.includes('/pages/')) {
+            return '../';
+        }
+        return './';
+    }
+
+    toggleDropdown(dropdown) {
+        this.dropdownOpen = !this.dropdownOpen;
+        dropdown.classList.toggle('active', this.dropdownOpen);
+    }
+
+    updateMessageBadge() {
+        if (window.userManager) {
+            const unread = window.userManager.getUnreadCount();
+            const badge = document.getElementById('msgBadge');
+            if (badge) {
+                if (unread > 0) {
+                    badge.textContent = unread > 9 ? '9+' : unread;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
         }
     }
 
     showUserMenu() {
-        // In a full implementation, this would show a dropdown menu
-        const confirmed = confirm(`¿Deseas cerrar sesión?\n\nUsuario: ${this.currentUser.name}`);
-        if (confirmed) {
-            this.logout();
+        // Legacy method - now handled by dropdown
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown) {
+            this.toggleDropdown(dropdown);
         }
     }
 

@@ -871,6 +871,9 @@
     <script src="../js/components/auth.js"></script>
     <script src="../js/components/cards.js"></script>
     <script src="../js/components/toast.js"></script>
+    <script src="../js/components/user.js"></script>
+    <script src="../js/components/calendar.js"></script>
+    <script src="../js/components/reservations.js"></script>
     <script src="../js/app.js"></script>
 
     <script>
@@ -902,6 +905,44 @@
             renderGallery();
             renderMainContent();
             renderBookingCard();
+            initCalendar();
+
+            // Track recently viewed
+            if (window.userManager) {
+                userManager.addToRecentlyViewed({
+                    id: currentLocale.id,
+                    slug: currentLocale.slug,
+                    name: currentLocale.name,
+                    icon: currentLocale.icon,
+                    rating: currentLocale.rating,
+                    price: currentLocale.price.base
+                }, 'locales');
+            }
+        }
+
+        function initCalendar() {
+            if (!currentLocale.availability) return;
+
+            localeCalendar = new EventCalendar('#bookingCalendar', {
+                availability: currentLocale.availability,
+                blockedDates: currentLocale.blockedDates || [],
+                showLegend: true,
+                onDateSelect: (date, dateStr) => {
+                    selectedDate = dateStr;
+                    document.getElementById('bookingSelection').style.display = 'block';
+                    document.getElementById('selectedDateText').textContent = formatSelectedDate(date);
+                    document.getElementById('bookingDate').value = dateStr;
+                }
+            });
+        }
+
+        function formatSelectedDate(date) {
+            return date.toLocaleDateString('es-PE', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric'
+            });
         }
 
         function renderGallery() {
@@ -1044,37 +1085,35 @@
                         </div>
                     </div>
 
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="review-author">
-                                <div class="avatar">MG</div>
-                                <div>
-                                    <strong>María García</strong>
-                                    <p style="color: var(--text-muted); font-size: var(--font-size-xs); margin: 0;">Hace 2 semanas</p>
+                    ${(currentLocale.reviews || []).slice(0, 3).map((review, idx) => `
+                        <div class="review-card">
+                            <div class="review-header">
+                                <div class="review-author">
+                                    <div class="avatar" ${idx % 2 === 1 ? 'style="background: var(--secondary);"' : ''}>${review.userAvatar}</div>
+                                    <div>
+                                        <strong>${review.userName}</strong>
+                                        <p style="color: var(--text-muted); font-size: var(--font-size-xs); margin: 0;">${review.eventType} - ${formatDate(review.date, 'short')}</p>
+                                    </div>
                                 </div>
+                                <div class="rating-stars">${generateStars(review.rating)}</div>
                             </div>
-                            <div class="rating-stars">${generateStars(5)}</div>
+                            <p class="review-text">${review.comment}</p>
+                            ${review.verified ? '<span style="font-size: 12px; color: var(--success);"><i class="fas fa-check-circle"></i> Compra verificada</span>' : ''}
                         </div>
-                        <p class="review-text">Excelente local, todo salió perfecto para mi evento de XV años. El espacio es hermoso y el personal muy atento. Totalmente recomendado.</p>
-                    </div>
+                    `).join('')}
 
-                    <div class="review-card">
-                        <div class="review-header">
-                            <div class="review-author">
-                                <div class="avatar" style="background: var(--secondary);">JR</div>
-                                <div>
-                                    <strong>Juan Rodríguez</strong>
-                                    <p style="color: var(--text-muted); font-size: var(--font-size-xs); margin: 0;">Hace 1 mes</p>
-                                </div>
-                            </div>
-                            <div class="rating-stars">${generateStars(4.5)}</div>
+                    ${(!currentLocale.reviews || currentLocale.reviews.length === 0) ? `
+                        <div class="review-card" style="text-align: center; color: var(--text-muted);">
+                            <i class="fas fa-comments" style="font-size: 2rem; margin-bottom: 8px;"></i>
+                            <p>Aún no hay reseñas para este local.</p>
                         </div>
-                        <p class="review-text">Muy buen local para eventos corporativos. Amplio estacionamiento y buena ubicación. El único detalle fue el aire acondicionado que tardó un poco en enfriar.</p>
-                    </div>
+                    ` : ''}
 
-                    <button class="btn btn-outline" style="margin-top: var(--spacing-4);">
-                        Ver todas las reseñas (${currentLocale.reviewsCount})
-                    </button>
+                    ${currentLocale.reviewsCount > 3 ? `
+                        <button class="btn btn-outline" style="margin-top: var(--spacing-4);">
+                            Ver todas las reseñas (${currentLocale.reviewsCount})
+                        </button>
+                    ` : ''}
                 </section>
 
                 <!-- Owner -->
@@ -1107,6 +1146,9 @@
             `;
         }
 
+        let localeCalendar = null;
+        let selectedDate = null;
+
         function renderBookingCard() {
             const card = document.getElementById('bookingCard');
             const minDate = new Date().toISOString().split('T')[0];
@@ -1117,11 +1159,19 @@
                     <span class="note">por evento</span>
                 </div>
 
-                <form class="booking-form" id="bookingForm" onsubmit="handleBooking(event)">
-                    <div class="form-group">
-                        <label>Fecha del evento</label>
-                        <input type="date" id="bookingDate" min="${minDate}" required>
+                <!-- Interactive Calendar -->
+                <div class="booking-calendar" id="bookingCalendar"></div>
+
+                <div class="booking-selection" id="bookingSelection" style="display: none;">
+                    <div class="selection-item" style="display: flex; align-items: center; gap: 10px; background: var(--success-50); padding: 12px; border-radius: 8px; color: var(--success); font-weight: 500;">
+                        <i class="fas fa-calendar-check"></i>
+                        <span id="selectedDateText">Selecciona una fecha</span>
                     </div>
+                </div>
+
+                <form class="booking-form" id="bookingForm" onsubmit="handleBooking(event)">
+                    <input type="hidden" id="bookingDate" value="">
+
 
                     <div class="form-group">
                         <label>Tipo de evento</label>
