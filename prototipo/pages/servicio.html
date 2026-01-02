@@ -42,18 +42,92 @@
             }
         }
 
-        .service-gallery {
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--spacing-3);
+            max-height: 400px;
+            margin-bottom: var(--spacing-6);
+        }
+
+        .gallery-main {
             position: relative;
             border-radius: var(--radius-xl);
             overflow: hidden;
-            aspect-ratio: 16/10;
-            background: var(--gray-100);
+            cursor: pointer;
         }
 
-        .service-gallery img {
+        .gallery-main img,
+        .gallery-main .placeholder {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .gallery-main .placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 6rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        .gallery-side {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: var(--spacing-3);
+        }
+
+        .gallery-thumb {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-thumb img,
+        .gallery-thumb .placeholder {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-thumb .placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+        }
+
+        .gallery-more {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                max-height: none;
+            }
+
+            .gallery-main {
+                height: 250px;
+            }
+
+            .gallery-side {
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: auto;
+                height: 120px;
+            }
         }
 
         .service-badges {
@@ -659,9 +733,8 @@
                 <div class="service-grid">
                     <!-- Gallery -->
                     <div class="service-main">
-                        <div class="service-gallery" id="serviceGallery">
-                            <img src="" alt="" id="serviceImage">
-                            <div class="service-badges" id="serviceBadges"></div>
+                        <div class="gallery-grid" id="serviceGallery">
+                            <!-- Gallery loaded via JS -->
                         </div>
 
                         <div class="service-info" style="margin-top: var(--spacing-6);">
@@ -1021,15 +1094,11 @@
             // Update page title
             document.title = `${s.name} | Celébralo pe`;
 
-            // Image
-            document.getElementById('serviceImage').src = s.images[0] || '../assets/images/placeholder.jpg';
-            document.getElementById('serviceImage').alt = s.name;
+            // Render Gallery
+            renderGallery();
 
-            // Badges
-            const badgesHtml = s.badges.map(badge =>
-                `<span class="service-badge ${badge.toLowerCase().includes('verificado') ? 'verified' : ''}">${badge}</span>`
-            ).join('');
-            document.getElementById('serviceBadges').innerHTML = badgesHtml;
+            // Badges are now inside the gallery
+            // (removed old badges rendering)
 
             // Category
             const category = SERVICE_CATEGORIES[s.category] || { name: s.category, icon: '🎉' };
@@ -1225,6 +1294,49 @@
         function formatReviewDate(dateStr) {
             const date = new Date(dateStr);
             return date.toLocaleDateString('es-PE', { year: 'numeric', month: 'long' });
+        }
+
+        function renderGallery() {
+            const gallery = document.getElementById('serviceGallery');
+            const s = currentService;
+            const images = s.images || [];
+            const mainImage = images[0] || null;
+            const thumb1 = images[1] || null;
+            const thumb2 = images[2] || null;
+            const extraCount = Math.max(0, images.length - 3);
+
+            const category = SERVICE_CATEGORIES[s.category] || { name: s.category, icon: '🎉' };
+            const badgesHtml = s.badges.map(badge =>
+                `<span class="service-badge ${badge.toLowerCase().includes('verificado') ? 'verified' : ''}">${badge}</span>`
+            ).join('');
+
+            gallery.innerHTML = `
+                <div class="gallery-main">
+                    ${mainImage
+                        ? `<img src="${mainImage}" alt="${s.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                           <div class="placeholder" style="display:none;">${category.icon}</div>`
+                        : `<div class="placeholder">${category.icon}</div>`
+                    }
+                    <div class="service-badges">${badgesHtml}</div>
+                </div>
+                <div class="gallery-side">
+                    <div class="gallery-thumb">
+                        ${thumb1
+                            ? `<img src="${thumb1}" alt="${s.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                               <div class="placeholder" style="display:none;">🎉</div>`
+                            : `<div class="placeholder">🎉</div>`
+                        }
+                    </div>
+                    <div class="gallery-thumb">
+                        ${thumb2
+                            ? `<img src="${thumb2}" alt="${s.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                               <div class="placeholder" style="display:none;">✨</div>`
+                            : `<div class="placeholder">✨</div>`
+                        }
+                        ${extraCount > 0 ? `<div class="gallery-more">+${extraCount} fotos</div>` : ''}
+                    </div>
+                </div>
+            `;
         }
 
         let serviceCalendar = null;

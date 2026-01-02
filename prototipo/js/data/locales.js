@@ -37,7 +37,7 @@ const LOCALES_DATA = [
             "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800",
             "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800"
         ],
-        icon: "🏛️",                              // Emoji del local
+        icon: "🏛️",
         description: "Describe aquí tu local con todos los detalles: ambiente, decoración, qué lo hace especial, servicios incluidos, etc. Esta descripción aparece en la página de detalle.",
         shortDescription: "Descripción corta para las tarjetas (máx 100 caracteres)",
         amenities: [
@@ -112,9 +112,10 @@ const LOCALES_DATA = [
         rating: 4.8,
         reviewsCount: 45,
         images: [
-            "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800",
-            "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800",
-            "https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=800"
+            "https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?w=800",
+            "https://images.unsplash.com/photo-1431540015161-0bf868a2d407?w=800",
+            "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800",
+            "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=800"
         ],
         icon: "🏛️",
         description: "Elegante salón con jardines amplios, ideal para matrimonios y eventos grandes. Ambiente sofisticado con decoración clásica y moderna.",
@@ -221,9 +222,10 @@ const LOCALES_DATA = [
         rating: 4.6,
         reviewsCount: 32,
         images: [
-            "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800",
-            "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800",
-            "https://images.unsplash.com/photo-1529543544277-8a168fc5d93a?w=800"
+            "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?w=800",
+            "https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800",
+            "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800",
+            "https://images.unsplash.com/photo-1575517111478-7f6afd0973db?w=800"
         ],
         icon: "🌳",
         description: "Hermosa quinta campestre con áreas verdes y piscina. Perfecta para eventos al aire libre y reuniones familiares en un ambiente natural y relajado.",
@@ -329,10 +331,10 @@ const LOCALES_DATA = [
         rating: 4.9,
         reviewsCount: 67,
         images: [
-            "https://images.unsplash.com/photo-1478147427282-58a87a120781?w=800",
-            "https://images.unsplash.com/photo-1510076857177-7470076d4098?w=800",
-            "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800",
-            "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=800"
+            "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800",
+            "https://images.unsplash.com/photo-1507504031003-b417219a0fde?w=800",
+            "https://images.unsplash.com/photo-1478146896981-b80fe463b330?w=800",
+            "https://images.unsplash.com/photo-1510924324327-27c4e3e20a15?w=800"
         ],
         icon: "🏰",
         description: "El local más exclusivo de Sullana. Decoración de lujo, servicio premium y tecnología de punta para eventos inolvidables. Incluye coordinador de eventos.",
@@ -450,9 +452,10 @@ const LOCALES_DATA = [
         rating: 4.4,
         reviewsCount: 28,
         images: [
-            "https://images.unsplash.com/photo-1496337589254-7e19d01cec44?w=800",
-            "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800",
-            "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800"
+            "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800",
+            "https://images.unsplash.com/photo-1464349153735-7db50ed83c84?w=800",
+            "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800",
+            "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=800"
         ],
         icon: "🎊",
         description: "Salón acogedor y económico, perfecto para cumpleaños y reuniones pequeñas. Excelente relación calidad-precio para eventos íntimos.",
@@ -557,9 +560,10 @@ const LOCALES_DATA = [
         rating: 4.7,
         reviewsCount: 41,
         images: [
-            "https://images.unsplash.com/photo-1529543544277-8a168fc5d93a?w=800",
-            "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
-            "https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?w=800"
+            "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=800",
+            "https://images.unsplash.com/photo-1526485856375-9110812fbf35?w=800",
+            "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=800",
+            "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800"
         ],
         icon: "⚽",
         description: "Club deportivo con amplios espacios verdes. Ideal para eventos empresariales y familiares. Incluye áreas recreativas y deportivas.",
@@ -665,9 +669,10 @@ const LOCALES_DATA = [
         rating: 4.5,
         reviewsCount: 19,
         images: [
-            "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800",
-            "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800",
-            "https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=800"
+            "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=800",
+            "https://images.unsplash.com/photo-1544124499-58912cbddaad?w=800",
+            "https://images.unsplash.com/photo-1510076857177-7470076d4098?w=800",
+            "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800"
         ],
         icon: "🌅",
         description: "Terraza moderna con vista panorámica de Sullana. Perfecta para eventos íntimos y celebraciones especiales al atardecer.",

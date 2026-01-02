@@ -6,11 +6,16 @@
 function createLocaleCard(locale) {
     const priceFormatted = formatPrice(locale.price.base);
     const starsHtml = generateStars(locale.rating);
+    const imageUrl = locale.images && locale.images[0] ? locale.images[0] : null;
 
     return `
         <article class="card locale-card" data-id="${locale.id}" onclick="goToLocaleDetail('${locale.slug}')">
             <div class="card-image">
-                <div class="card-image-placeholder">${locale.icon}</div>
+                ${imageUrl
+                    ? `<img src="${imageUrl}" alt="${locale.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                       <div class="card-image-placeholder" style="display:none;">${locale.icon}</div>`
+                    : `<div class="card-image-placeholder">${locale.icon}</div>`
+                }
                 ${locale.verified ? '<span class="card-badge"><i class="fas fa-check-circle"></i> Verificado</span>' : ''}
                 <button class="card-favorite" onclick="event.stopPropagation(); toggleFavorite('locale', ${locale.id}, this)" aria-label="Agregar a favoritos">
                     <i class="far fa-heart"></i>
@@ -55,13 +60,16 @@ function createServiceCard(service) {
 
     const starsHtml = generateStars(service.rating);
     const categoryInfo = SERVICE_CATEGORIES[service.category] || { name: service.category, icon: '🎉' };
+    const imageUrl = service.images && service.images[0] ? service.images[0] : null;
 
     return `
         <article class="card service-card" data-id="${service.id}" onclick="goToServiceDetail('${service.slug}')">
             <div class="card-image">
-                <div class="card-image-placeholder" style="background: linear-gradient(135deg, ${categoryInfo.color || 'var(--primary)'} 0%, ${categoryInfo.color || 'var(--primary-dark)'}99 100%);">
-                    ${categoryInfo.icon}
-                </div>
+                ${imageUrl
+                    ? `<img src="${imageUrl}" alt="${service.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                       <div class="card-image-placeholder" style="display:none; background: linear-gradient(135deg, ${categoryInfo.color || 'var(--primary)'} 0%, ${categoryInfo.color || 'var(--primary-dark)'}99 100%);">${categoryInfo.icon}</div>`
+                    : `<div class="card-image-placeholder" style="background: linear-gradient(135deg, ${categoryInfo.color || 'var(--primary)'} 0%, ${categoryInfo.color || 'var(--primary-dark)'}99 100%);">${categoryInfo.icon}</div>`
+                }
                 ${service.verified ? '<span class="card-badge"><i class="fas fa-check-circle"></i> Verificado</span>' : ''}
                 <button class="card-favorite" onclick="event.stopPropagation(); toggleFavorite('service', ${service.id}, this)" aria-label="Agregar a favoritos">
                     <i class="far fa-heart"></i>

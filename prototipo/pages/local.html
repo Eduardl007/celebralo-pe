@@ -1170,20 +1170,46 @@
 
         function renderGallery() {
             const gallery = document.getElementById('galleryGrid');
+            const images = currentLocale.images || [];
+            const mainImage = images[0] || null;
+            const thumb1 = images[1] || null;
+            const thumb2 = images[2] || null;
+            const extraCount = Math.max(0, images.length - 3);
+
             gallery.innerHTML = `
-                <div class="gallery-main">
-                    <div class="placeholder">${currentLocale.icon}</div>
+                <div class="gallery-main" onclick="openGalleryModal(0)">
+                    ${mainImage
+                        ? `<img src="${mainImage}" alt="${currentLocale.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                           <div class="placeholder" style="display:none;">${currentLocale.icon}</div>`
+                        : `<div class="placeholder">${currentLocale.icon}</div>`
+                    }
                 </div>
                 <div class="gallery-side">
-                    <div class="gallery-thumb">
-                        <div class="placeholder">🎉</div>
+                    <div class="gallery-thumb" onclick="openGalleryModal(1)">
+                        ${thumb1
+                            ? `<img src="${thumb1}" alt="${currentLocale.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                               <div class="placeholder" style="display:none;">🎉</div>`
+                            : `<div class="placeholder">🎉</div>`
+                        }
                     </div>
-                    <div class="gallery-thumb">
-                        <div class="placeholder">✨</div>
-                        <div class="gallery-more">+5 fotos</div>
+                    <div class="gallery-thumb" onclick="openGalleryModal(2)">
+                        ${thumb2
+                            ? `<img src="${thumb2}" alt="${currentLocale.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                               <div class="placeholder" style="display:none;">✨</div>`
+                            : `<div class="placeholder">✨</div>`
+                        }
+                        ${extraCount > 0 ? `<div class="gallery-more">+${extraCount} fotos</div>` : ''}
                     </div>
                 </div>
             `;
+        }
+
+        // Modal de galería
+        function openGalleryModal(startIndex) {
+            // Por ahora, solo mostramos un mensaje
+            if (currentLocale.images && currentLocale.images.length > 0) {
+                console.log('Abrir galería en imagen:', startIndex);
+            }
         }
 
         function renderMainContent() {
