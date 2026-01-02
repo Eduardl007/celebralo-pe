@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="-WivQeeMjDJ48477slxQm1V3g5Z4kxukvV6vjRAfXcc" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio | Celébralo pe</title>
+    <meta name="description" content="Detalle del servicio para eventos en Sullana, Piura.">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/layout.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <style>
+        .service-hero {
+            padding-top: calc(var(--header-height) + var(--spacing-6));
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--spacing-8);
+            padding: var(--spacing-6) 0;
+        }
+
+        @media (max-width: 1024px) {
+            .service-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .service-gallery {
+            position: relative;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            aspect-ratio: 16/10;
+            background: var(--gray-100);
+        }
+
+        .service-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .service-badges {
+            position: absolute;
+            top: var(--spacing-4);
+            left: var(--spacing-4);
+            display: flex;
+            gap: var(--spacing-2);
+            flex-wrap: wrap;
+        }
+
+        .service-badge {
+            padding: var(--spacing-1) var(--spacing-3);
+            background: var(--white);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+            box-shadow: var(--shadow-md);
+        }
+
+        .service-badge.verified {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .service-info h1 {
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .service-category {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-1) var(--spacing-3);
+            background: var(--primary-50);
+            color: var(--primary);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .service-rating {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            margin-bottom: var(--spacing-4);
+        }
+
+        .service-rating .stars {
+            color: var(--warning);
+        }
+
+        .service-rating .score {
+            font-weight: var(--font-weight-bold);
+        }
+
+        .service-rating .reviews {
+            color: var(--text-secondary);
+        }
+
+        .service-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: var(--spacing-6);
+        }
+
+        /* Booking Card */
+        .booking-card {
+            position: sticky;
+            top: calc(var(--header-height) + var(--spacing-4));
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-6);
+        }
+
+        .booking-price {
+            display: flex;
+            align-items: baseline;
+            gap: var(--spacing-2);
+            margin-bottom: var(--spacing-4);
+            padding-bottom: var(--spacing-4);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .booking-price .amount {
+            font-size: var(--font-size-3xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+        }
+
+        .booking-price .unit {
+            color: var(--text-secondary);
+        }
+
+        .booking-actions {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-3);
+        }
+
+        .booking-actions .btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .owner-card {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            padding: var(--spacing-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            margin-top: var(--spacing-4);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .owner-card:hover {
+            background: var(--gray-100);
+        }
+
+        .owner-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+        }
+
+        .owner-info {
+            flex: 1;
+        }
+
+        .owner-info strong {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .owner-info span {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .owner-response {
+            text-align: right;
+        }
+
+        .owner-response .rate {
+            font-weight: var(--font-weight-bold);
+            color: var(--success);
+        }
+
+        .owner-response .time {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+        }
+
+        /* Sections */
+        .service-section {
+            padding: var(--spacing-8) 0;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .service-section h2 {
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-4);
+        }
+
+        /* Packages */
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-4);
+        }
+
+        .package-card {
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-5);
+            transition: all var(--transition-fast);
+        }
+
+        .package-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .package-card.recommended {
+            border-color: var(--primary);
+            position: relative;
+        }
+
+        .package-card.recommended::before {
+            content: 'Recomendado';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary);
+            color: var(--white);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-semibold);
+        }
+
+        .package-name {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            margin-bottom: var(--spacing-2);
+        }
+
+        .package-price {
+            font-size: var(--font-size-2xl);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+            margin-bottom: var(--spacing-3);
+        }
+
+        .package-description {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            line-height: 1.6;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-4);
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-3);
+        }
+
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-lg);
+            background: var(--primary-50);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            font-size: var(--font-size-sm);
+        }
+
+        /* Coverage */
+        .coverage-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-2);
+        }
+
+        .coverage-tag {
+            padding: var(--spacing-2) var(--spacing-3);
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+        }
+
+        /* Contact Modal */
+        .contact-modal {
+            max-width: 500px;
+        }
+
+        .contact-modal h2 {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .contact-form .form-group {
+            margin-bottom: var(--spacing-4);
+        }
+
+        .contact-form label {
+            display: block;
+            margin-bottom: var(--spacing-2);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .contact-form input,
+        .contact-form select,
+        .contact-form textarea {
+            width: 100%;
+            padding: var(--spacing-3);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: var(--font-size-base);
+        }
+
+        .contact-form textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="../index.html" class="logo">
+                    <span class="logo-icon">🎉</span>
+                    <span class="logo-text">Celébralo<span class="logo-accent">pe</span></span>
+                </a>
+
+                <div class="nav-menu" id="navMenu">
+                    <a href="locales.html" class="nav-link">Locales</a>
+                    <a href="servicios.html" class="nav-link active">Servicios</a>
+                    <a href="paquetes.html" class="nav-link">Paquetes</a>
+                    <a href="cotizador.html" class="nav-link">Cotizador</a>
+                </div>
+
+                <div class="nav-actions">
+                    <button class="btn btn-primary btn-sm" onclick="openContactModal()">
+                        Cotizar Servicio
+                    </button>
+                    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section class="service-hero">
+            <div class="container">
+                <div class="service-grid">
+                    <!-- Gallery -->
+                    <div class="service-main">
+                        <div class="service-gallery" id="serviceGallery">
+                            <img src="" alt="" id="serviceImage">
+                            <div class="service-badges" id="serviceBadges"></div>
+                        </div>
+
+                        <div class="service-info" style="margin-top: var(--spacing-6);">
+                            <div class="service-category" id="serviceCategory">
+                                <span class="emoji"></span>
+                                <span class="name"></span>
+                            </div>
+                            <h1 id="serviceName">Cargando...</h1>
+                            <div class="service-rating" id="serviceRating">
+                                <span class="stars"><i class="fas fa-star"></i></span>
+                                <span class="score"></span>
+                                <span class="reviews"></span>
+                            </div>
+                            <p class="service-description" id="serviceDescription"></p>
+                        </div>
+
+                        <!-- Features Section -->
+                        <div class="service-section">
+                            <h2><i class="fas fa-check-circle" style="color: var(--success); margin-right: 8px;"></i>Incluye</h2>
+                            <div class="features-grid" id="featuresGrid"></div>
+                        </div>
+
+                        <!-- Packages Section -->
+                        <div class="service-section">
+                            <h2><i class="fas fa-box" style="color: var(--primary); margin-right: 8px;"></i>Paquetes Disponibles</h2>
+                            <div class="packages-grid" id="packagesGrid"></div>
+                        </div>
+
+                        <!-- Coverage Section -->
+                        <div class="service-section">
+                            <h2><i class="fas fa-map-marker-alt" style="color: var(--secondary); margin-right: 8px;"></i>Cobertura</h2>
+                            <div class="coverage-list" id="coverageList"></div>
+                        </div>
+                    </div>
+
+                    <!-- Booking Card -->
+                    <div class="service-sidebar">
+                        <div class="booking-card">
+                            <div class="booking-price">
+                                <span class="amount" id="bookingPrice">S/ --</span>
+                                <span class="unit" id="bookingUnit">/servicio</span>
+                            </div>
+
+                            <div class="booking-actions">
+                                <button class="btn btn-primary btn-lg" onclick="openContactModal()">
+                                    <i class="fas fa-paper-plane"></i> Solicitar Cotización
+                                </button>
+                                <button class="btn btn-outline btn-lg" onclick="contactOwner()">
+                                    <i class="fas fa-comments"></i> Contactar Proveedor
+                                </button>
+                            </div>
+
+                            <div class="owner-card" id="ownerCard" onclick="contactOwner()">
+                                <div class="owner-avatar" id="ownerAvatar">--</div>
+                                <div class="owner-info">
+                                    <strong id="ownerName">Proveedor</strong>
+                                    <span id="ownerBusiness">Servicio</span>
+                                </div>
+                                <div class="owner-response">
+                                    <div class="rate" id="ownerRate">--%</div>
+                                    <div class="time" id="ownerTime">respuesta</div>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 1px solid var(--border-light);">
+                                <div style="display: flex; align-items: center; gap: var(--spacing-2); color: var(--text-secondary); font-size: var(--font-size-sm);">
+                                    <i class="fas fa-shield-alt" style="color: var(--success);"></i>
+                                    <span>Pago seguro a través de la plataforma</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Contact Modal -->
+    <div class="modal" id="contactModal">
+        <div class="modal-content contact-modal">
+            <button class="modal-close" onclick="closeContactModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2>Solicitar Cotización</h2>
+            <p style="color: var(--text-secondary); margin-bottom: var(--spacing-4);">
+                Completa el formulario y te contactaremos pronto.
+            </p>
+            <form class="contact-form" id="contactForm" onsubmit="submitContact(event)">
+                <div class="form-group">
+                    <label for="contactName">Nombre completo *</label>
+                    <input type="text" id="contactName" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactPhone">Teléfono *</label>
+                    <input type="tel" id="contactPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Email</label>
+                    <input type="email" id="contactEmail">
+                </div>
+                <div class="form-group">
+                    <label for="contactEvent">Tipo de evento *</label>
+                    <select id="contactEvent" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="matrimonio">Matrimonio</option>
+                        <option value="quinceanos">XV Años</option>
+                        <option value="cumpleanos">Cumpleaños</option>
+                        <option value="corporativo">Corporativo</option>
+                        <option value="bautizo">Bautizo</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="contactDate">Fecha del evento</label>
+                    <input type="date" id="contactDate">
+                </div>
+                <div class="form-group">
+                    <label for="contactMessage">Mensaje adicional</label>
+                    <textarea id="contactMessage" placeholder="Cuéntanos más sobre tu evento..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
+                    Enviar Solicitud
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2025 Celébralo pe. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="chatbot" id="chatbot">
+        <button class="chatbot-trigger" id="chatbotTrigger">
+            <i class="fas fa-comments"></i>
+            <span class="chatbot-badge">1</span>
+        </button>
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <div class="chatbot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="chatbot-info">
+                    <strong>Celé</strong>
+                    <span>Tu asistente festivo</span>
+                </div>
+                <button class="chatbot-close" id="chatbotClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages"></div>
+            <div class="chatbot-quick-actions" id="quickActions">
+                <button class="quick-action" data-action="precios">Precios</button>
+                <button class="quick-action" data-action="paquetes">Paquetes</button>
+                <button class="quick-action" data-action="ayuda">Ayuda</button>
+            </div>
+            <form class="chatbot-input" id="chatbotForm">
+                <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
+                <button type="submit"><i class="fas fa-paper-plane"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Scripts -->
+    <script src="../js/data/servicios.js"></script>
+    <script src="../js/components/chatbot.js"></script>
+    <script src="../js/app.js"></script>
+
+    <script>
+        let currentService = null;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadService();
+            initNav();
+        });
+
+        function loadService() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('slug');
+
+            if (!slug) {
+                window.location.href = 'servicios.html';
+                return;
+            }
+
+            currentService = SERVICIOS_DATA.find(s => s.slug === slug);
+
+            if (!currentService) {
+                window.location.href = 'servicios.html';
+                return;
+            }
+
+            renderService();
+        }
+
+        function renderService() {
+            const s = currentService;
+
+            // Update page title
+            document.title = `${s.name} | Celébralo pe`;
+
+            // Image
+            document.getElementById('serviceImage').src = s.images[0] || '../assets/images/placeholder.jpg';
+            document.getElementById('serviceImage').alt = s.name;
+
+            // Badges
+            const badgesHtml = s.badges.map(badge =>
+                `<span class="service-badge ${badge.toLowerCase().includes('verificado') ? 'verified' : ''}">${badge}</span>`
+            ).join('');
+            document.getElementById('serviceBadges').innerHTML = badgesHtml;
+
+            // Category
+            const category = SERVICE_CATEGORIES[s.category] || { name: s.category, icon: '🎉' };
+            document.querySelector('#serviceCategory .emoji').textContent = category.icon;
+            document.querySelector('#serviceCategory .name').textContent = category.name;
+
+            // Basic info
+            document.getElementById('serviceName').textContent = s.name;
+            document.getElementById('serviceDescription').textContent = s.description;
+
+            // Rating
+            const ratingContainer = document.getElementById('serviceRating');
+            ratingContainer.querySelector('.score').textContent = s.rating;
+            ratingContainer.querySelector('.reviews').textContent = `(${s.reviewsCount} reseñas)`;
+
+            // Price
+            const basePrice = s.pricing.basePrice || (s.pricing.packages && s.pricing.packages[0].price) || 0;
+            document.getElementById('bookingPrice').textContent = `S/ ${basePrice.toLocaleString()}`;
+            document.getElementById('bookingUnit').textContent = s.pricing.type === 'per-person' ? '/persona' : '/servicio';
+
+            // Owner
+            if (s.owner) {
+                document.getElementById('ownerAvatar').textContent = s.owner.avatar;
+                document.getElementById('ownerName').textContent = s.owner.name;
+                document.getElementById('ownerBusiness').textContent = s.name;
+                document.getElementById('ownerRate').textContent = `${s.owner.responseRate}%`;
+                document.getElementById('ownerTime').textContent = s.owner.responseTime;
+            }
+
+            // Features
+            const featuresHtml = s.features.map(feature => `
+                <div class="feature-item">
+                    <div class="feature-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="feature-text">${feature}</div>
+                </div>
+            `).join('');
+            document.getElementById('featuresGrid').innerHTML = featuresHtml;
+
+            // Packages
+            if (s.pricing.packages) {
+                const packagesHtml = s.pricing.packages.map((pkg, index) => `
+                    <div class="package-card ${index === 1 ? 'recommended' : ''}">
+                        <div class="package-name">${pkg.name}</div>
+                        <div class="package-price">S/ ${pkg.price.toLocaleString()}${pkg.hours ? ` <small>(${pkg.hours}h)</small>` : ''}</div>
+                        <div class="package-description">${pkg.description}</div>
+                    </div>
+                `).join('');
+                document.getElementById('packagesGrid').innerHTML = packagesHtml;
+            }
+
+            // Coverage
+            const coverageHtml = s.location.coverage.map(city =>
+                `<span class="coverage-tag"><i class="fas fa-map-marker-alt" style="margin-right: 4px;"></i>${city}</span>`
+            ).join('');
+            document.getElementById('coverageList').innerHTML = coverageHtml;
+        }
+
+        function initNav() {
+            const navToggle = document.getElementById('navToggle');
+            const navMenu = document.getElementById('navMenu');
+
+            if (navToggle && navMenu) {
+                navToggle.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                });
+            }
+        }
+
+        function openContactModal() {
+            document.getElementById('contactModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeContactModal() {
+            document.getElementById('contactModal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function contactOwner() {
+            // Abrir chat en modo propietario
+            if (window.eventBot && window.eventBot.currentOwner) {
+                window.eventBot.switchToOwnerMode();
+            } else if (window.eventBot) {
+                window.eventBot.open();
+                showToast('info', 'Contacto', `Para consultas sobre "${currentService.name}", usa nuestro chat.`);
+            }
+        }
+
+        function submitContact(e) {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('contactName').value,
+                phone: document.getElementById('contactPhone').value,
+                email: document.getElementById('contactEmail').value,
+                event: document.getElementById('contactEvent').value,
+                date: document.getElementById('contactDate').value,
+                message: document.getElementById('contactMessage').value,
+                service: currentService.name,
+                serviceId: currentService.id
+            };
+
+            // Enviar a Google Sheets si está disponible
+            if (typeof sendToGoogleSheets === 'function') {
+                sendToGoogleSheets('Cotizaciones', {
+                    id: 'COT-' + Date.now(),
+                    ...formData,
+                    tipo: 'servicio',
+                    fecha: new Date().toLocaleDateString('es-PE'),
+                    timestamp: new Date().toISOString()
+                });
+            }
+
+            showToast('success', 'Solicitud enviada', 'Te contactaremos pronto para darte una cotización personalizada.');
+            closeContactModal();
+            document.getElementById('contactForm').reset();
+        }
+
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'}"></i>
+                </div>
+                <div class="toast-content">
+                    <strong>${title}</strong>
+                    <p>${message}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        // Close modal on click outside
+        document.getElementById('contactModal').addEventListener('click', (e) => {
+            if (e.target.id === 'contactModal') {
+                closeContactModal();
+            }
+        });
+    </script>
+</body>
+</html>

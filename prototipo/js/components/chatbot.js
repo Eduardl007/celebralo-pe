@@ -158,18 +158,53 @@ class EventBot {
     // ==========================================
 
     detectLocalPage() {
-        // Detectar si estamos en página de detalle de local
+        // Detectar si estamos en página de detalle de local o servicio
         const urlParams = new URLSearchParams(window.location.search);
         const slug = urlParams.get('slug');
+        const pathname = window.location.pathname.toLowerCase();
 
-        if (window.location.pathname.includes('local.html') && slug && typeof LOCALES_DATA !== 'undefined') {
-            const local = LOCALES_DATA.find(l => l.slug === slug);
-            if (local && local.owner) {
-                this.currentLocal = local;
-                this.currentOwner = local.owner;
-                this.showOwnerBubble();
-            }
+        console.log('Detectando página:', pathname, 'slug:', slug);
+
+        // Detectar página de local
+        if (pathname.includes('local.html') && slug) {
+            this.waitForData('LOCALES_DATA', () => {
+                const local = LOCALES_DATA.find(l => l.slug === slug);
+                if (local && local.owner) {
+                    this.currentLocal = local;
+                    this.currentOwner = local.owner;
+                    this.providerType = 'local';
+                    console.log('Local detectado:', local.name);
+                    this.showOwnerBubble();
+                }
+            });
         }
+
+        // Detectar página de servicio
+        if (pathname.includes('servicio.html') && slug) {
+            this.waitForData('SERVICIOS_DATA', () => {
+                const servicio = SERVICIOS_DATA.find(s => s.slug === slug);
+                if (servicio && servicio.owner) {
+                    this.currentLocal = servicio; // Reutilizamos currentLocal para servicios
+                    this.currentOwner = servicio.owner;
+                    this.providerType = 'servicio';
+                    console.log('Servicio detectado:', servicio.name);
+                    this.showOwnerBubble();
+                }
+            });
+        }
+    }
+
+    waitForData(dataName, callback, maxAttempts = 10) {
+        let attempts = 0;
+        const check = () => {
+            if (typeof window[dataName] !== 'undefined') {
+                callback();
+            } else if (attempts < maxAttempts) {
+                attempts++;
+                setTimeout(check, 200);
+            }
+        };
+        check();
     }
 
     showOwnerBubble() {
@@ -512,105 +547,167 @@ class EventBot {
     // ==========================================
 
     generateOwnerResponse(message) {
-        const local = this.currentLocal;
+        const provider = this.currentLocal;
         const owner = this.currentOwner;
+        const isService = this.providerType === 'servicio';
 
         // Disponibilidad
         if (this.matchKeywords(message, ['disponib', 'fecha', 'cuando', 'libre', 'reserv'])) {
-            const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
-            const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-            let availText = dayKeys.map((day, i) => {
-                const avail = local.availability[day];
-                return avail.available ? `• ${days[i]}: ${avail.hours}` : `• ${days[i]}: Cerrado`;
-            }).join('<br>');
+            if (isService) {
+                const days = provider.availability?.operatingDays?.join(', ') || 'Todos los días';
+                return {
+                    text: `📅 <strong>Disponibilidad de ${provider.name}:</strong><br><br>
+                        • Días de atención: ${days}<br>
+                        • Reservar con: ${provider.availability?.advanceBooking || '5 días'} de anticipación<br><br>
+                        ¿Te gustaría solicitar una cotización?`,
+                    options: {
+                        buttons: [
+                            { text: '📝 Solicitar cotización', value: 'quiero cotización' },
+                            { text: '📦 Ver paquetes', value: 'paquetes disponibles' }
+                        ]
+                    }
+                };
+            } else {
+                const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+                const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                let availText = dayKeys.map((day, i) => {
+                    const avail = provider.availability[day];
+                    return avail.available ? `• ${days[i]}: ${avail.hours}` : `• ${days[i]}: Cerrado`;
+                }).join('<br>');
 
-            return {
-                text: `📅 <strong>Disponibilidad de ${local.name}:</strong><br><br>${availText}<br><br>
-                    ¿Te gustaría verificar una fecha específica o hacer una reserva?`,
-                options: {
-                    buttons: [
-                        { text: '📝 Solicitar reserva', value: 'quiero reservar' },
-                        { text: '👁️ Agendar visita', value: 'quiero visitar' }
-                    ]
-                }
-            };
+                return {
+                    text: `📅 <strong>Disponibilidad de ${provider.name}:</strong><br><br>${availText}<br><br>
+                        ¿Te gustaría verificar una fecha específica o hacer una reserva?`,
+                    options: {
+                        buttons: [
+                            { text: '📝 Solicitar reserva', value: 'quiero reservar' },
+                            { text: '👁️ Agendar visita', value: 'quiero visitar' }
+                        ]
+                    }
+                };
+            }
         }
 
         // Precios
         if (this.matchKeywords(message, ['precio', 'costo', 'cuanto', 'cuánto', 'tarifa', 'cobr'])) {
-            return {
-                text: `💰 <strong>Precios de ${local.name}:</strong><br><br>
-                    • Alquiler base: <strong>S/ ${local.price.base.toLocaleString()}</strong><br>
-                    • Hora adicional: S/ ${local.price.perHour}<br>
-                    • Depósito: S/ ${local.price.deposit}<br><br>
-                    El precio incluye: ${local.amenities.slice(0, 3).map(a => a.name).join(', ')}.<br><br>
-                    ¿Deseas más información o una cotización personalizada?`,
-                options: {
-                    buttons: [
-                        { text: '📋 Cotización', value: 'quiero cotización' },
-                        { text: '📦 Ver paquetes', value: 'paquetes disponibles' }
-                    ]
-                }
-            };
+            if (isService) {
+                const packages = provider.pricing?.packages || [];
+                const packagesText = packages.map(p =>
+                    `• <strong>${p.name}</strong>: S/ ${p.price}${p.hours ? ` (${p.hours}h)` : ''}<br>  ${p.description}`
+                ).join('<br><br>');
+
+                return {
+                    text: `💰 <strong>Precios de ${provider.name}:</strong><br><br>
+                        ${packagesText}<br><br>
+                        ¿Te gustaría más información sobre algún paquete?`,
+                    options: {
+                        buttons: [
+                            { text: '📋 Cotización personalizada', value: 'quiero cotización' }
+                        ]
+                    }
+                };
+            } else {
+                return {
+                    text: `💰 <strong>Precios de ${provider.name}:</strong><br><br>
+                        • Alquiler base: <strong>S/ ${provider.price.base.toLocaleString()}</strong><br>
+                        • Hora adicional: S/ ${provider.price.perHour}<br>
+                        • Depósito: S/ ${provider.price.deposit}<br><br>
+                        El precio incluye: ${provider.amenities.slice(0, 3).map(a => a.name).join(', ')}.<br><br>
+                        ¿Deseas más información o una cotización personalizada?`,
+                    options: {
+                        buttons: [
+                            { text: '📋 Cotización', value: 'quiero cotización' },
+                            { text: '📦 Ver paquetes', value: 'paquetes disponibles' }
+                        ]
+                    }
+                };
+            }
         }
 
-        // Capacidad
-        if (this.matchKeywords(message, ['capacidad', 'personas', 'invitados', 'cupo', 'aforo'])) {
+        // Capacidad (solo para locales)
+        if (!isService && this.matchKeywords(message, ['capacidad', 'personas', 'invitados', 'cupo', 'aforo'])) {
             return {
-                text: `👥 <strong>Capacidad de ${local.name}:</strong><br><br>
-                    • Mínimo: ${local.capacity.min} personas<br>
-                    • Máximo: ${local.capacity.max} personas<br>
-                    • Sentados: ${local.capacity.seated} personas<br>
-                    • De pie: ${local.capacity.standing} personas<br><br>
+                text: `👥 <strong>Capacidad de ${provider.name}:</strong><br><br>
+                    • Mínimo: ${provider.capacity.min} personas<br>
+                    • Máximo: ${provider.capacity.max} personas<br>
+                    • Sentados: ${provider.capacity.seated} personas<br>
+                    • De pie: ${provider.capacity.standing} personas<br><br>
                     ¿Cuántos invitados tendrás en tu evento?`,
                 options: {}
             };
         }
 
-        // Servicios/Amenidades
-        if (this.matchKeywords(message, ['servicio', 'incluye', 'tiene', 'ofrece', 'amenidad'])) {
-            const amenitiesList = local.amenities.map(a => `• ${a.name}: ${a.description}`).join('<br>');
-            return {
-                text: `✨ <strong>Servicios incluidos en ${local.name}:</strong><br><br>${amenitiesList}<br><br>
-                    ¿Necesitas algún servicio adicional?`,
-                options: {}
-            };
+        // Servicios/Amenidades/Características
+        if (this.matchKeywords(message, ['servicio', 'incluye', 'tiene', 'ofrece', 'amenidad', 'característica'])) {
+            if (isService) {
+                const featuresList = provider.features?.map(f => `• ${f}`).join('<br>') || 'Consultar';
+                return {
+                    text: `✨ <strong>Características de ${provider.name}:</strong><br><br>${featuresList}<br><br>
+                        ¿Necesitas más información?`,
+                    options: {}
+                };
+            } else {
+                const amenitiesList = provider.amenities.map(a => `• ${a.name}: ${a.description}`).join('<br>');
+                return {
+                    text: `✨ <strong>Servicios incluidos en ${provider.name}:</strong><br><br>${amenitiesList}<br><br>
+                        ¿Necesitas algún servicio adicional?`,
+                    options: {}
+                };
+            }
         }
 
-        // Reserva
-        if (this.matchKeywords(message, ['reserv', 'apartar', 'separar'])) {
+        // Paquetes (para servicios)
+        if (isService && this.matchKeywords(message, ['paquete', 'combo', 'opcion'])) {
+            const packages = provider.pricing?.packages || [];
+            const packagesText = packages.map(p =>
+                `<strong>${p.name}</strong> - S/ ${p.price}<br>${p.description}`
+            ).join('<br><br>');
+
             return {
-                text: `📝 <strong>¡Excelente elección!</strong><br><br>
-                    Para reservar ${local.name}, necesito algunos datos:<br><br>
-                    1. ¿Fecha de tu evento?<br>
-                    2. ¿Tipo de evento?<br>
-                    3. ¿Número de invitados?<br><br>
-                    Puedes usar el botón "Reservar Ahora" en la página para completar el formulario completo.`,
+                text: `📦 <strong>Paquetes de ${provider.name}:</strong><br><br>${packagesText}`,
                 options: {
                     buttons: [
-                        { text: '📅 Ir a reservar', value: 'formulario_reserva' }
+                        { text: '📋 Solicitar cotización', value: 'quiero cotización' }
                     ]
                 }
             };
         }
 
-        // Visita
-        if (this.matchKeywords(message, ['visit', 'conocer', 'ver el local', 'ir a ver'])) {
+        // Reserva/Cotización
+        if (this.matchKeywords(message, ['reserv', 'apartar', 'separar', 'cotiza'])) {
+            const actionText = isService ? 'contratar nuestro servicio' : 'reservar';
             return {
-                text: `👁️ <strong>¡Claro que puedes visitar ${local.name}!</strong><br><br>
-                    Estamos disponibles para visitas de ${local.availability.saturday.hours} los fines de semana.<br><br>
+                text: `📝 <strong>¡Excelente elección!</strong><br><br>
+                    Para ${actionText} ${provider.name}, necesito algunos datos:<br><br>
+                    1. ¿Fecha de tu evento?<br>
+                    2. ¿Tipo de evento?<br>
+                    3. ¿Número de invitados?<br><br>
+                    Puedes usar el botón en la página para completar el formulario.`,
+                options: {
+                    buttons: [
+                        { text: '📅 Completar solicitud', value: 'formulario_reserva' }
+                    ]
+                }
+            };
+        }
+
+        // Visita (solo locales)
+        if (!isService && this.matchKeywords(message, ['visit', 'conocer', 'ver el local', 'ir a ver'])) {
+            return {
+                text: `👁️ <strong>¡Claro que puedes visitar ${provider.name}!</strong><br><br>
+                    Estamos disponibles para visitas de ${provider.availability.saturday?.hours || '10:00-18:00'} los fines de semana.<br><br>
                     Usa el botón "Solicitar Visita" en la página o dime qué día te gustaría venir.`,
                 options: {}
             };
         }
 
-        // Políticas
-        if (this.matchKeywords(message, ['política', 'regla', 'cancelación', 'pago'])) {
-            const rulesList = local.policies.rules.map(r => `• ${r}`).join('<br>');
+        // Políticas (solo locales)
+        if (!isService && this.matchKeywords(message, ['política', 'regla', 'cancelación', 'pago'])) {
+            const rulesList = provider.policies.rules.map(r => `• ${r}`).join('<br>');
             return {
-                text: `📋 <strong>Políticas de ${local.name}:</strong><br><br>
-                    <strong>Cancelación:</strong> ${local.policies.cancellation}<br><br>
-                    <strong>Pago:</strong> ${local.policies.deposit}<br><br>
+                text: `📋 <strong>Políticas de ${provider.name}:</strong><br><br>
+                    <strong>Cancelación:</strong> ${provider.policies.cancellation}<br><br>
+                    <strong>Pago:</strong> ${provider.policies.deposit}<br><br>
                     <strong>Reglas:</strong><br>${rulesList}`,
                 options: {}
             };
@@ -618,15 +715,16 @@ class EventBot {
 
         // Saludos
         if (this.matchKeywords(message, ['hola', 'buenos', 'buenas', 'hi'])) {
+            const typeText = isService ? 'servicio' : 'local';
             return {
                 text: `¡Hola! 👋 Soy ${owner.name}.<br><br>
-                    Gracias por tu interés en <strong>${local.name}</strong>. Estoy aquí para ayudarte con cualquier consulta.<br><br>
+                    Gracias por tu interés en <strong>${provider.name}</strong>. Estoy aquí para ayudarte con cualquier consulta sobre nuestro ${typeText}.<br><br>
                     ¿Qué te gustaría saber?`,
                 options: {
                     buttons: [
                         { text: '💰 Precios', value: 'precios' },
                         { text: '📅 Disponibilidad', value: 'disponibilidad' },
-                        { text: '✨ Servicios', value: 'servicios incluidos' }
+                        { text: isService ? '📦 Paquetes' : '✨ Servicios', value: isService ? 'paquetes' : 'servicios incluidos' }
                     ]
                 }
             };
@@ -634,12 +732,13 @@ class EventBot {
 
         // Formulario reserva (abrir modal)
         if (message.includes('formulario_reserva')) {
-            // Intentar abrir el modal de reserva si existe
             if (typeof openBookingModal === 'function') {
                 setTimeout(() => openBookingModal(), 300);
+            } else if (typeof openContactModal === 'function') {
+                setTimeout(() => openContactModal(), 300);
             }
             return {
-                text: `Abriendo el formulario de reserva... 📝`,
+                text: `Abriendo el formulario de solicitud... 📝`,
                 options: {}
             };
         }
@@ -647,7 +746,7 @@ class EventBot {
         // Gracias
         if (this.matchKeywords(message, ['gracias', 'thanks', 'genial'])) {
             return {
-                text: `¡Con gusto! 😊 Cualquier otra consulta sobre ${local.name}, aquí estoy.<br><br>
+                text: `¡Con gusto! 😊 Cualquier otra consulta sobre ${provider.name}, aquí estoy.<br><br>
                     <strong>Tiempo de respuesta:</strong> ${owner.responseTime}<br>
                     <strong>Tasa de respuesta:</strong> ${owner.responseRate}%`,
                 options: {}
@@ -655,10 +754,11 @@ class EventBot {
         }
 
         // Respuesta por defecto
+        const typeText = isService ? 'servicio' : 'local';
         return {
             text: `Gracias por tu mensaje. Te responderé lo antes posible.<br><br>
                 Mi tiempo de respuesta habitual es <strong>${owner.responseTime}</strong>.<br><br>
-                Mientras tanto, puedes revisar toda la información del local en esta página o usar los botones de "Reservar" o "Solicitar Visita".`,
+                Mientras tanto, puedes revisar toda la información del ${typeText} en esta página.`,
             options: {
                 buttons: [
                     { text: '💰 Ver precios', value: 'precios' },

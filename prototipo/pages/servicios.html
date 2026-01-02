@@ -711,7 +711,7 @@
                 const priceUnit = service.pricing.type === 'per-person' ? '/persona' : service.pricing.type === 'per-item' ? '' : '/evento';
 
                 return `
-                    <div class="service-card" onclick="openServiceModal(${service.id})">
+                    <div class="service-card" onclick="window.location.href='servicio.html?slug=${service.slug}'" style="cursor: pointer;">
                         <div class="service-card-header">
                             <div class="service-icon">${service.icon}</div>
                             <div class="service-title-area">
@@ -741,9 +741,9 @@
                                     <span class="price-unit">${priceUnit}</span>
                                 </div>
                                 <div class="service-actions">
-                                    <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); openServiceModal(${service.id})">
+                                    <a href="servicio.html?slug=${service.slug}" class="btn btn-primary btn-sm" onclick="event.stopPropagation();">
                                         Ver detalles
-                                    </button>
+                                    </a>
                                 </div>
                             </div>
                         </div>
