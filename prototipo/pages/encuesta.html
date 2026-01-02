@@ -247,6 +247,56 @@
             color: #9ca3af;
         }
 
+        /* Contact input */
+        .contact-input {
+            margin-top: 4px;
+        }
+
+        .input-with-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 14px;
+            color: #25D366;
+            font-size: 1.2rem;
+        }
+
+        .contact-field {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+
+        .contact-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .contact-field::placeholder {
+            color: #9ca3af;
+        }
+
+        .contact-note {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: #9ca3af;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .contact-note i {
+            font-size: 0.7rem;
+        }
+
         .optional-tag {
             font-size: 0.75rem;
             color: #9ca3af;
@@ -478,6 +528,21 @@
                 <textarea class="feedback-textarea" name="mejoras" placeholder="Ej: Me gustaría ver más fotos, precios más claros, filtros de búsqueda..."></textarea>
             </div>
 
+            <!-- Q6: Contacto -->
+            <div class="question" data-question="6">
+                <label class="question-label">
+                    <span class="question-number">6</span>
+                    ¿Te gustaría que te contactemos? <span class="optional-tag">(opcional)</span>
+                </label>
+                <div class="contact-input">
+                    <div class="input-with-icon">
+                        <i class="fab fa-whatsapp"></i>
+                        <input type="text" name="contacto" class="contact-field" placeholder="WhatsApp o correo electrónico">
+                    </div>
+                    <p class="contact-note"><i class="fas fa-lock"></i> Solo para informarte de mejoras y novedades</p>
+                </div>
+            </div>
+
             <button type="submit" class="submit-btn" id="submitBtn">
                 Enviar mi opinión
             </button>
@@ -532,6 +597,7 @@
                 usaria: formData.get('usaria'),
                 nps: formData.get('nps'),
                 mejoras: formData.get('mejoras') || '',
+                contacto: formData.get('contacto') || '',
                 fecha: new Date().toLocaleDateString('es-PE'),
                 hora: new Date().toLocaleTimeString('es-PE'),
                 timestamp: new Date().toISOString()
