@@ -8,9 +8,9 @@ const APP_CONFIG = {
     version: '1.0.0',
     environment: 'prototype',
     apiBaseUrl: 'https://api.celebralo.pe', // Placeholder
-    supportPhone: '+51 999 888 777',
+    supportPhone: null,  // Oculto - contacto via plataforma
     supportEmail: 'hola@celebralo.pe',
-    whatsappNumber: '+51999888777'
+    whatsappNumber: null  // Oculto - contacto via plataforma
 };
 
 // App State
@@ -244,12 +244,16 @@ async function shareContent(title, text, url) {
     }
 }
 
-// WhatsApp Contact
+// Contact via Platform (WhatsApp deshabilitado)
 function contactWhatsApp(message = '') {
-    const phone = APP_CONFIG.whatsappNumber;
-    const url = formatWhatsAppLink(phone, message);
-    window.open(url, '_blank');
-    trackEvent('contact', { method: 'whatsapp' });
+    // Redirigir al chatbot de la plataforma en lugar de WhatsApp externo
+    if (window.eventBot) {
+        window.eventBot.open();
+        showToast('info', 'Contacto', 'Usa nuestro chat para comunicarte. Todas las transacciones se realizan dentro de la plataforma.');
+    } else {
+        showToast('info', 'Contacto', 'Por favor usa el chat de la plataforma para contactarnos.');
+    }
+    trackEvent('contact', { method: 'platform_chat' });
 }
 
 // Format Phone Display

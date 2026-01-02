@@ -67,9 +67,9 @@ const LOCALES_DATA = [
             rules: ["No fumar en interiores", "Horario máximo según disponibilidad"]
         },
         contact: {
-            phone: "+51 900 000 000",             // ← CAMBIAR: Teléfono real del proveedor
-            whatsapp: "+51 900 000 000",          // ← CAMBIAR: WhatsApp real (importante!)
-            email: "contacto@ejemplo.com"         // ← CAMBIAR: Email real
+            phone: null,                          // Oculto - contacto via plataforma
+            whatsapp: null,                       // Oculto - contacto via plataforma
+            email: null                           // Oculto - contacto via plataforma
         },
         verified: false,                          // true cuando verificas al proveedor
         featured: true,                           // true para destacarlo en home
@@ -144,9 +144,9 @@ const LOCALES_DATA = [
             rules: ["No se permite fumar en interiores", "Mascotas no permitidas", "Horario máximo: 2am"]
         },
         contact: {
-            phone: "+51 999 111 222",
-            whatsapp: "+51 999 111 222",
-            email: "reservas@losjardines.pe"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: true,
@@ -216,9 +216,9 @@ const LOCALES_DATA = [
             rules: ["Piscina supervisada", "No mascotas", "Máximo 150 personas"]
         },
         contact: {
-            phone: "+51 999 222 333",
-            whatsapp: "+51 999 222 333",
-            email: "contacto@quintaparaiso.pe"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: true,
@@ -291,9 +291,9 @@ const LOCALES_DATA = [
             rules: ["Dress code semi-formal", "Coordinador asignado", "Incluye limpieza"]
         },
         contact: {
-            phone: "+51 999 333 444",
-            whatsapp: "+51 999 333 444",
-            email: "eventos@lamansion.pe"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: true,
@@ -362,9 +362,9 @@ const LOCALES_DATA = [
             rules: ["Decoración propia permitida", "Máximo hasta medianoche"]
         },
         contact: {
-            phone: "+51 999 444 555",
-            whatsapp: "+51 999 444 555",
-            email: "fiestaalegre@gmail.com"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: false,
@@ -435,9 +435,9 @@ const LOCALES_DATA = [
             rules: ["Uso de instalaciones deportivas incluido", "Guardavidas disponible", "Eventos corporativos con descuento"]
         },
         contact: {
-            phone: "+51 999 555 666",
-            whatsapp: "+51 999 555 666",
-            email: "reservas@clubelbosque.pe"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: true,
@@ -506,9 +506,9 @@ const LOCALES_DATA = [
             rules: ["Ideal para atardeceres", "Música ambiente incluida", "Máximo 80 personas"]
         },
         contact: {
-            phone: "+51 999 666 777",
-            whatsapp: "+51 999 666 777",
-            email: "vistahermosa@gmail.com"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: false,

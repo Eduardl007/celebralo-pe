@@ -519,11 +519,11 @@
             <div class="chatbot-window" id="chatbotWindow">
                 <div class="chatbot-header">
                     <div class="chatbot-avatar">
-                        <img src="../assets/images/eventbot-avatar.svg" alt="EventBot">
+                        <img src="../assets/images/eventbot-avatar.svg" alt="Celé">
                         <span class="status-dot"></span>
                     </div>
                     <div class="chatbot-info">
-                        <strong>EventBot</strong>
+                        <strong>Celé</strong>
                         <span>Tu asistente virtual 24/7</span>
                     </div>
                     <button class="chatbot-close" id="chatbotClose" aria-label="Cerrar chat">
@@ -824,7 +824,7 @@
                             Agregar al carrito
                         </button>
                         <button class="btn btn-outline btn-lg" onclick="contactService(${service.id})">
-                            <i class="fab fa-whatsapp"></i>
+                            <i class="fas fa-comments"></i>
                             Contactar
                         </button>
                     </div>
@@ -878,9 +878,13 @@
             const service = getServiceById(serviceId);
             if (!service) return;
 
-            const message = `Hola, me interesa el servicio "${service.name}" publicado en Celébralo pe. Podrian darme mas informacion?`;
-            const url = formatWhatsAppLink(service.contact.whatsapp, message);
-            window.open(url, '_blank');
+            // Redirigir al chatbot de la plataforma
+            if (window.eventBot) {
+                window.eventBot.open();
+                showToast('info', 'Contacto', `Para consultas sobre "${service.name}", usa nuestro chat. Un asesor te ayudará.`);
+            } else {
+                showToast('info', 'Contacto', 'Por favor usa el chat de la plataforma para contactar al proveedor.');
+            }
         }
 
         // Close modal on escape

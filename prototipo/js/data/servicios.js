@@ -45,9 +45,9 @@ const SERVICIOS_DATA = [
             operatingDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
         },
         contact: {
-            phone: "+51 999 100 200",
-            whatsapp: "+51 999 100 200",
-            email: "pedidos@sabornorteno.pe"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: true,
@@ -102,9 +102,9 @@ const SERVICIOS_DATA = [
             operatingDays: ["Jueves", "Viernes", "Sábado", "Domingo"]
         },
         contact: {
-            phone: "+51 999 200 300",
-            whatsapp: "+51 999 200 300",
-            email: "djmixmaster@gmail.com"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: true,
@@ -159,9 +159,9 @@ const SERVICIOS_DATA = [
             operatingDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
         },
         contact: {
-            phone: "+51 999 300 400",
-            whatsapp: "+51 999 300 400",
-            email: "contacto@momentosfoto.pe"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: true,
@@ -216,9 +216,9 @@ const SERVICIOS_DATA = [
             operatingDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
         },
         contact: {
-            phone: "+51 999 400 500",
-            whatsapp: "+51 999 400 500",
-            email: "eventosmagicos@gmail.com"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: true,
@@ -272,9 +272,9 @@ const SERVICIOS_DATA = [
             operatingDays: ["Viernes", "Sábado", "Domingo"]
         },
         contact: {
-            phone: "+51 999 500 600",
-            whatsapp: "+51 999 500 600",
-            email: "fiestakids@gmail.com"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: false,
@@ -329,9 +329,9 @@ const SERVICIOS_DATA = [
             operatingDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
         },
         contact: {
-            phone: "+51 999 600 700",
-            whatsapp: "+51 999 600 700",
-            email: "dulcetentacion@gmail.com"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: true,
@@ -386,9 +386,9 @@ const SERVICIOS_DATA = [
             operatingDays: ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
         },
         contact: {
-            phone: "+51 999 700 800",
-            whatsapp: "+51 999 700 800",
-            email: "eventrental@gmail.com"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: false,
@@ -442,9 +442,9 @@ const SERVICIOS_DATA = [
             operatingDays: ["Viernes", "Sábado", "Domingo"]
         },
         contact: {
-            phone: "+51 999 800 900",
-            whatsapp: "+51 999 800 900",
-            email: "lossullaneros@gmail.com"
+            phone: null,
+            whatsapp: null,
+            email: null
         },
         verified: true,
         featured: true,

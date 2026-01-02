@@ -616,8 +616,8 @@
             <button class="chatbot-trigger" id="chatbotTrigger"><i class="fas fa-comments"></i></button>
             <div class="chatbot-window" id="chatbotWindow">
                 <div class="chatbot-header">
-                    <div class="chatbot-avatar"><img src="../assets/images/eventbot-avatar.svg" alt="EventBot"><span class="status-dot"></span></div>
-                    <div class="chatbot-info"><strong>EventBot</strong><span>Tu asistente 24/7</span></div>
+                    <div class="chatbot-avatar"><img src="../assets/images/eventbot-avatar.svg" alt="Celé"><span class="status-dot"></span></div>
+                    <div class="chatbot-info"><strong>Celé</strong><span>Tu asistente festivo 🎉</span></div>
                     <button class="chatbot-close" id="chatbotClose"><i class="fas fa-times"></i></button>
                 </div>
                 <div class="chatbot-messages" id="chatbotMessages"></div>
@@ -1101,7 +1101,7 @@
                         </div>
                     </div>
                     <button class="btn btn-outline btn-block" onclick="contactOwner()">
-                        <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
+                        <i class="fas fa-comments"></i> Contactar vía plataforma
                     </button>
                 </div>
             `;
@@ -1277,7 +1277,7 @@
 
             } catch (error) {
                 console.error('Error al enviar:', error);
-                showToast('error', 'Error', 'Hubo un problema. Intenta de nuevo o contáctanos por WhatsApp');
+                showToast('error', 'Error', 'Hubo un problema. Intenta de nuevo o usa el chat de la plataforma.');
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;
@@ -1285,9 +1285,13 @@
         }
 
         function contactOwner() {
-            const message = `Hola, me interesa el local "${currentLocale.name}" publicado en Celébralo pe. ¿Podrían darme más información?`;
-            const url = formatWhatsAppLink(currentLocale.contact.whatsapp, message);
-            window.open(url, '_blank');
+            // Redirigir al chatbot de la plataforma
+            if (window.eventBot) {
+                window.eventBot.open();
+                showToast('info', 'Contacto', `Para consultas sobre "${currentLocale.name}", usa nuestro chat. Un asesor te ayudará.`);
+            } else {
+                showToast('info', 'Contacto', 'Por favor usa el chat de la plataforma para contactar al proveedor.');
+            }
         }
 
         function openVisitModal() {
