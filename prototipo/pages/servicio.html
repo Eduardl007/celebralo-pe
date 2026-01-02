@@ -737,6 +737,16 @@
                                     <span class="score-count" id="totalReviews">0 resenas</span>
                                 </div>
                             </div>
+
+                            <!-- Boton para escribir resena -->
+                            <div style="background: linear-gradient(135deg, var(--primary-50) 0%, var(--secondary-50) 100%); border: 2px dashed var(--primary); border-radius: 12px; padding: 20px; margin: 20px 0; text-align: center;">
+                                <h4 style="margin-bottom: 8px; color: var(--primary);">¿Ya contrataste este servicio?</h4>
+                                <p style="color: var(--text-secondary); margin-bottom: 16px;">Comparte tu experiencia y ayuda a otros</p>
+                                <button class="btn btn-primary" onclick="openReviewModal()">
+                                    <i class="fas fa-pen"></i> Escribir Resena
+                                </button>
+                            </div>
+
                             <div class="reviews-list" id="reviewsList"></div>
                             <div class="reviews-empty" id="reviewsEmpty" style="display: none;">
                                 <i class="fas fa-comments"></i>
@@ -856,6 +866,67 @@
                 <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;">
                     Enviar Solicitud
                 </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal para escribir resena -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-overlay" onclick="closeReviewModal()"></div>
+        <div class="modal-content contact-modal" style="max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <button class="modal-close" onclick="closeReviewModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 style="display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-star" style="color: var(--warning);"></i>
+                Escribe tu resena
+            </h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;" id="reviewModalSubtitle">
+                Comparte tu experiencia con este servicio
+            </p>
+            <form id="reviewForm" onsubmit="submitReview(event)">
+                <div class="form-group" style="text-align: center;">
+                    <label style="display: block; margin-bottom: 12px;">¿Como calificarias tu experiencia?</label>
+                    <div class="star-rating-input" id="starRatingInput" style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px;">
+                        <i class="far fa-star" data-rating="1" style="font-size: 2rem; color: var(--gray-300); cursor: pointer;"></i>
+                        <i class="far fa-star" data-rating="2" style="font-size: 2rem; color: var(--gray-300); cursor: pointer;"></i>
+                        <i class="far fa-star" data-rating="3" style="font-size: 2rem; color: var(--gray-300); cursor: pointer;"></i>
+                        <i class="far fa-star" data-rating="4" style="font-size: 2rem; color: var(--gray-300); cursor: pointer;"></i>
+                        <i class="far fa-star" data-rating="5" style="font-size: 2rem; color: var(--gray-300); cursor: pointer;"></i>
+                    </div>
+                    <input type="hidden" id="reviewRating" value="0">
+                </div>
+                <div class="form-group">
+                    <label for="reviewEventType">¿Para que tipo de evento contrataste?</label>
+                    <select id="reviewEventType" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Matrimonio">Matrimonio</option>
+                        <option value="Quinceanos">XV Anos</option>
+                        <option value="Cumpleanos">Cumpleanos</option>
+                        <option value="Bautizo">Bautizo</option>
+                        <option value="Corporativo">Evento Corporativo</option>
+                        <option value="Graduacion">Graduacion</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="reviewComment">Cuentanos tu experiencia</label>
+                    <textarea id="reviewComment" placeholder="¿Que te gusto del servicio? ¿Como fue la atencion? ¿Lo recomendarias?" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="reviewName">Tu nombre</label>
+                    <input type="text" id="reviewName" placeholder="Tu nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="reviewEmail">Correo (no se publicara)</label>
+                    <input type="email" id="reviewEmail" placeholder="tu@correo.com" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" style="width: 100%;" id="submitReviewBtn">
+                    <i class="fas fa-paper-plane"></i> Publicar Resena
+                </button>
+                <p style="text-align: center; margin-top: 12px; font-size: 13px; color: var(--gray-500);">
+                    <i class="fas fa-shield-alt"></i> Tu resena sera revisada antes de publicarse
+                </p>
             </form>
         </div>
     </div>
@@ -1388,6 +1459,201 @@
         // Llamar a updateFavoriteButton después de cargar el servicio
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => updateFavoriteButton(), 500);
+        });
+
+        // ==========================================
+        // SISTEMA DE RESEÑAS
+        // ==========================================
+
+        const REVIEWS_STORAGE_KEY = 'celebralo_service_reviews';
+        let selectedRating = 0;
+
+        function openReviewModal() {
+            // Verificar si el usuario está logueado
+            const user = window.userManager?.getUserData();
+            if (user) {
+                document.getElementById('reviewName').value = user.name || '';
+                document.getElementById('reviewEmail').value = user.email || '';
+            }
+
+            if (currentService) {
+                document.getElementById('reviewModalSubtitle').textContent = `Comparte tu experiencia con ${currentService.name}`;
+            }
+            document.getElementById('reviewModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Inicializar estrellas
+            initStarRating();
+        }
+
+        function closeReviewModal() {
+            document.getElementById('reviewModal').classList.remove('active');
+            document.body.style.overflow = '';
+            selectedRating = 0;
+            document.getElementById('reviewForm').reset();
+            updateStarDisplay(0);
+        }
+
+        function initStarRating() {
+            const stars = document.querySelectorAll('#starRatingInput i');
+            stars.forEach(star => {
+                star.onclick = function() {
+                    selectedRating = parseInt(this.dataset.rating);
+                    document.getElementById('reviewRating').value = selectedRating;
+                    updateStarDisplay(selectedRating);
+                };
+
+                star.onmouseenter = function() {
+                    const rating = parseInt(this.dataset.rating);
+                    updateStarDisplay(rating);
+                };
+            });
+
+            document.getElementById('starRatingInput').onmouseleave = function() {
+                updateStarDisplay(selectedRating);
+            };
+        }
+
+        function updateStarDisplay(rating) {
+            const stars = document.querySelectorAll('#starRatingInput i');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                    star.style.color = 'var(--warning)';
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                    star.style.color = 'var(--gray-300)';
+                }
+            });
+        }
+
+        async function submitReview(e) {
+            e.preventDefault();
+
+            if (selectedRating === 0) {
+                showToast('warning', 'Calificacion requerida', 'Por favor selecciona una calificacion con las estrellas');
+                return;
+            }
+
+            const btn = document.getElementById('submitReviewBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            btn.disabled = true;
+
+            const review = {
+                id: 'REV-' + Date.now(),
+                serviceId: currentService?.id,
+                serviceName: currentService?.name,
+                rating: selectedRating,
+                eventType: document.getElementById('reviewEventType').value,
+                comment: document.getElementById('reviewComment').value,
+                userName: document.getElementById('reviewName').value,
+                userEmail: document.getElementById('reviewEmail').value,
+                userAvatar: document.getElementById('reviewName').value.charAt(0).toUpperCase(),
+                date: new Date().toISOString(),
+                verified: false
+            };
+
+            try {
+                // Guardar localmente
+                saveServiceReview(review);
+
+                // Enviar a Google Sheets
+                if (typeof sendToGoogleSheets === 'function') {
+                    await sendToGoogleSheets('Feedback', {
+                        id: review.id,
+                        tipo: 'resena_servicio',
+                        servicio: currentService?.name,
+                        servicioId: currentService?.id,
+                        calificacion: review.rating,
+                        tipoEvento: review.eventType,
+                        mensaje: review.comment,
+                        nombre: review.userName,
+                        email: review.userEmail,
+                        fecha: new Date().toLocaleDateString('es-PE'),
+                        timestamp: new Date().toISOString()
+                    });
+                }
+
+                closeReviewModal();
+                showToast('success', 'Gracias por tu resena!', 'Tu opinion ayuda a otros usuarios');
+
+                // Recargar reseñas
+                loadServiceReviews();
+
+            } catch (error) {
+                console.error('Error al enviar resena:', error);
+                showToast('error', 'Error', 'No se pudo enviar la resena. Intenta de nuevo.');
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function saveServiceReview(review) {
+            const allReviews = JSON.parse(localStorage.getItem(REVIEWS_STORAGE_KEY) || '{}');
+            const serviceId = review.serviceId || 'unknown';
+            if (!allReviews[serviceId]) {
+                allReviews[serviceId] = [];
+            }
+            allReviews[serviceId].unshift(review);
+            localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(allReviews));
+        }
+
+        function loadServiceReviews() {
+            if (!currentService) return;
+
+            const allReviews = JSON.parse(localStorage.getItem(REVIEWS_STORAGE_KEY) || '{}');
+            const userReviews = allReviews[currentService.id] || [];
+            const existingReviews = currentService.reviews || [];
+            const combinedReviews = [...userReviews, ...existingReviews];
+
+            if (combinedReviews.length > 0) {
+                document.getElementById('reviewsList').style.display = 'block';
+                document.getElementById('reviewsEmpty').style.display = 'none';
+
+                const reviewsHtml = combinedReviews.map(review => `
+                    <div class="review-item" style="padding: 16px; border: 1px solid var(--border-light); border-radius: 12px; margin-bottom: 12px;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                    ${review.userAvatar || review.userName?.charAt(0) || 'U'}
+                                </div>
+                                <div>
+                                    <strong>${review.userName}</strong>
+                                    ${review.id?.startsWith('REV-') ? '<span style="color: var(--primary); font-size: 12px;"> (Tu resena)</span>' : ''}
+                                    <div style="font-size: 12px; color: var(--text-muted);">${review.eventType || 'Evento'}</div>
+                                </div>
+                            </div>
+                            <div style="color: var(--warning);">
+                                ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); margin: 0;">${review.comment}</p>
+                    </div>
+                `).join('');
+
+                document.getElementById('reviewsList').innerHTML = reviewsHtml;
+
+                // Actualizar promedio
+                const avgRating = (combinedReviews.reduce((sum, r) => sum + r.rating, 0) / combinedReviews.length).toFixed(1);
+                document.getElementById('avgRating').textContent = avgRating;
+                document.getElementById('totalReviews').textContent = `${combinedReviews.length} resenas`;
+            }
+        }
+
+        // Cargar reseñas al iniciar
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => loadServiceReviews(), 600);
+        });
+
+        // Cerrar modal con click fuera
+        document.getElementById('reviewModal')?.addEventListener('click', (e) => {
+            if (e.target.id === 'reviewModal') {
+                closeReviewModal();
+            }
         });
     </script>
 </body>

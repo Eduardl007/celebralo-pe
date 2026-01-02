@@ -235,34 +235,41 @@ class EventBot {
         // Detectar si estamos en página de detalle de local o servicio
         const urlParams = new URLSearchParams(window.location.search);
         const slug = urlParams.get('slug');
+        const fullUrl = window.location.href.toLowerCase();
         const pathname = window.location.pathname.toLowerCase();
 
-        console.log('Detectando página:', pathname, 'slug:', slug);
+        console.log('Detectando página - URL:', fullUrl, 'slug:', slug);
 
-        // Detectar página de local
-        if (pathname.includes('local.html') && slug) {
+        // Detectar página de local (funciona con file:// y http://)
+        const isLocalPage = fullUrl.includes('local.html') || pathname.includes('local.html');
+        if (isLocalPage && slug) {
             this.waitForData('LOCALES_DATA', () => {
                 const local = LOCALES_DATA.find(l => l.slug === slug);
                 if (local && local.owner) {
                     this.currentLocal = local;
                     this.currentOwner = local.owner;
                     this.providerType = 'local';
-                    console.log('Local detectado:', local.name);
+                    console.log('Local detectado:', local.name, '- Mostrando burbuja');
                     this.showOwnerBubble();
+                } else {
+                    console.log('Local no encontrado o sin owner:', slug);
                 }
             });
         }
 
-        // Detectar página de servicio
-        if (pathname.includes('servicio.html') && slug) {
+        // Detectar página de servicio (funciona con file:// y http://)
+        const isServicePage = fullUrl.includes('servicio.html') || pathname.includes('servicio.html');
+        if (isServicePage && slug) {
             this.waitForData('SERVICIOS_DATA', () => {
                 const servicio = SERVICIOS_DATA.find(s => s.slug === slug);
                 if (servicio && servicio.owner) {
-                    this.currentLocal = servicio; // Reutilizamos currentLocal para servicios
+                    this.currentLocal = servicio;
                     this.currentOwner = servicio.owner;
                     this.providerType = 'servicio';
-                    console.log('Servicio detectado:', servicio.name);
+                    console.log('Servicio detectado:', servicio.name, '- Mostrando burbuja');
                     this.showOwnerBubble();
+                } else {
+                    console.log('Servicio no encontrado o sin owner:', slug);
                 }
             });
         }
