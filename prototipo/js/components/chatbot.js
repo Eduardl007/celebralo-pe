@@ -123,12 +123,12 @@ class EventBot {
     }
 
     // Guardar conversaciones con propietarios (integrado con UserManager)
-    saveOwnerChat(ownerId, message, type) {
+    saveOwnerChat(chatId, message, type) {
         try {
             // Guardar en formato local
             const chats = JSON.parse(localStorage.getItem(this.OWNER_CHATS_KEY) || '{}');
-            if (!chats[ownerId]) {
-                chats[ownerId] = [];
+            if (!chats[chatId]) {
+                chats[chatId] = [];
             }
 
             const messageObj = {
@@ -137,13 +137,15 @@ class EventBot {
                 timestamp: new Date().toISOString()
             };
 
-            chats[ownerId].push(messageObj);
+            chats[chatId].push(messageObj);
 
             // Mantener ultimos 100 mensajes por propietario
-            if (chats[ownerId].length > 100) {
-                chats[ownerId] = chats[ownerId].slice(-100);
+            if (chats[chatId].length > 100) {
+                chats[chatId] = chats[chatId].slice(-100);
             }
             localStorage.setItem(this.OWNER_CHATS_KEY, JSON.stringify(chats));
+
+            console.log('Mensaje guardado en chat:', chatId, 'Total mensajes:', chats[chatId].length);
 
             // Sincronizar con UserManager para la bandeja de mensajes
             if (window.userManager && this.currentOwner && this.currentLocal) {
@@ -158,7 +160,7 @@ class EventBot {
                     providerData.incrementUnread = true;
                 }
 
-                userManager.addMessageToConversation(ownerId, messageObj, providerData);
+                userManager.addMessageToConversation(chatId, messageObj, providerData);
             }
         } catch (e) {
             console.warn('Error saving owner chat:', e);
@@ -167,20 +169,32 @@ class EventBot {
 
     loadOwnerChat(ownerId) {
         try {
-            // Intentar cargar desde UserManager primero
+            let messages = [];
+
+            // Cargar desde localStorage directo (fuente principal)
+            const chats = JSON.parse(localStorage.getItem(this.OWNER_CHATS_KEY) || '{}');
+            if (chats[ownerId] && chats[ownerId].length > 0) {
+                messages = chats[ownerId];
+            }
+
+            // También intentar cargar desde UserManager
             if (window.userManager) {
                 const conversation = userManager.getConversation(ownerId);
                 if (conversation && conversation.messages && conversation.messages.length > 0) {
                     // Marcar como leido al abrir
                     userManager.markConversationAsRead(ownerId);
-                    return conversation.messages;
+
+                    // Si no hay mensajes en localStorage, usar los de UserManager
+                    if (messages.length === 0) {
+                        messages = conversation.messages;
+                    }
                 }
             }
 
-            // Fallback a localStorage directo
-            const chats = JSON.parse(localStorage.getItem(this.OWNER_CHATS_KEY) || '{}');
-            return chats[ownerId] || [];
+            console.log('Mensajes cargados para', ownerId, ':', messages.length);
+            return messages;
         } catch (e) {
+            console.warn('Error loading owner chat:', e);
             return [];
         }
     }
@@ -299,6 +313,13 @@ class EventBot {
         }, 2000);
     }
 
+    // Generar ID único para el chat con el proveedor
+    getOwnerChatId() {
+        const type = this.providerType || 'local';
+        const localId = this.currentLocal?.id || this.currentLocal?.slug || 'unknown';
+        return `${type}_${localId}`;
+    }
+
     switchToOwnerMode() {
         this.mode = 'owner';
         this.chatbot.classList.add('owner-mode');
@@ -310,9 +331,12 @@ class EventBot {
         // Actualizar header
         this.updateChatHeader();
 
-        // Limpiar y cargar historial con propietario
+        // Limpiar y cargar historial con propietario usando ID único
         this.messagesContainer.innerHTML = '';
-        const ownerHistory = this.loadOwnerChat(this.currentOwner.id);
+        const chatId = this.getOwnerChatId();
+        const ownerHistory = this.loadOwnerChat(chatId);
+
+        console.log('Cargando chat con ID:', chatId);
 
         if (ownerHistory.length > 0) {
             ownerHistory.forEach(msg => {
@@ -320,11 +344,12 @@ class EventBot {
             });
         } else {
             // Mensaje inicial del propietario
-            this.addBotMessage(`¡Hola! 👋 Soy <strong>${this.currentOwner.name}</strong>, propietario de <strong>${this.currentLocal.name}</strong>.<br><br>
+            const typeText = this.providerType === 'servicio' ? 'del servicio' : 'del local';
+            this.addBotMessage(`¡Hola! 👋 Soy <strong>${this.currentOwner.name}</strong>, propietario ${typeText} <strong>${this.currentLocal.name}</strong>.<br><br>
                 ¿En qué puedo ayudarte? Puedo responder sobre:<br>
                 • 📅 Disponibilidad de fechas<br>
                 • 💰 Precios y paquetes<br>
-                • 🎉 Detalles del local<br>
+                • 🎉 Detalles ${typeText}<br>
                 • 📋 Reservaciones`);
         }
 
@@ -476,7 +501,8 @@ class EventBot {
         const message = { type: 'user', text, timestamp: new Date() };
 
         if (this.mode === 'owner' && this.currentOwner) {
-            this.saveOwnerChat(this.currentOwner.id, text, 'user');
+            const chatId = this.getOwnerChatId();
+            this.saveOwnerChat(chatId, text, 'user');
             // Enviar mensaje a Google Sheets para que el propietario lo vea
             this.notifyProviderMessage(text);
         } else {
@@ -525,7 +551,8 @@ class EventBot {
         const message = { type: 'bot', text, options, timestamp: new Date() };
 
         if (this.mode === 'owner' && this.currentOwner) {
-            this.saveOwnerChat(this.currentOwner.id, text, 'bot');
+            const chatId = this.getOwnerChatId();
+            this.saveOwnerChat(chatId, text, 'bot');
         } else {
             this.messages.push(message);
             this.saveChatHistory();

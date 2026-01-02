@@ -686,6 +686,21 @@
         /* Modal de reseñas */
         .review-modal-content {
             max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #reviewModal .modal-content {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #reviewModal .auth-header {
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            padding-bottom: var(--spacing-4);
+            z-index: 1;
         }
     </style>
 </head>
