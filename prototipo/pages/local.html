@@ -1285,10 +1285,12 @@
         }
 
         function contactOwner() {
-            // Redirigir al chatbot de la plataforma
-            if (window.eventBot) {
+            // Abrir chat en modo propietario
+            if (window.eventBot && window.eventBot.currentOwner) {
+                window.eventBot.switchToOwnerMode();
+            } else if (window.eventBot) {
                 window.eventBot.open();
-                showToast('info', 'Contacto', `Para consultas sobre "${currentLocale.name}", usa nuestro chat. Un asesor te ayudará.`);
+                showToast('info', 'Contacto', `Para consultas sobre "${currentLocale.name}", usa nuestro chat.`);
             } else {
                 showToast('info', 'Contacto', 'Por favor usa el chat de la plataforma para contactar al proveedor.');
             }

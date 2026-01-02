@@ -1,6 +1,9 @@
 /* ========================================
-   CELÉBRALO PE - Chatbot "Celé" v2.0
+   CELÉBRALO PE - Chatbot "Celé" v3.0
    Tu asistente festivo con flujo guiado
+   + Chat con propietarios
+   + Persistencia de conversaciones
+   + Enlaces a recomendaciones
    ======================================== */
 
 class EventBot {
@@ -8,6 +11,9 @@ class EventBot {
         this.isOpen = false;
         this.messages = [];
         this.isTyping = false;
+        this.mode = 'assistant'; // 'assistant' o 'owner'
+        this.currentOwner = null;
+        this.currentLocal = null;
 
         // Contexto mejorado para flujo guiado
         this.context = {
@@ -15,7 +21,7 @@ class EventBot {
             date: null,
             guests: null,
             budget: null,
-            stage: 'greeting', // greeting, event_type, guests, budget, recommendations, free_chat
+            stage: 'greeting',
             userName: null,
             preferences: [],
             searchHistory: []
@@ -24,6 +30,10 @@ class EventBot {
         // Configuración del wizard
         this.wizardSteps = ['event_type', 'guests', 'budget', 'recommendations'];
         this.currentStep = 0;
+
+        // Storage keys
+        this.STORAGE_KEY = 'celebralo_chat_history';
+        this.OWNER_CHATS_KEY = 'celebralo_owner_chats';
 
         this.init();
     }
@@ -55,16 +65,245 @@ class EventBot {
             });
         }
 
-        // Initial greeting
-        setTimeout(() => {
-            this.addBotMessage(this.getGreeting(), {
-                buttons: [
-                    { text: '🎊 Organizar evento', value: 'organizar_evento' },
-                    { text: '🔍 Solo explorar', value: 'explorar' }
-                ]
-            });
-        }, 500);
+        // Cargar historial si existe
+        this.loadChatHistory();
+
+        // Detectar si estamos en página de local
+        this.detectLocalPage();
+
+        // Initial greeting si no hay historial
+        if (this.messages.length === 0) {
+            setTimeout(() => {
+                this.addBotMessage(this.getGreeting(), {
+                    buttons: [
+                        { text: '🎊 Organizar evento', value: 'organizar_evento' },
+                        { text: '🔍 Solo explorar', value: 'explorar' }
+                    ]
+                });
+            }, 500);
+        }
     }
+
+    // ==========================================
+    // PERSISTENCIA DE CONVERSACIONES
+    // ==========================================
+
+    loadChatHistory() {
+        try {
+            const saved = localStorage.getItem(this.STORAGE_KEY);
+            if (saved) {
+                const data = JSON.parse(saved);
+                // Solo cargar si es del mismo día
+                const savedDate = new Date(data.date).toDateString();
+                const today = new Date().toDateString();
+
+                if (savedDate === today && data.messages && data.messages.length > 0) {
+                    this.messages = data.messages;
+                    this.context = data.context || this.context;
+                    // Renderizar mensajes guardados
+                    this.messages.forEach(msg => this.renderMessage(msg, false));
+                }
+            }
+        } catch (e) {
+            console.warn('Error loading chat history:', e);
+        }
+    }
+
+    saveChatHistory() {
+        try {
+            const data = {
+                date: new Date().toISOString(),
+                messages: this.messages.slice(-50), // Últimos 50 mensajes
+                context: this.context
+            };
+            localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+        } catch (e) {
+            console.warn('Error saving chat history:', e);
+        }
+    }
+
+    // Guardar conversaciones con propietarios
+    saveOwnerChat(ownerId, message, type) {
+        try {
+            const chats = JSON.parse(localStorage.getItem(this.OWNER_CHATS_KEY) || '{}');
+            if (!chats[ownerId]) {
+                chats[ownerId] = [];
+            }
+            chats[ownerId].push({
+                text: message,
+                type: type,
+                timestamp: new Date().toISOString()
+            });
+            // Mantener últimos 100 mensajes por propietario
+            if (chats[ownerId].length > 100) {
+                chats[ownerId] = chats[ownerId].slice(-100);
+            }
+            localStorage.setItem(this.OWNER_CHATS_KEY, JSON.stringify(chats));
+        } catch (e) {
+            console.warn('Error saving owner chat:', e);
+        }
+    }
+
+    loadOwnerChat(ownerId) {
+        try {
+            const chats = JSON.parse(localStorage.getItem(this.OWNER_CHATS_KEY) || '{}');
+            return chats[ownerId] || [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    // ==========================================
+    // MODO PROPIETARIO (Owner Mode)
+    // ==========================================
+
+    detectLocalPage() {
+        // Detectar si estamos en página de detalle de local
+        const urlParams = new URLSearchParams(window.location.search);
+        const slug = urlParams.get('slug');
+
+        if (window.location.pathname.includes('local.html') && slug && typeof LOCALES_DATA !== 'undefined') {
+            const local = LOCALES_DATA.find(l => l.slug === slug);
+            if (local && local.owner) {
+                this.currentLocal = local;
+                this.currentOwner = local.owner;
+                this.showOwnerBubble();
+            }
+        }
+    }
+
+    showOwnerBubble() {
+        // Crear burbuja de propietario si no existe
+        if (document.getElementById('ownerBubble')) return;
+
+        const bubble = document.createElement('div');
+        bubble.id = 'ownerBubble';
+        bubble.className = 'owner-bubble';
+        bubble.innerHTML = `
+            <div class="owner-bubble-avatar">${this.currentOwner.avatar}</div>
+            <div class="owner-bubble-content">
+                <div class="owner-bubble-name">${this.currentOwner.name}</div>
+                <div class="owner-bubble-status">Disponible para chat</div>
+            </div>
+            <div class="owner-bubble-close" onclick="event.stopPropagation(); document.getElementById('ownerBubble').classList.add('hidden');">
+                <i class="fas fa-times"></i>
+            </div>
+        `;
+
+        bubble.addEventListener('click', (e) => {
+            if (!e.target.closest('.owner-bubble-close')) {
+                this.switchToOwnerMode();
+            }
+        });
+
+        document.body.appendChild(bubble);
+
+        // Mostrar después de 2 segundos
+        setTimeout(() => {
+            bubble.style.display = 'flex';
+        }, 2000);
+    }
+
+    switchToOwnerMode() {
+        this.mode = 'owner';
+        this.chatbot.classList.add('owner-mode');
+
+        // Ocultar burbuja
+        const bubble = document.getElementById('ownerBubble');
+        if (bubble) bubble.classList.add('hidden');
+
+        // Actualizar header
+        this.updateChatHeader();
+
+        // Limpiar y cargar historial con propietario
+        this.messagesContainer.innerHTML = '';
+        const ownerHistory = this.loadOwnerChat(this.currentOwner.id);
+
+        if (ownerHistory.length > 0) {
+            ownerHistory.forEach(msg => {
+                this.renderMessage({ type: msg.type, text: msg.text }, false);
+            });
+        } else {
+            // Mensaje inicial del propietario
+            this.addBotMessage(`¡Hola! 👋 Soy <strong>${this.currentOwner.name}</strong>, propietario de <strong>${this.currentLocal.name}</strong>.<br><br>
+                ¿En qué puedo ayudarte? Puedo responder sobre:<br>
+                • 📅 Disponibilidad de fechas<br>
+                • 💰 Precios y paquetes<br>
+                • 🎉 Detalles del local<br>
+                • 📋 Reservaciones`);
+        }
+
+        // Ocultar quick actions en modo propietario
+        if (this.quickActions) {
+            this.quickActions.style.display = 'none';
+        }
+
+        this.open();
+    }
+
+    switchToAssistantMode() {
+        this.mode = 'assistant';
+        this.chatbot.classList.remove('owner-mode');
+
+        // Restaurar header original
+        this.restoreChatHeader();
+
+        // Mostrar burbuja de nuevo
+        const bubble = document.getElementById('ownerBubble');
+        if (bubble) bubble.classList.remove('hidden');
+
+        // Restaurar mensajes del asistente
+        this.messagesContainer.innerHTML = '';
+        this.messages.forEach(msg => this.renderMessage(msg, false));
+
+        // Mostrar quick actions
+        if (this.quickActions) {
+            this.quickActions.style.display = 'flex';
+        }
+    }
+
+    updateChatHeader() {
+        const header = this.window.querySelector('.chatbot-header');
+        if (!header) return;
+
+        // Guardar header original
+        if (!this.originalHeader) {
+            this.originalHeader = header.innerHTML;
+        }
+
+        header.innerHTML = `
+            <button class="chat-back-btn" onclick="window.eventBot.switchToAssistantMode()">
+                <i class="fas fa-arrow-left"></i> Volver
+            </button>
+            <div class="owner-avatar-small">${this.currentOwner.avatar}</div>
+            <div class="chatbot-info">
+                <strong>${this.currentOwner.name}</strong>
+                <span>${this.currentLocal.name}</span>
+            </div>
+            <button class="chatbot-close" id="chatbotCloseOwner">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        // Re-bind close button
+        document.getElementById('chatbotCloseOwner').addEventListener('click', () => this.close());
+    }
+
+    restoreChatHeader() {
+        const header = this.window.querySelector('.chatbot-header');
+        if (header && this.originalHeader) {
+            header.innerHTML = this.originalHeader;
+            // Re-bind close button
+            this.closeBtn = document.getElementById('chatbotClose');
+            if (this.closeBtn) {
+                this.closeBtn.addEventListener('click', () => this.close());
+            }
+        }
+    }
+
+    // ==========================================
+    // FUNCIONES PRINCIPALES
+    // ==========================================
 
     toggle() {
         if (this.isOpen) {
@@ -77,11 +316,8 @@ class EventBot {
     open() {
         this.isOpen = true;
         this.window.style.display = 'flex';
-
-        // Forzar reflow para que la animación funcione
         this.window.offsetHeight;
         this.window.classList.add('active');
-
         this.hideBadge();
         setTimeout(() => this.input.focus(), 300);
 
@@ -137,21 +373,37 @@ class EventBot {
 
     addUserMessage(text) {
         const message = { type: 'user', text, timestamp: new Date() };
-        this.messages.push(message);
+
+        if (this.mode === 'owner' && this.currentOwner) {
+            this.saveOwnerChat(this.currentOwner.id, text, 'user');
+        } else {
+            this.messages.push(message);
+            this.saveChatHistory();
+        }
+
         this.renderMessage(message);
     }
 
     addBotMessage(text, options = {}) {
         const message = { type: 'bot', text, options, timestamp: new Date() };
-        this.messages.push(message);
+
+        if (this.mode === 'owner' && this.currentOwner) {
+            this.saveOwnerChat(this.currentOwner.id, text, 'bot');
+        } else {
+            this.messages.push(message);
+            this.saveChatHistory();
+        }
+
         this.renderMessage(message);
     }
 
-    renderMessage(message) {
+    renderMessage(message, animate = true) {
         const div = document.createElement('div');
         div.className = `chat-message ${message.type}`;
+        if (!animate) div.style.animation = 'none';
         div.innerHTML = message.text;
 
+        // Añadir botones si existen
         if (message.options && message.options.buttons) {
             const buttonsDiv = document.createElement('div');
             buttonsDiv.className = 'chat-buttons';
@@ -160,7 +412,6 @@ class EventBot {
                 const button = document.createElement('button');
                 button.textContent = btn.text;
                 button.addEventListener('click', () => {
-                    // Deshabilitar botones después de hacer clic
                     buttonsDiv.querySelectorAll('button').forEach(b => b.disabled = true);
                     this.addUserMessage(btn.text);
                     this.processMessage(btn.value || btn.text);
@@ -171,8 +422,35 @@ class EventBot {
             div.appendChild(buttonsDiv);
         }
 
+        // Añadir links de locales si existen
+        if (message.options && message.options.localeLinks) {
+            const linksDiv = document.createElement('div');
+            linksDiv.style.marginTop = '12px';
+            linksDiv.style.display = 'flex';
+            linksDiv.style.flexDirection = 'column';
+            linksDiv.style.gap = '8px';
+
+            message.options.localeLinks.forEach(locale => {
+                const link = document.createElement('a');
+                link.className = 'chat-link';
+                link.href = this.getLocalePath() + `local.html?slug=${locale.slug}`;
+                link.innerHTML = `<i class="fas fa-external-link-alt"></i> Ver ${locale.name}`;
+                linksDiv.appendChild(link);
+            });
+
+            div.appendChild(linksDiv);
+        }
+
         this.messagesContainer.appendChild(div);
         this.scrollToBottom();
+    }
+
+    getLocalePath() {
+        // Detectar si estamos en raíz o en subcarpeta
+        if (window.location.pathname.includes('/pages/')) {
+            return '';
+        }
+        return 'pages/';
     }
 
     showTyping() {
@@ -200,14 +478,19 @@ class EventBot {
     processMessage(message) {
         this.showTyping();
         const normalizedMsg = message.toLowerCase();
-
-        // Tiempo de respuesta variable para parecer más natural
         const delay = 600 + Math.random() * 600;
 
         setTimeout(() => {
             this.hideTyping();
 
-            // Primero verificar si es parte del flujo guiado
+            // Si estamos en modo propietario, usar respuestas de propietario
+            if (this.mode === 'owner') {
+                const response = this.generateOwnerResponse(normalizedMsg);
+                this.addBotMessage(response.text, response.options);
+                return;
+            }
+
+            // Flujo del asistente
             if (this.context.stage !== 'free_chat') {
                 const wizardResponse = this.handleWizardFlow(normalizedMsg);
                 if (wizardResponse) {
@@ -217,7 +500,6 @@ class EventBot {
                 }
             }
 
-            // Si no es wizard, usar respuestas contextuales
             const response = this.generateResponse(normalizedMsg);
             this.addBotMessage(response.text, response.options);
             this.logInteraction(message, response.text);
@@ -225,14 +507,177 @@ class EventBot {
         }, delay);
     }
 
+    // ==========================================
+    // RESPUESTAS DEL PROPIETARIO
+    // ==========================================
+
+    generateOwnerResponse(message) {
+        const local = this.currentLocal;
+        const owner = this.currentOwner;
+
+        // Disponibilidad
+        if (this.matchKeywords(message, ['disponib', 'fecha', 'cuando', 'libre', 'reserv'])) {
+            const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+            const dayKeys = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+            let availText = dayKeys.map((day, i) => {
+                const avail = local.availability[day];
+                return avail.available ? `• ${days[i]}: ${avail.hours}` : `• ${days[i]}: Cerrado`;
+            }).join('<br>');
+
+            return {
+                text: `📅 <strong>Disponibilidad de ${local.name}:</strong><br><br>${availText}<br><br>
+                    ¿Te gustaría verificar una fecha específica o hacer una reserva?`,
+                options: {
+                    buttons: [
+                        { text: '📝 Solicitar reserva', value: 'quiero reservar' },
+                        { text: '👁️ Agendar visita', value: 'quiero visitar' }
+                    ]
+                }
+            };
+        }
+
+        // Precios
+        if (this.matchKeywords(message, ['precio', 'costo', 'cuanto', 'cuánto', 'tarifa', 'cobr'])) {
+            return {
+                text: `💰 <strong>Precios de ${local.name}:</strong><br><br>
+                    • Alquiler base: <strong>S/ ${local.price.base.toLocaleString()}</strong><br>
+                    • Hora adicional: S/ ${local.price.perHour}<br>
+                    • Depósito: S/ ${local.price.deposit}<br><br>
+                    El precio incluye: ${local.amenities.slice(0, 3).map(a => a.name).join(', ')}.<br><br>
+                    ¿Deseas más información o una cotización personalizada?`,
+                options: {
+                    buttons: [
+                        { text: '📋 Cotización', value: 'quiero cotización' },
+                        { text: '📦 Ver paquetes', value: 'paquetes disponibles' }
+                    ]
+                }
+            };
+        }
+
+        // Capacidad
+        if (this.matchKeywords(message, ['capacidad', 'personas', 'invitados', 'cupo', 'aforo'])) {
+            return {
+                text: `👥 <strong>Capacidad de ${local.name}:</strong><br><br>
+                    • Mínimo: ${local.capacity.min} personas<br>
+                    • Máximo: ${local.capacity.max} personas<br>
+                    • Sentados: ${local.capacity.seated} personas<br>
+                    • De pie: ${local.capacity.standing} personas<br><br>
+                    ¿Cuántos invitados tendrás en tu evento?`,
+                options: {}
+            };
+        }
+
+        // Servicios/Amenidades
+        if (this.matchKeywords(message, ['servicio', 'incluye', 'tiene', 'ofrece', 'amenidad'])) {
+            const amenitiesList = local.amenities.map(a => `• ${a.name}: ${a.description}`).join('<br>');
+            return {
+                text: `✨ <strong>Servicios incluidos en ${local.name}:</strong><br><br>${amenitiesList}<br><br>
+                    ¿Necesitas algún servicio adicional?`,
+                options: {}
+            };
+        }
+
+        // Reserva
+        if (this.matchKeywords(message, ['reserv', 'apartar', 'separar'])) {
+            return {
+                text: `📝 <strong>¡Excelente elección!</strong><br><br>
+                    Para reservar ${local.name}, necesito algunos datos:<br><br>
+                    1. ¿Fecha de tu evento?<br>
+                    2. ¿Tipo de evento?<br>
+                    3. ¿Número de invitados?<br><br>
+                    Puedes usar el botón "Reservar Ahora" en la página para completar el formulario completo.`,
+                options: {
+                    buttons: [
+                        { text: '📅 Ir a reservar', value: 'formulario_reserva' }
+                    ]
+                }
+            };
+        }
+
+        // Visita
+        if (this.matchKeywords(message, ['visit', 'conocer', 'ver el local', 'ir a ver'])) {
+            return {
+                text: `👁️ <strong>¡Claro que puedes visitar ${local.name}!</strong><br><br>
+                    Estamos disponibles para visitas de ${local.availability.saturday.hours} los fines de semana.<br><br>
+                    Usa el botón "Solicitar Visita" en la página o dime qué día te gustaría venir.`,
+                options: {}
+            };
+        }
+
+        // Políticas
+        if (this.matchKeywords(message, ['política', 'regla', 'cancelación', 'pago'])) {
+            const rulesList = local.policies.rules.map(r => `• ${r}`).join('<br>');
+            return {
+                text: `📋 <strong>Políticas de ${local.name}:</strong><br><br>
+                    <strong>Cancelación:</strong> ${local.policies.cancellation}<br><br>
+                    <strong>Pago:</strong> ${local.policies.deposit}<br><br>
+                    <strong>Reglas:</strong><br>${rulesList}`,
+                options: {}
+            };
+        }
+
+        // Saludos
+        if (this.matchKeywords(message, ['hola', 'buenos', 'buenas', 'hi'])) {
+            return {
+                text: `¡Hola! 👋 Soy ${owner.name}.<br><br>
+                    Gracias por tu interés en <strong>${local.name}</strong>. Estoy aquí para ayudarte con cualquier consulta.<br><br>
+                    ¿Qué te gustaría saber?`,
+                options: {
+                    buttons: [
+                        { text: '💰 Precios', value: 'precios' },
+                        { text: '📅 Disponibilidad', value: 'disponibilidad' },
+                        { text: '✨ Servicios', value: 'servicios incluidos' }
+                    ]
+                }
+            };
+        }
+
+        // Formulario reserva (abrir modal)
+        if (message.includes('formulario_reserva')) {
+            // Intentar abrir el modal de reserva si existe
+            if (typeof openBookingModal === 'function') {
+                setTimeout(() => openBookingModal(), 300);
+            }
+            return {
+                text: `Abriendo el formulario de reserva... 📝`,
+                options: {}
+            };
+        }
+
+        // Gracias
+        if (this.matchKeywords(message, ['gracias', 'thanks', 'genial'])) {
+            return {
+                text: `¡Con gusto! 😊 Cualquier otra consulta sobre ${local.name}, aquí estoy.<br><br>
+                    <strong>Tiempo de respuesta:</strong> ${owner.responseTime}<br>
+                    <strong>Tasa de respuesta:</strong> ${owner.responseRate}%`,
+                options: {}
+            };
+        }
+
+        // Respuesta por defecto
+        return {
+            text: `Gracias por tu mensaje. Te responderé lo antes posible.<br><br>
+                Mi tiempo de respuesta habitual es <strong>${owner.responseTime}</strong>.<br><br>
+                Mientras tanto, puedes revisar toda la información del local en esta página o usar los botones de "Reservar" o "Solicitar Visita".`,
+            options: {
+                buttons: [
+                    { text: '💰 Ver precios', value: 'precios' },
+                    { text: '📅 Ver disponibilidad', value: 'disponibilidad' }
+                ]
+            }
+        };
+    }
+
+    // ==========================================
+    // WIZARD FLOW (Flujo guiado)
+    // ==========================================
+
     handleWizardFlow(message) {
-        // Detectar si quiere iniciar el wizard
         if (this.matchKeywords(message, ['organizar', 'planificar', 'quiero organizar', 'tengo un evento'])) {
             this.context.stage = 'event_type';
             return this.askEventType();
         }
 
-        // Detectar si quiere explorar libremente
         if (this.matchKeywords(message, ['explorar', 'solo explorar', 'ver opciones'])) {
             this.context.stage = 'free_chat';
             return {
@@ -252,7 +697,6 @@ class EventBot {
             };
         }
 
-        // Manejar cada etapa del wizard
         switch (this.context.stage) {
             case 'event_type':
                 return this.handleEventTypeResponse(message);
@@ -316,7 +760,6 @@ class EventBot {
             }
         }
 
-        // Si no reconoce el tipo, pedir de nuevo
         return {
             text: `No estoy seguro del tipo de evento. ¿Podrías elegir una opción?`,
             options: {
@@ -347,7 +790,6 @@ class EventBot {
             guests = { min: 200, max: 500 };
             guestsText = 'más de 200 personas';
         } else {
-            // Intentar extraer número
             const numMatch = message.match(/(\d+)/);
             if (numMatch) {
                 const num = parseInt(numMatch[1]);
@@ -392,26 +834,20 @@ class EventBot {
 
     handleBudgetResponse(message) {
         let budget = null;
-        let budgetText = '';
 
         if (message.includes('hasta 1000') || message.includes('económico')) {
             budget = { min: 0, max: 1000, level: 'economico' };
-            budgetText = 'Hasta S/ 1,000';
         } else if (message.includes('1000') && message.includes('2000')) {
             budget = { min: 1000, max: 2000, level: 'estandar' };
-            budgetText = 'S/ 1,000 - 2,000';
         } else if (message.includes('2000') && message.includes('3500')) {
             budget = { min: 2000, max: 3500, level: 'premium' };
-            budgetText = 'S/ 2,000 - 3,500';
         } else if (message.includes('sin limite') || message.includes('no importa')) {
             budget = { min: 0, max: 99999, level: 'premium' };
-            budgetText = 'Sin límite';
         }
 
         if (budget) {
             this.context.budget = budget;
             this.context.stage = 'recommendations';
-
             return this.showRecommendations();
         }
 
@@ -432,25 +868,41 @@ class EventBot {
         const { eventType, guests, budget } = this.context;
         this.context.stage = 'free_chat';
 
-        // Generar recomendaciones basadas en el contexto
-        let recommendations = this.getMatchingLocales();
+        // Obtener locales que coincidan
+        const recommendations = this.getMatchingLocales();
 
-        let recText = recommendations.length > 0
-            ? recommendations.map((r, i) => `${i + 1}. <strong>${r.name}</strong> - ${r.price} (Cap: ${r.capacity})`).join('<br>')
-            : '• Salón Los Jardines Premium - S/ 1,200<br>• Quinta El Paraíso - S/ 900<br>• La Mansión - S/ 1,800';
+        let recText = '';
+        let localeLinks = [];
+
+        if (recommendations.length > 0) {
+            recText = recommendations.map((r, i) =>
+                `${i + 1}. <strong>${r.name}</strong> - S/ ${r.price.toLocaleString()} (Cap: ${r.capacity})`
+            ).join('<br>');
+
+            localeLinks = recommendations.map(r => ({
+                name: r.name,
+                slug: r.slug
+            }));
+        } else {
+            recText = '• Salón Los Jardines Premium - S/ 1,200<br>• Quinta El Paraíso - S/ 900<br>• La Mansión - S/ 1,800';
+            localeLinks = [
+                { name: 'Salón Los Jardines Premium', slug: 'salon-los-jardines-premium' },
+                { name: 'Quinta El Paraíso', slug: 'quinta-el-paraiso' },
+                { name: 'La Mansión', slug: 'centro-eventos-la-mansion' }
+            ];
+        }
 
         return {
             text: `🎯 <strong>¡Tengo recomendaciones para ti!</strong><br><br>
                 📋 <strong>Tu evento:</strong><br>
                 • Tipo: ${eventType?.name || 'Evento'}<br>
                 • Invitados: ${guests?.exact || `${guests?.min}-${guests?.max}`} personas<br>
-                • Presupuesto: ${budget?.max === 99999 ? 'Sin límite' : 'S/ ' + budget?.max}<br><br>
+                • Presupuesto: ${budget?.max === 99999 ? 'Sin límite' : 'Hasta S/ ' + budget?.max?.toLocaleString()}<br><br>
                 🏛️ <strong>Locales recomendados:</strong><br>
-                ${recText}<br><br>
-                ¿Te gustaría ver más detalles de alguno?`,
+                ${recText}`,
             options: {
+                localeLinks: localeLinks,
                 buttons: [
-                    { text: '📍 Ver locales', value: 'ver locales recomendados' },
                     { text: '📦 Ver paquetes', value: 'paquetes para mi evento' },
                     { text: '🔄 Buscar de nuevo', value: 'organizar evento' }
                 ]
@@ -459,30 +911,36 @@ class EventBot {
     }
 
     getMatchingLocales() {
-        // Si LOCALES_DATA está disponible, filtrar
-        if (typeof LOCALES_DATA !== 'undefined') {
-            return LOCALES_DATA
-                .filter(local => {
-                    const matchesCapacity = !this.context.guests ||
-                        (local.capacity.max >= this.context.guests.min);
-                    const matchesBudget = !this.context.budget ||
-                        (local.price.base <= this.context.budget.max);
-                    const matchesEvent = !this.context.eventType ||
-                        local.eventTypes.includes(this.context.eventType.type);
-                    return matchesCapacity && matchesBudget && matchesEvent;
-                })
-                .slice(0, 3)
-                .map(local => ({
-                    name: local.name,
-                    price: `S/ ${local.price.base.toLocaleString()}`,
-                    capacity: local.capacity.max
-                }));
-        }
-        return [];
+        if (typeof LOCALES_DATA === 'undefined') return [];
+
+        return LOCALES_DATA
+            .filter(local => {
+                // Excluir el local de ejemplo (id: 0)
+                if (local.id === 0) return false;
+
+                const matchesCapacity = !this.context.guests ||
+                    (local.capacity.max >= this.context.guests.min);
+                const matchesBudget = !this.context.budget ||
+                    (local.price.base <= this.context.budget.max);
+                const matchesEvent = !this.context.eventType ||
+                    local.eventTypes.includes(this.context.eventType.type);
+                return matchesCapacity && matchesBudget && matchesEvent;
+            })
+            .slice(0, 3)
+            .map(local => ({
+                name: local.name,
+                slug: local.slug,
+                price: local.price.base,
+                capacity: local.capacity.max
+            }));
     }
 
+    // ==========================================
+    // RESPUESTAS GENERALES
+    // ==========================================
+
     generateResponse(message) {
-        // Respuestas para precios
+        // Precios
         if (this.matchKeywords(message, ['precio', 'costo', 'cuanto', 'cuánto', 'tarifa', 'cobran'])) {
             return {
                 text: `<strong>💰 Rangos de Precios:</strong><br><br>
@@ -504,18 +962,22 @@ class EventBot {
             };
         }
 
-        // Ver locales
+        // Ver locales - CON LINKS
         if (this.matchKeywords(message, ['ver locales', 'mostrar locales', 'locales disponibles'])) {
+            const locales = typeof LOCALES_DATA !== 'undefined'
+                ? LOCALES_DATA.filter(l => l.id !== 0).slice(0, 3)
+                : [];
+
+            const localeLinks = locales.map(l => ({
+                name: l.name,
+                slug: l.slug
+            }));
+
             return {
                 text: `<strong>🏛️ Nuestros Locales Destacados:</strong><br><br>
-                    ⭐ <strong>Salón Los Jardines Premium</strong><br>
-                    Capacidad: 200 | Desde S/ 1,200<br><br>
-                    ⭐ <strong>La Mansión</strong><br>
-                    Capacidad: 300 | Desde S/ 1,800<br><br>
-                    ⭐ <strong>Quinta El Paraíso</strong><br>
-                    Capacidad: 150 | Desde S/ 900<br><br>
-                    <a href="./pages/locales.html" style="color: var(--primary);">Ver todos los locales →</a>`,
+                    ${locales.map(l => `⭐ <strong>${l.name}</strong><br>Capacidad: ${l.capacity.max} | Desde S/ ${l.price.base.toLocaleString()}`).join('<br><br>')}`,
                 options: {
+                    localeLinks: localeLinks,
                     buttons: [
                         { text: '🔍 Filtrar por capacidad', value: 'capacidad' },
                         { text: '💰 Filtrar por precio', value: 'precio' }
@@ -563,17 +1025,20 @@ class EventBot {
             };
         }
 
-        // Matrimonios
+        // Matrimonios - CON LINKS
         if (this.matchKeywords(message, ['matrimonio', 'boda', 'casamiento'])) {
             this.context.eventType = { type: 'matrimonio', icon: '💒', name: 'Matrimonio' };
+
+            const weddingLocales = typeof LOCALES_DATA !== 'undefined'
+                ? LOCALES_DATA.filter(l => l.id !== 0 && l.eventTypes.includes('matrimonio')).slice(0, 3)
+                : [];
+
             return {
                 text: `<strong>💒 Locales para Matrimonios:</strong><br><br>
                     Tenemos los mejores espacios para tu gran día:<br><br>
-                    🏆 <strong>La Mansión</strong> - Elegante y espacioso<br>
-                    🌳 <strong>Los Jardines Premium</strong> - Áreas verdes<br>
-                    🏛️ <strong>Club El Bosque</strong> - Con instalaciones deportivas<br><br>
-                    Todos incluyen coordinador y opciones de catering.`,
+                    ${weddingLocales.map(l => `🏆 <strong>${l.name}</strong> - S/ ${l.price.base.toLocaleString()}`).join('<br>')}`,
                 options: {
+                    localeLinks: weddingLocales.map(l => ({ name: l.name, slug: l.slug })),
                     buttons: [
                         { text: '📅 Verificar disponibilidad', value: 'disponibilidad matrimonio' },
                         { text: '📦 Paquetes de boda', value: 'paquete matrimonio' }
@@ -772,6 +1237,19 @@ class EventBot {
             searchHistory: []
         };
         this.currentStep = 0;
+    }
+
+    // Método para limpiar historial
+    clearHistory() {
+        this.messages = [];
+        localStorage.removeItem(this.STORAGE_KEY);
+        this.messagesContainer.innerHTML = '';
+        this.addBotMessage(this.getGreeting(), {
+            buttons: [
+                { text: '🎊 Organizar evento', value: 'organizar_evento' },
+                { text: '🔍 Solo explorar', value: 'explorar' }
+            ]
+        });
     }
 }
 
