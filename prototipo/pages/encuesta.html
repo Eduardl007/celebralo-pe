@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu opinión nos importa | Celébralo pe</title>
+    <link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .survey-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .survey-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .survey-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .survey-header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .time-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+
+        .survey-body {
+            padding: 30px;
+        }
+
+        .question {
+            margin-bottom: 28px;
+        }
+
+        .question:last-of-type {
+            margin-bottom: 20px;
+        }
+
+        .question-label {
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 14px;
+            display: block;
+            font-size: 0.95rem;
+        }
+
+        .question-number {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-size: 0.75rem;
+            margin-right: 8px;
+        }
+
+        /* Emoji Rating */
+        .emoji-rating {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .emoji-option {
+            flex: 1;
+            text-align: center;
+            padding: 12px 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .emoji-option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .emoji-option.selected {
+            border-color: #667eea;
+            background: #f0f1ff;
+        }
+
+        .emoji-option input {
+            display: none;
+        }
+
+        .emoji-option .emoji {
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .emoji-option .label {
+            font-size: 0.7rem;
+            color: #6b7280;
+        }
+
+        /* NPS Scale */
+        .nps-scale {
+            display: flex;
+            gap: 6px;
+        }
+
+        .nps-option {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .nps-option:hover {
+            border-color: #667eea;
+        }
+
+        .nps-option.selected {
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
+        }
+
+        .nps-option input {
+            display: none;
+        }
+
+        .nps-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.7rem;
+            color: #9ca3af;
+        }
+
+        /* Radio Options */
+        .radio-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .radio-option:hover {
+            border-color: #667eea;
+        }
+
+        .radio-option.selected {
+            border-color: #667eea;
+            background: #f0f1ff;
+        }
+
+        .radio-option input {
+            display: none;
+        }
+
+        .radio-option .check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .radio-option.selected .check {
+            border-color: #667eea;
+            background: #667eea;
+        }
+
+        .radio-option.selected .check::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        /* Textarea */
+        .feedback-textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s;
+        }
+
+        .feedback-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .feedback-textarea::placeholder {
+            color: #9ca3af;
+        }
+
+        .optional-tag {
+            font-size: 0.75rem;
+            color: #9ca3af;
+            font-weight: 400;
+        }
+
+        /* Submit */
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Thank you state */
+        .thank-you {
+            text-align: center;
+            padding: 60px 30px;
+            display: none;
+        }
+
+        .thank-you.show {
+            display: block;
+        }
+
+        .thank-you-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .thank-you h2 {
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+
+        .thank-you p {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #5a6fd6;
+        }
+
+        .survey-form.hide {
+            display: none;
+        }
+
+        /* Progress */
+        .progress-bar {
+            height: 4px;
+            background: #e5e7eb;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="survey-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="survey-header">
+            <h1>Tu opinión nos importa</h1>
+            <p>Ayúdanos a mejorar Celébralo pe</p>
+            <span class="time-badge"><i class="fas fa-clock"></i> Solo 1 minuto</span>
+        </div>
+
+        <form class="survey-body survey-form" id="surveyForm">
+            <!-- Q1: Facilidad de uso -->
+            <div class="question" data-question="1">
+                <label class="question-label">
+                    <span class="question-number">1</span>
+                    ¿Qué tan fácil fue navegar por la web?
+                </label>
+                <div class="emoji-rating">
+                    <label class="emoji-option">
+                        <input type="radio" name="facilidad" value="1" required>
+                        <span class="emoji">😫</span>
+                        <span class="label">Difícil</span>
+                    </label>
+                    <label class="emoji-option">
+                        <input type="radio" name="facilidad" value="2">
+                        <span class="emoji">😕</span>
+                        <span class="label">Confuso</span>
+                    </label>
+                    <label class="emoji-option">
+                        <input type="radio" name="facilidad" value="3">
+                        <span class="emoji">😐</span>
+                        <span class="label">Normal</span>
+                    </label>
+                    <label class="emoji-option">
+                        <input type="radio" name="facilidad" value="4">
+                        <span class="emoji">🙂</span>
+                        <span class="label">Fácil</span>
+                    </label>
+                    <label class="emoji-option">
+                        <input type="radio" name="facilidad" value="5">
+                        <span class="emoji">😍</span>
+                        <span class="label">Muy fácil</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q2: Confianza -->
+            <div class="question" data-question="2">
+                <label class="question-label">
+                    <span class="question-number">2</span>
+                    ¿Te genera confianza esta plataforma?
+                </label>
+                <div class="radio-options">
+                    <label class="radio-option">
+                        <input type="radio" name="confianza" value="si_mucha" required>
+                        <span class="check"></span>
+                        Sí, mucha confianza
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="confianza" value="si_algo">
+                        <span class="check"></span>
+                        Sí, algo de confianza
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="confianza" value="no_seguro">
+                        <span class="check"></span>
+                        No estoy seguro/a
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="confianza" value="no">
+                        <span class="check"></span>
+                        No, me genera dudas
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q3: Usaría para su evento -->
+            <div class="question" data-question="3">
+                <label class="question-label">
+                    <span class="question-number">3</span>
+                    ¿Usarías Celébralo pe para tu próximo evento?
+                </label>
+                <div class="radio-options">
+                    <label class="radio-option">
+                        <input type="radio" name="usaria" value="definitivamente_si" required>
+                        <span class="check"></span>
+                        Definitivamente sí
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="usaria" value="probablemente_si">
+                        <span class="check"></span>
+                        Probablemente sí
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="usaria" value="tal_vez">
+                        <span class="check"></span>
+                        Tal vez
+                    </label>
+                    <label class="radio-option">
+                        <input type="radio" name="usaria" value="no">
+                        <span class="check"></span>
+                        No lo creo
+                    </label>
+                </div>
+            </div>
+
+            <!-- Q4: NPS -->
+            <div class="question" data-question="4">
+                <label class="question-label">
+                    <span class="question-number">4</span>
+                    ¿Recomendarías Celébralo pe a un amigo?
+                </label>
+                <div class="nps-scale">
+                    <label class="nps-option"><input type="radio" name="nps" value="1" required>1</label>
+                    <label class="nps-option"><input type="radio" name="nps" value="2">2</label>
+                    <label class="nps-option"><input type="radio" name="nps" value="3">3</label>
+                    <label class="nps-option"><input type="radio" name="nps" value="4">4</label>
+                    <label class="nps-option"><input type="radio" name="nps" value="5">5</label>
+                    <label class="nps-option"><input type="radio" name="nps" value="6">6</label>
+                    <label class="nps-option"><input type="radio" name="nps" value="7">7</label>
+                    <label class="nps-option"><input type="radio" name="nps" value="8">8</label>
+                    <label class="nps-option"><input type="radio" name="nps" value="9">9</label>
+                    <label class="nps-option"><input type="radio" name="nps" value="10">10</label>
+                </div>
+                <div class="nps-labels">
+                    <span>Nada probable</span>
+                    <span>Muy probable</span>
+                </div>
+            </div>
+
+            <!-- Q5: Feedback abierto -->
+            <div class="question" data-question="5">
+                <label class="question-label">
+                    <span class="question-number">5</span>
+                    ¿Qué mejorarías? <span class="optional-tag">(opcional)</span>
+                </label>
+                <textarea class="feedback-textarea" name="mejoras" placeholder="Ej: Me gustaría ver más fotos, precios más claros, filtros de búsqueda..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">
+                Enviar mi opinión
+            </button>
+        </form>
+
+        <div class="thank-you" id="thankYou">
+            <div class="thank-you-icon">🎉</div>
+            <h2>¡Gracias por tu opinión!</h2>
+            <p>Tu feedback nos ayuda a crear una mejor experiencia para organizar eventos.</p>
+            <a href="../index.html" class="back-btn">Volver a Celébralo pe</a>
+        </div>
+    </div>
+
+    <!-- Google Sheets Integration -->
+    <script>
+        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx-Jyco4e_8mvT2stR39kU-vKEaDxvdd6FDosumVFW2ufMNwcrBLM3JEQGr44C5Ajl3/exec';
+
+        // Selection handlers
+        document.querySelectorAll('.emoji-option, .radio-option, .nps-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.closest('.emoji-rating, .radio-options, .nps-scale');
+                parent.querySelectorAll('.emoji-option, .radio-option, .nps-option').forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+                this.querySelector('input').checked = true;
+                updateProgress();
+            });
+        });
+
+        // Progress bar
+        function updateProgress() {
+            const questions = document.querySelectorAll('.question[data-question]');
+            const answered = document.querySelectorAll('input[type="radio"]:checked').length;
+            const total = 4; // Solo las 4 preguntas obligatorias
+            const progress = (answered / total) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // Form submit
+        document.getElementById('surveyForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('submitBtn');
+            btn.textContent = 'Enviando...';
+            btn.disabled = true;
+
+            const formData = new FormData(this);
+            const data = {
+                facilidad: formData.get('facilidad'),
+                confianza: formData.get('confianza'),
+                usaria: formData.get('usaria'),
+                nps: formData.get('nps'),
+                mejoras: formData.get('mejoras') || '',
+                fecha: new Date().toLocaleDateString('es-PE'),
+                hora: new Date().toLocaleTimeString('es-PE'),
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                // Enviar a Google Sheets
+                await fetch(GOOGLE_SHEETS_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ sheet: 'Encuestas', data: data })
+                });
+
+                // Guardar también localmente
+                const encuestas = JSON.parse(localStorage.getItem('celebralo_encuestas') || '[]');
+                encuestas.push(data);
+                localStorage.setItem('celebralo_encuestas', JSON.stringify(encuestas));
+
+                // Mostrar agradecimiento
+                document.getElementById('surveyForm').classList.add('hide');
+                document.getElementById('thankYou').classList.add('show');
+                document.getElementById('progressFill').style.width = '100%';
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Hubo un error. Por favor intenta de nuevo.');
+                btn.textContent = 'Enviar mi opinión';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
