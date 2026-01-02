@@ -477,12 +477,48 @@ class EventBot {
 
         if (this.mode === 'owner' && this.currentOwner) {
             this.saveOwnerChat(this.currentOwner.id, text, 'user');
+            // Enviar mensaje a Google Sheets para que el propietario lo vea
+            this.notifyProviderMessage(text);
         } else {
             this.messages.push(message);
             this.saveChatHistory();
         }
 
         this.renderMessage(message);
+    }
+
+    // Notificar al proveedor sobre un nuevo mensaje
+    notifyProviderMessage(message) {
+        if (!this.currentOwner || !this.currentLocal) return;
+
+        // Obtener datos del usuario si está logueado
+        const user = window.userManager?.getUserData();
+        const userName = user?.name || 'Usuario anónimo';
+        const userEmail = user?.email || 'No proporcionado';
+        const userPhone = user?.phone || 'No proporcionado';
+
+        // Enviar a Google Sheets
+        if (typeof sendToGoogleSheets === 'function') {
+            sendToGoogleSheets('MensajesProveedores', {
+                id: 'MSG-' + Date.now(),
+                tipo: 'mensaje_chat',
+                proveedorNombre: this.currentOwner.name,
+                proveedorId: this.currentOwner.id,
+                localServicio: this.currentLocal.name,
+                localServicioSlug: this.currentLocal.slug,
+                tipoProveedor: this.providerType || 'local',
+                mensaje: message,
+                usuarioNombre: userName,
+                usuarioEmail: userEmail,
+                usuarioTelefono: userPhone,
+                estado: 'pendiente_respuesta',
+                fecha: new Date().toLocaleDateString('es-PE'),
+                hora: new Date().toLocaleTimeString('es-PE'),
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        console.log('Mensaje enviado a proveedor:', this.currentOwner.name);
     }
 
     addBotMessage(text, options = {}) {
@@ -809,6 +845,25 @@ class EventBot {
             };
         }
 
+        // Contacto por WhatsApp
+        if (message.includes('contacto_whatsapp') || this.matchKeywords(message, ['whatsapp', 'wsp', 'whats'])) {
+            const whatsappNumber = this.getProviderWhatsApp();
+            const providerName = provider.name;
+            const whatsappMessage = encodeURIComponent(`Hola, me interesa información sobre ${providerName} en Celébralo pe.`);
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`;
+
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 500);
+
+            return {
+                text: `📱 <strong>Abriendo WhatsApp...</strong><br><br>
+                    Te conectaremos con un asesor de Celébralo pe que coordinará directamente con ${owner.name}.<br><br>
+                    <a href="${whatsappUrl}" target="_blank" style="color: var(--primary);">Click aquí si no se abre automáticamente</a>`,
+                options: {}
+            };
+        }
+
         // Gracias
         if (this.matchKeywords(message, ['gracias', 'thanks', 'genial'])) {
             return {
@@ -822,16 +877,24 @@ class EventBot {
         // Respuesta por defecto
         const typeText = isService ? 'servicio' : 'local';
         return {
-            text: `Gracias por tu mensaje. Te responderé lo antes posible.<br><br>
-                Mi tiempo de respuesta habitual es <strong>${owner.responseTime}</strong>.<br><br>
-                Mientras tanto, puedes revisar toda la información del ${typeText} en esta página.`,
+            text: `✅ <strong>¡Mensaje recibido!</strong><br><br>
+                Tu consulta ha sido enviada a ${owner.name}.<br><br>
+                ⏱️ <strong>Tiempo de respuesta:</strong> ${owner.responseTime}<br>
+                📧 Te notificaremos cuando responda.<br><br>
+                ¿Necesitas una respuesta más rápida?`,
             options: {
                 buttons: [
-                    { text: '💰 Ver precios', value: 'precios' },
-                    { text: '📅 Ver disponibilidad', value: 'disponibilidad' }
+                    { text: '📱 WhatsApp directo', value: 'contacto_whatsapp' },
+                    { text: '📋 Solicitar cotización', value: 'quiero cotización' }
                 ]
             }
         };
+    }
+
+    // Obtener número de WhatsApp del proveedor
+    getProviderWhatsApp() {
+        // Número de contacto general de Celébralo pe
+        return '51972142767';
     }
 
     // ==========================================

@@ -790,6 +790,19 @@
                                     <span>Pago seguro a traves de la plataforma</span>
                                 </div>
                             </div>
+
+                            <!-- Acciones: Compartir y Favoritos -->
+                            <div class="share-actions" style="display: flex; justify-content: center; gap: var(--spacing-4); margin-top: var(--spacing-4); padding-top: var(--spacing-4); border-top: 1px solid var(--border-light);">
+                                <button onclick="shareService()" title="Compartir" style="padding: var(--spacing-2); color: var(--text-muted); cursor: pointer; transition: color 0.2s; background: none; border: none;">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                                <button onclick="toggleFavoriteService()" title="Guardar" id="favBtn" style="padding: var(--spacing-2); color: var(--text-muted); cursor: pointer; transition: color 0.2s; background: none; border: none;">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                                <button onclick="window.print()" title="Imprimir" style="padding: var(--spacing-2); color: var(--text-muted); cursor: pointer; transition: color 0.2s; background: none; border: none;">
+                                    <i class="fas fa-print"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1289,6 +1302,92 @@
             if (e.target.id === 'contactModal') {
                 closeContactModal();
             }
+        });
+
+        // ==========================================
+        // FUNCIONES DE FAVORITOS Y COMPARTIR
+        // ==========================================
+
+        function shareService() {
+            const title = currentService?.name || 'Servicio';
+            const text = currentService?.shortDescription || 'Mira este servicio en Celébralo pe';
+            const url = window.location.href;
+
+            if (navigator.share) {
+                navigator.share({ title, text, url })
+                    .then(() => showToast('success', 'Compartido', 'Enlace compartido correctamente'))
+                    .catch(err => console.log('Error al compartir:', err));
+            } else {
+                // Fallback: copiar al portapapeles
+                navigator.clipboard.writeText(url)
+                    .then(() => showToast('success', 'Enlace copiado', 'El enlace ha sido copiado al portapapeles'))
+                    .catch(() => showToast('error', 'Error', 'No se pudo copiar el enlace'));
+            }
+        }
+
+        function toggleFavoriteService() {
+            const btn = document.getElementById('favBtn');
+            const icon = btn.querySelector('i');
+
+            // Usar userManager para guardar correctamente en el historial
+            if (window.userManager && currentService) {
+                const isFavorite = userManager.toggleFavorite(currentService.id, 'servicios');
+
+                if (isFavorite) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    btn.style.color = 'var(--error)';
+                    showToast('success', '❤️ Guardado', 'Agregado a tus favoritos');
+
+                    // Registrar en Google Sheets
+                    if (typeof sendToGoogleSheets === 'function') {
+                        sendToGoogleSheets('Feedback', {
+                            tipo: 'favorito_agregado',
+                            mensaje: `Servicio: ${currentService.name}`,
+                            servicioId: currentService.id,
+                            servicioSlug: currentService.slug,
+                            fecha: new Date().toLocaleDateString('es-PE')
+                        });
+                    }
+                } else {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    btn.style.color = '';
+                    showToast('info', 'Eliminado', 'Eliminado de favoritos');
+                }
+            } else {
+                // Fallback si userManager no está disponible
+                const isFavorite = icon.classList.contains('fas');
+                if (isFavorite) {
+                    icon.classList.remove('fas');
+                    icon.classList.add('far');
+                    btn.style.color = '';
+                    showToast('info', 'Eliminado', 'Eliminado de favoritos');
+                } else {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    btn.style.color = 'var(--error)';
+                    showToast('success', '❤️ Guardado', 'Agregado a favoritos');
+                }
+            }
+        }
+
+        // Actualizar estado del botón de favoritos al cargar
+        function updateFavoriteButton() {
+            if (window.userManager && currentService) {
+                const btn = document.getElementById('favBtn');
+                const icon = btn?.querySelector('i');
+                if (icon && userManager.isFavorite(currentService.id, 'servicios')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas');
+                    btn.style.color = 'var(--error)';
+                }
+            }
+        }
+
+        // Llamar a updateFavoriteButton después de cargar el servicio
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => updateFavoriteButton(), 500);
         });
     </script>
 </body>
