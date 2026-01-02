@@ -50,6 +50,11 @@ function createLocaleCard(locale) {
     `;
 }
 
+// Helper para obtener info de categoría de servicio
+function getServiceCategoryInfo(category) {
+    return SERVICE_CATEGORIES[category] || { name: category, icon: '🎉', color: '#FF6B35' };
+}
+
 // Generate service card HTML
 function createServiceCard(service) {
     const basePrice = service.pricing.basePrice ||
@@ -59,7 +64,7 @@ function createServiceCard(service) {
         service.pricing.type === 'per-event' ? 'por evento' : 'desde';
 
     const starsHtml = generateStars(service.rating);
-    const categoryInfo = SERVICE_CATEGORIES[service.category] || { name: service.category, icon: '🎉' };
+    const categoryInfo = getServiceCategoryInfo(service.category);
     const imageUrl = service.images && service.images[0] ? service.images[0] : null;
 
     return `
@@ -105,7 +110,7 @@ function createServiceCard(service) {
 function createServiceMiniCard(service) {
     const basePrice = service.pricing.basePrice ||
         (service.pricing.packages && service.pricing.packages[0].price) || 0;
-    const categoryInfo = SERVICE_CATEGORIES[service.category] || { name: service.category, icon: '🎉', color: '#FF6B35' };
+    const categoryInfo = getServiceCategoryInfo(service.category);
 
     return `
         <div class="service-card" onclick="goToServiceDetail('${service.slug}')">

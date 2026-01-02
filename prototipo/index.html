@@ -14,7 +14,7 @@
     </script>
     <!-- ======================================= -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Celébralo pe Perú - Encuentra el Local Perfecto para tu Evento</title>
+    <title>Celébralo pe - Encuentra el Local Perfecto para tu Evento</title>
     <meta name="description" content="Plataforma líder en Sullana para encontrar locales y servicios para eventos. Reserva en minutos con precios transparentes y reseñas verificadas.">
 
     <!-- Open Graph -->
@@ -59,7 +59,7 @@
                         <li><a href="./index.html" class="nav-link active">Inicio</a></li>
                         <li><a href="./pages/locales.html" class="nav-link">Locales</a></li>
                         <li><a href="./pages/servicios.html" class="nav-link">Servicios</a></li>
-                        <li><a href="./pages/paquetes.html" class="nav-link">Paquetes</a></li>
+                        <!-- OCULTO: <li><a href="./pages/paquetes.html" class="nav-link">Paquetes</a></li> -->
                         <li><a href="./pages/como-funciona.html" class="nav-link">¿Cómo Funciona?</a></li>
                     </ul>
 
@@ -101,7 +101,7 @@
                     </h1>
 
                     <p class="hero-subtitle">
-                        Encuentra locales verificados, servicios de calidad y paquetes todo-en-uno
+                        Encuentra locales verificados y servicios de calidad
                         para cualquier celebración en Sullana, Piura.
                     </p>
 
@@ -114,9 +114,9 @@
                             <button class="search-tab" data-tab="servicios">
                                 <i class="fas fa-concierge-bell"></i> Servicios
                             </button>
-                            <button class="search-tab" data-tab="paquetes">
+                            <!-- OCULTO: <button class="search-tab" data-tab="paquetes">
                                 <i class="fas fa-box-open"></i> Paquetes
-                            </button>
+                            </button> -->
                         </div>
 
                         <form class="search-form" id="searchForm">
@@ -126,15 +126,22 @@
                                     Tipo de Evento
                                 </label>
                                 <select id="eventType" required>
-                                    <option value="">Selecciona...</option>
-                                    <option value="cumpleanos">🎂 Cumpleaños</option>
-                                    <option value="matrimonio">💒 Matrimonio</option>
-                                    <option value="quinceanos">👸 XV Años</option>
-                                    <option value="corporativo">🏢 Corporativo</option>
-                                    <option value="bautizo">⛪ Bautizo</option>
-                                    <option value="graduacion">🎓 Graduación</option>
-                                    <option value="baby-shower">👶 Baby Shower</option>
-                                    <option value="otro">✨ Otro</option>
+                                    <option value="">-- Selecciona tipo de evento --</option>
+                                    <optgroup label="FIESTAS">
+                                        <option value="cumpleanos">🎂 Cumpleaños</option>
+                                        <option value="quinceanos">👸 Quinceañeros</option>
+                                        <option value="graduacion">🎓 Graduación</option>
+                                    </optgroup>
+                                    <optgroup label="MOMENTOS ESPECIALES">
+                                        <option value="baby-shower">👶 Bienvenida de Bebé</option>
+                                        <option value="bautizo">⛪ Bautizo y Comunión</option>
+                                        <option value="aniversario">💝 Aniversario</option>
+                                    </optgroup>
+                                    <optgroup label="EVENTOS SOCIALES">
+                                        <option value="matrimonio">💒 Matrimonio</option>
+                                        <option value="corporativo">🏢 Empresarial</option>
+                                        <option value="integracion">🤝 Confraternidad</option>
+                                    </optgroup>
                                 </select>
                             </div>
 
@@ -216,63 +223,58 @@
             </div>
         </section>
 
-        <!-- Categories Section -->
-        <section class="section categories-section">
+        <!-- Explora Locales Section -->
+        <section class="section explore-section">
             <div class="container">
                 <div class="section-header">
-                    <span class="section-tag">Categorías</span>
-                    <h2 class="section-title">¿Qué tipo de evento vas a organizar?</h2>
-                    <p class="section-subtitle">Selecciona una categoría y encuentra las mejores opciones para tu celebración</p>
+                    <span class="section-tag">Explora</span>
+                    <h2 class="section-title">Encuentra el local ideal</h2>
+                    <p class="section-subtitle">Selecciona el tipo de celebración que vas a organizar</p>
                 </div>
 
-                <div class="categories-grid">
-                    <a href="pages/locales.html?categoria=cumpleanos" class="category-card">
-                        <div class="category-icon" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E);">
-                            🎂
+                <!-- Por Celebración -->
+                <div class="explore-group">
+                    <h3 class="explore-group-title"><i class="fas fa-calendar-star"></i> Por Celebración</h3>
+                    <div class="locale-types-grid">
+                        <!-- Fiestas -->
+                        <div class="locale-type-card">
+                            <div class="locale-type-header" style="background: linear-gradient(135deg, #FF6B6B, #FF8E8E);">
+                                <span class="locale-type-icon">🎉</span>
+                                <h3>Fiestas</h3>
+                            </div>
+                            <div class="locale-type-options">
+                                <a href="pages/locales.html?categoria=cumpleanos">🎂 Cumpleaños</a>
+                                <a href="pages/locales.html?categoria=quinceanos">👸 Quinceañeros</a>
+                                <a href="pages/locales.html?categoria=graduacion">🎓 Graduación</a>
+                            </div>
                         </div>
-                        <h3>Cumpleaños</h3>
-                        <p>15 locales disponibles</p>
-                    </a>
 
-                    <a href="./pages/locales.html?categoria=matrimonio" class="category-card">
-                        <div class="category-icon" style="background: linear-gradient(135deg, #A855F7, #C084FC);">
-                            💒
+                        <!-- Momentos Especiales -->
+                        <div class="locale-type-card">
+                            <div class="locale-type-header" style="background: linear-gradient(135deg, #10B981, #34D399);">
+                                <span class="locale-type-icon">💫</span>
+                                <h3>Momentos Especiales</h3>
+                            </div>
+                            <div class="locale-type-options">
+                                <a href="pages/locales.html?categoria=baby-shower">👶 Bienvenida de Bebé</a>
+                                <a href="pages/locales.html?categoria=bautizo">⛪ Bautizo y Comunión</a>
+                                <a href="pages/locales.html?categoria=aniversario">💝 Aniversario</a>
+                            </div>
                         </div>
-                        <h3>Matrimonios</h3>
-                        <p>12 locales disponibles</p>
-                    </a>
 
-                    <a href="./pages/locales.html?categoria=quinceanos" class="category-card">
-                        <div class="category-icon" style="background: linear-gradient(135deg, #EC4899, #F472B6);">
-                            👸
+                        <!-- Eventos Sociales -->
+                        <div class="locale-type-card">
+                            <div class="locale-type-header" style="background: linear-gradient(135deg, #3B82F6, #60A5FA);">
+                                <span class="locale-type-icon">✨</span>
+                                <h3>Eventos Sociales</h3>
+                            </div>
+                            <div class="locale-type-options">
+                                <a href="pages/locales.html?categoria=matrimonio">💒 Matrimonio</a>
+                                <a href="pages/locales.html?categoria=corporativo">🏢 Empresarial</a>
+                                <a href="pages/locales.html?categoria=integracion">🤝 Confraternidad</a>
+                            </div>
                         </div>
-                        <h3>XV Años</h3>
-                        <p>18 locales disponibles</p>
-                    </a>
-
-                    <a href="./pages/locales.html?categoria=corporativo" class="category-card">
-                        <div class="category-icon" style="background: linear-gradient(135deg, #3B82F6, #60A5FA);">
-                            🏢
-                        </div>
-                        <h3>Corporativo</h3>
-                        <p>10 locales disponibles</p>
-                    </a>
-
-                    <a href="./pages/locales.html?categoria=bautizo" class="category-card">
-                        <div class="category-icon" style="background: linear-gradient(135deg, #10B981, #34D399);">
-                            ⛪
-                        </div>
-                        <h3>Bautizos</h3>
-                        <p>14 locales disponibles</p>
-                    </a>
-
-                    <a href="./pages/locales.html?categoria=familiar" class="category-card">
-                        <div class="category-icon" style="background: linear-gradient(135deg, #F59E0B, #FBBF24);">
-                            👨‍👩‍👧‍👦
-                        </div>
-                        <h3>Familiar</h3>
-                        <p>20 locales disponibles</p>
-                    </a>
+                    </div>
                 </div>
             </div>
         </section>
@@ -403,8 +405,8 @@
             </div>
         </section>
 
-        <!-- Packages Section -->
-        <section class="section packages-section">
+        <!-- Packages Section - OCULTO TEMPORALMENTE -->
+        <section class="section packages-section" style="display: none !important;">
             <div class="container">
                 <div class="section-header">
                     <span class="section-tag">Ahorra tiempo y dinero</span>
@@ -622,7 +624,7 @@
                         <ul>
                             <li><a href="./pages/locales.html">Locales</a></li>
                             <li><a href="./pages/servicios.html">Servicios</a></li>
-                            <li><a href="./pages/paquetes.html">Paquetes</a></li>
+                            <!-- OCULTO: <li><a href="./pages/paquetes.html">Paquetes</a></li> -->
                             <li><a href="./pages/ofertas.html">Ofertas</a></li>
                         </ul>
                     </div>
@@ -753,7 +755,7 @@
                 <div class="chatbot-quick-actions" id="quickActions">
                     <button class="quick-action" data-action="precios">💰 Ver precios</button>
                     <button class="quick-action" data-action="disponibilidad">📅 Disponibilidad</button>
-                    <button class="quick-action" data-action="paquetes">📦 Paquetes</button>
+                    <!-- OCULTO: <button class="quick-action" data-action="paquetes">📦 Paquetes</button> -->
                     <button class="quick-action" data-action="ayuda">❓ Ayuda</button>
                 </div>
 

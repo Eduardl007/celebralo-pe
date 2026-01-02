@@ -145,6 +145,28 @@
             color: var(--text-secondary);
         }
 
+        .filter-subgroup {
+            margin-bottom: var(--spacing-3);
+            padding-bottom: var(--spacing-2);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .filter-subgroup:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .filter-subgroup-title {
+            display: block;
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-bold);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: var(--spacing-2);
+            padding: var(--spacing-1) 0;
+        }
+
         .price-range {
             display: flex;
             gap: var(--spacing-2);
@@ -159,6 +181,72 @@
 
         .price-range span {
             color: var(--text-muted);
+        }
+
+        /* Active Filters */
+        .active-filters {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-3);
+            padding: var(--spacing-3) var(--spacing-4);
+            background: var(--primary-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-4);
+            flex-wrap: wrap;
+        }
+
+        .active-filters-label {
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-secondary);
+        }
+
+        .active-filters-tags {
+            display: flex;
+            gap: var(--spacing-2);
+            flex-wrap: wrap;
+        }
+
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-2);
+            padding: var(--spacing-1) var(--spacing-3);
+            background: var(--primary);
+            color: var(--white);
+            border-radius: var(--radius-full);
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .filter-tag button {
+            background: none;
+            border: none;
+            color: var(--white);
+            cursor: pointer;
+            padding: 0;
+            font-size: var(--font-size-xs);
+            opacity: 0.8;
+        }
+
+        .filter-tag button:hover {
+            opacity: 1;
+        }
+
+        .clear-all-filters {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-1);
+            margin-left: auto;
+        }
+
+        .clear-all-filters:hover {
+            text-decoration: underline;
         }
 
         /* Results Area */
@@ -335,7 +423,7 @@
                         <li><a href="../index.html" class="nav-link">Inicio</a></li>
                         <li><a href="locales.html" class="nav-link active">Locales</a></li>
                         <li><a href="servicios.html" class="nav-link">Servicios</a></li>
-                        <li><a href="paquetes.html" class="nav-link">Paquetes</a></li>
+                        <!-- OCULTO: <li><a href="paquetes.html" class="nav-link">Paquetes</a></li> -->
                         <li><a href="como-funciona.html" class="nav-link">¿Cómo Funciona?</a></li>
                     </ul>
 
@@ -391,37 +479,6 @@
                             <span class="clear-filters" onclick="clearAllFilters()">Limpiar</span>
                         </div>
 
-                        <!-- Event Type Filter -->
-                        <div class="filter-group">
-                            <label>Tipo de Evento</label>
-                            <div class="filter-options">
-                                <label class="filter-option">
-                                    <input type="checkbox" name="eventType" value="matrimonio">
-                                    <span>💒 Matrimonio</span>
-                                </label>
-                                <label class="filter-option">
-                                    <input type="checkbox" name="eventType" value="quinceanos">
-                                    <span>👸 XV Años</span>
-                                </label>
-                                <label class="filter-option">
-                                    <input type="checkbox" name="eventType" value="cumpleanos">
-                                    <span>🎂 Cumpleaños</span>
-                                </label>
-                                <label class="filter-option">
-                                    <input type="checkbox" name="eventType" value="corporativo">
-                                    <span>🏢 Corporativo</span>
-                                </label>
-                                <label class="filter-option">
-                                    <input type="checkbox" name="eventType" value="bautizo">
-                                    <span>⛪ Bautizo</span>
-                                </label>
-                                <label class="filter-option">
-                                    <input type="checkbox" name="eventType" value="familiar">
-                                    <span>👨‍👩‍👧‍👦 Familiar</span>
-                                </label>
-                            </div>
-                        </div>
-
                         <!-- Capacity Filter -->
                         <div class="filter-group">
                             <label>Capacidad</label>
@@ -459,26 +516,58 @@
                             </div>
                         </div>
 
-                        <!-- Category Filter -->
+                        <!-- Event Type Filter (Tipo de Evento) -->
                         <div class="filter-group">
-                            <label>Tipo de Local</label>
+                            <label>Tipo de Evento</label>
                             <div class="filter-options">
-                                <label class="filter-option">
-                                    <input type="checkbox" name="category" value="salon">
-                                    <span>🏛️ Salón de Eventos</span>
-                                </label>
-                                <label class="filter-option">
-                                    <input type="checkbox" name="category" value="quinta">
-                                    <span>🌳 Quinta</span>
-                                </label>
-                                <label class="filter-option">
-                                    <input type="checkbox" name="category" value="club">
-                                    <span>⚽ Club</span>
-                                </label>
-                                <label class="filter-option">
-                                    <input type="checkbox" name="category" value="terraza">
-                                    <span>🌅 Terraza</span>
-                                </label>
+                                <!-- Fiestas -->
+                                <div class="filter-subgroup">
+                                    <span class="filter-subgroup-title">🎉 Fiestas</span>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="cumpleanos">
+                                        <span>🎂 Cumpleaños</span>
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="quinceanos">
+                                        <span>👸 Quinceañeros</span>
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="graduacion">
+                                        <span>🎓 Graduación</span>
+                                    </label>
+                                </div>
+                                <!-- Momentos Especiales -->
+                                <div class="filter-subgroup">
+                                    <span class="filter-subgroup-title">💫 Momentos Especiales</span>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="baby-shower">
+                                        <span>👶 Bienvenida de Bebé</span>
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="bautizo">
+                                        <span>⛪ Bautizo y Comunión</span>
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="aniversario">
+                                        <span>💝 Aniversario</span>
+                                    </label>
+                                </div>
+                                <!-- Eventos Sociales -->
+                                <div class="filter-subgroup">
+                                    <span class="filter-subgroup-title">✨ Eventos Sociales</span>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="matrimonio">
+                                        <span>💒 Matrimonio</span>
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="corporativo">
+                                        <span>🏢 Empresarial</span>
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="integracion">
+                                        <span>🤝 Confraternidad</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
@@ -523,6 +612,15 @@
 
                 <!-- Results Area -->
                 <main class="results-area">
+                    <!-- Active Filters -->
+                    <div class="active-filters" id="activeFilters" style="display: none;">
+                        <span class="active-filters-label">Filtrando por:</span>
+                        <div class="active-filters-tags" id="activeFiltersTags"></div>
+                        <button class="clear-all-filters" onclick="clearAllFilters()">
+                            <i class="fas fa-times"></i> Limpiar filtros
+                        </button>
+                    </div>
+
                     <div class="results-header">
                         <p class="results-count">
                             Mostrando <strong id="resultsCount">6</strong> locales
@@ -730,8 +828,59 @@
             }
 
             if (params.get('categoria')) {
-                const checkbox = document.querySelector(`input[name="category"][value="${params.get('categoria')}"]`);
+                const checkbox = document.querySelector(`input[name="eventType"][value="${params.get('categoria')}"]`);
                 if (checkbox) checkbox.checked = true;
+            }
+        }
+
+        // Nombres de categorías para mostrar en filtros activos
+        const CATEGORY_LABELS = {
+            'cumpleanos': '🎂 Cumpleaños',
+            'quinceanos': '👸 Quinceañeros',
+            'graduacion': '🎓 Graduación',
+            'baby-shower': '👶 Bienvenida de Bebé',
+            'bautizo': '⛪ Bautizo y Comunión',
+            'aniversario': '💝 Aniversario',
+            'matrimonio': '💒 Matrimonio',
+            'corporativo': '🏢 Empresarial',
+            'integracion': '🤝 Confraternidad'
+        };
+
+        function updateActiveFilters() {
+            const container = document.getElementById('activeFilters');
+            const tagsContainer = document.getElementById('activeFiltersTags');
+            const filters = getActiveFilters();
+
+            let tags = [];
+
+            if (filters.eventType) {
+                tags.push({
+                    type: 'eventType',
+                    value: filters.eventType,
+                    label: CATEGORY_LABELS[filters.eventType] || filters.eventType
+                });
+            }
+
+            if (tags.length > 0) {
+                tagsContainer.innerHTML = tags.map(tag => `
+                    <span class="filter-tag">
+                        ${tag.label}
+                        <button onclick="removeFilter('${tag.type}', '${tag.value}')" aria-label="Quitar filtro">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </span>
+                `).join('');
+                container.style.display = 'flex';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        function removeFilter(type, value) {
+            const checkbox = document.querySelector(`input[name="${type}"][value="${value}"]`);
+            if (checkbox) {
+                checkbox.checked = false;
+                loadLocales();
             }
         }
 
@@ -748,13 +897,14 @@
 
                 document.getElementById('resultsCount').textContent = locales.length;
                 checkFavorites();
+                updateActiveFilters();
             }, 500);
         }
 
         function getActiveFilters() {
             const filters = {};
 
-            // Event types
+            // Event types (Tipo de Evento)
             const eventTypes = Array.from(document.querySelectorAll('input[name="eventType"]:checked'))
                 .map(cb => cb.value);
             if (eventTypes.length > 0) filters.eventType = eventTypes[0];
@@ -768,11 +918,6 @@
             const priceMax = document.getElementById('priceMax').value;
             if (priceMin) filters.priceMin = parseInt(priceMin);
             if (priceMax) filters.priceMax = parseInt(priceMax);
-
-            // Categories
-            const categories = Array.from(document.querySelectorAll('input[name="category"]:checked'))
-                .map(cb => cb.value);
-            if (categories.length > 0) filters.category = categories[0];
 
             // Verified only
             const verified = document.querySelector('input[name="verified"]:checked');
@@ -792,6 +937,7 @@
             });
             document.getElementById('priceMin').value = '';
             document.getElementById('priceMax').value = '';
+            document.getElementById('activeFilters').style.display = 'none';
             loadLocales();
         }
 

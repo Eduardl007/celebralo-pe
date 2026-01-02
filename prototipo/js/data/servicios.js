@@ -106,7 +106,7 @@ const SERVICIOS_DATA = [
         id: 102,
         name: "DJ Profesional 'Mix Master'",
         slug: "dj-mix-master",
-        category: "musica",
+        category: "dj",
         location: {
             district: "Sullana",
             city: "Piura",
@@ -657,7 +657,7 @@ const SERVICIOS_DATA = [
         id: 108,
         name: "Grupo Musical 'Los Sullaneros'",
         slug: "grupo-los-sullaneros",
-        category: "musica",
+        category: "banda",
         location: {
             district: "Sullana",
             city: "Piura",
@@ -754,16 +754,70 @@ const SERVICIOS_DATA = [
     }
 ];
 
-// Service categories
+// ========================================
+// CATEGORÍAS DE SERVICIOS - ESTRUCTURA SIMPLE
+// ========================================
+
 const SERVICE_CATEGORIES = {
+    // Categorías base que coinciden con los datos
     catering: { name: "Catering", icon: "🍽️", color: "#FF6B35" },
-    musica: { name: "Música y DJ", icon: "🎵", color: "#8B5CF6" },
+    pasteleria: { name: "Pastelería", icon: "🎂", color: "#EF4444" },
+    dj: { name: "DJ", icon: "🎧", color: "#8B5CF6" },
+    banda: { name: "Banda / Orquesta", icon: "🎤", color: "#7C3AED" },
     fotografia: { name: "Fotografía y Video", icon: "📸", color: "#3B82F6" },
     decoracion: { name: "Decoración", icon: "🎈", color: "#EC4899" },
-    animacion: { name: "Animación", icon: "🤹", color: "#F59E0B" },
-    pasteleria: { name: "Pastelería", icon: "🎂", color: "#EF4444" },
+    animacion: { name: "Animación", icon: "🎭", color: "#F59E0B" },
     mobiliario: { name: "Mobiliario", icon: "🪑", color: "#10B981" },
-    transporte: { name: "Transporte", icon: "🚗", color: "#6366F1" }
+    // Legacy para compatibilidad
+    musica: { name: "Música", icon: "🎵", color: "#8B5CF6" }
+};
+
+// Agrupación de categorías para filtros
+const SERVICE_CATEGORY_GROUPS = {
+    gastronomia: {
+        name: "Gastronomía",
+        icon: "🍽️",
+        color: "#FF6B35",
+        includes: ["catering", "pasteleria"]
+    },
+    musica: {
+        name: "Música",
+        icon: "🎵",
+        color: "#8B5CF6",
+        includes: ["dj", "banda"]
+    },
+    fotografia: {
+        name: "Fotografía",
+        icon: "📸",
+        color: "#3B82F6",
+        includes: ["fotografia"]
+    },
+    decoracion: {
+        name: "Decoración",
+        icon: "🎈",
+        color: "#EC4899",
+        includes: ["decoracion"]
+    },
+    animacion: {
+        name: "Animación",
+        icon: "🎭",
+        color: "#F59E0B",
+        includes: ["animacion"]
+    },
+    mobiliario: {
+        name: "Mobiliario",
+        icon: "🪑",
+        color: "#10B981",
+        includes: ["mobiliario"]
+    }
+};
+
+// Alias para compatibilidad
+const SERVICE_CATEGORY_ALIASES = {
+    catering: "gastronomia",
+    pasteleria: "gastronomia",
+    dj: "musica",
+    banda: "musica"
 };
 
 // Helper functions

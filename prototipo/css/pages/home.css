@@ -360,3 +360,143 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ========================================
+   Explore Section (Unified Categories)
+   ======================================== */
+.explore-section {
+    background: var(--gray-50);
+    padding: var(--spacing-16) 0;
+}
+
+.explore-group {
+    background: var(--white);
+    border-radius: var(--radius-2xl);
+    padding: var(--spacing-8);
+    margin-bottom: var(--spacing-8);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+}
+
+.explore-group:last-child {
+    margin-bottom: 0;
+}
+
+.explore-group-title {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--white);
+    margin-bottom: var(--spacing-6);
+    padding: var(--spacing-3) var(--spacing-5);
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+.explore-group-title i {
+    font-size: var(--font-size-base);
+}
+
+/* Segundo grupo con color diferente */
+.explore-group:nth-child(2) .explore-group-title {
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+}
+
+@media (max-width: 768px) {
+    .explore-group {
+        padding: var(--spacing-5);
+        margin-bottom: var(--spacing-5);
+    }
+
+    .explore-group-title {
+        font-size: var(--font-size-base);
+        padding: var(--spacing-2) var(--spacing-4);
+    }
+}
+
+/* ========================================
+   Locale Types Grid (Por Tipo de Espacio)
+   ======================================== */
+
+.locale-types-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-6);
+}
+
+.locale-type-card {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+    border: 1px solid var(--border-light);
+}
+
+.locale-type-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.locale-type-header {
+    padding: var(--spacing-5);
+    text-align: center;
+    color: var(--white);
+}
+
+.locale-type-header h3 {
+    margin: 0;
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+}
+
+.locale-type-icon {
+    display: block;
+    font-size: 2.5rem;
+    margin-bottom: var(--spacing-2);
+}
+
+.locale-type-options {
+    padding: var(--spacing-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.locale-type-options a {
+    display: block;
+    padding: var(--spacing-3) var(--spacing-4);
+    background: var(--gray-50);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-fast);
+}
+
+.locale-type-options a:hover {
+    background: var(--primary-50);
+    color: var(--primary-700);
+    transform: translateX(4px);
+}
+
+/* Locale Types Responsive */
+@media (max-width: 900px) {
+    .locale-types-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 640px) {
+    .locale-type-header {
+        padding: var(--spacing-4);
+    }
+
+    .locale-type-icon {
+        font-size: 2rem;
+    }
+}

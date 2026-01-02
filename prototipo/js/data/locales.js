@@ -237,7 +237,7 @@ const LOCALES_DATA = [
             { icon: "fa-parking", name: "Estacionamiento", description: "30 espacios" },
             { icon: "fa-utensils", name: "Zona BBQ", description: "Área techada para cocina" }
         ],
-        eventTypes: ["cumpleanos", "familiar", "bautizo", "baby-shower"],
+        eventTypes: ["cumpleanos", "bautizo", "baby-shower", "aniversario"],
         availability: {
             monday: { available: false, hours: null },
             tuesday: { available: false, hours: null },
@@ -466,7 +466,7 @@ const LOCALES_DATA = [
             { icon: "fa-paint-brush", name: "Decoración", description: "Opcional" },
             { icon: "fa-utensils", name: "Cocina", description: "Cocina básica" }
         ],
-        eventTypes: ["cumpleanos", "familiar", "baby-shower", "reunion"],
+        eventTypes: ["cumpleanos", "baby-shower", "bautizo", "aniversario"],
         availability: {
             monday: { available: false, hours: null },
             tuesday: { available: false, hours: null },
@@ -575,7 +575,7 @@ const LOCALES_DATA = [
             { icon: "fa-parking", name: "Estacionamiento", description: "100 espacios" },
             { icon: "fa-child", name: "Zona Kids", description: "Área de juegos" }
         ],
-        eventTypes: ["corporativo", "familiar", "team-building", "graduacion"],
+        eventTypes: ["corporativo", "integracion", "graduacion", "aniversario"],
         availability: {
             monday: { available: true, hours: "08:00-22:00" },
             tuesday: { available: true, hours: "08:00-22:00" },
@@ -683,7 +683,7 @@ const LOCALES_DATA = [
             { icon: "fa-umbrella", name: "Terraza Techada", description: "Protección solar" },
             { icon: "fa-lightbulb", name: "Iluminación LED", description: "Ambiente personalizable" }
         ],
-        eventTypes: ["cumpleanos", "aniversario", "pedida", "reunion"],
+        eventTypes: ["cumpleanos", "aniversario", "matrimonio", "bautizo"],
         availability: {
             monday: { available: false, hours: null },
             tuesday: { available: false, hours: null },
@@ -753,31 +753,126 @@ const LOCALES_DATA = [
     }
 ];
 
-// Categories mapping
+// ========================================
+// CATEGORÍAS DE LOCALES - SEGMENTACIÓN CLARA
+// ========================================
+// Estructura jerárquica para evitar solapamiento
+
 const LOCALE_CATEGORIES = {
-    salon: { name: "Salón de Eventos", icon: "🏛️" },
-    quinta: { name: "Quinta / Casa de Campo", icon: "🌳" },
-    "centro-eventos": { name: "Centro de Eventos", icon: "🏰" },
-    club: { name: "Club / Centro Recreativo", icon: "⚽" },
-    terraza: { name: "Terraza / Rooftop", icon: "🌅" },
-    restaurante: { name: "Restaurante", icon: "🍽️" },
-    hotel: { name: "Hotel / Salón de Hotel", icon: "🏨" }
+    // ─────────────────────────────────────
+    // ESPACIOS CERRADOS (Indoor)
+    // Característica: Ambiente climatizado, formal
+    // ─────────────────────────────────────
+    salon: {
+        name: "Salón de Eventos",
+        icon: "🏛️",
+        segment: "indoor",
+        description: "Espacio cerrado con aire acondicionado para eventos formales",
+        idealFor: ["matrimonio", "quinceanos", "corporativo", "graduacion"]
+    },
+    hotel: {
+        name: "Hotel / Salón de Hotel",
+        icon: "🏨",
+        segment: "indoor",
+        description: "Salón con opción de hospedaje para invitados",
+        idealFor: ["matrimonio", "corporativo", "conferencia"]
+    },
+    restaurante: {
+        name: "Restaurante / Salón Privado",
+        icon: "🍽️",
+        segment: "indoor",
+        description: "Espacio con servicio de comida incluido",
+        idealFor: ["cumpleanos", "aniversario", "corporativo", "reunion"]
+    },
+
+    // ─────────────────────────────────────
+    // ESPACIOS AL AIRE LIBRE (Outdoor)
+    // Característica: Naturaleza, áreas verdes
+    // ─────────────────────────────────────
+    quinta: {
+        name: "Quinta Campestre",
+        icon: "🌳",
+        segment: "outdoor",
+        description: "Casa de campo con jardines, piscina y áreas recreativas",
+        idealFor: ["cumpleanos", "familiar", "baby-shower", "bautizo"]
+    },
+    jardin: {
+        name: "Jardín de Eventos",
+        icon: "🌺",
+        segment: "outdoor",
+        description: "Áreas verdes decoradas para ceremonias al aire libre",
+        idealFor: ["matrimonio", "quinceanos", "bautizo"]
+    },
+    terraza: {
+        name: "Terraza / Rooftop",
+        icon: "🌅",
+        segment: "outdoor",
+        description: "Espacio elevado con vista panorámica",
+        idealFor: ["aniversario", "pedida", "cumpleanos", "reunion"]
+    },
+
+    // ─────────────────────────────────────
+    // ESPACIOS RECREATIVOS (Recreation)
+    // Característica: Instalaciones deportivas/juegos
+    // ─────────────────────────────────────
+    club: {
+        name: "Club Deportivo",
+        icon: "⚽",
+        segment: "recreation",
+        description: "Instalaciones deportivas: canchas, piscina olímpica",
+        idealFor: ["corporativo", "team-building", "graduacion", "familiar"]
+    },
+    "centro-recreativo": {
+        name: "Centro Recreativo",
+        icon: "🎢",
+        segment: "recreation",
+        description: "Espacio con juegos, piscina recreativa y áreas infantiles",
+        idealFor: ["cumpleanos", "familiar", "baby-shower"]
+    },
+
+    // ─────────────────────────────────────
+    // ESPACIOS PREMIUM (Premium)
+    // Característica: Todo incluido, servicio exclusivo
+    // ─────────────────────────────────────
+    "centro-eventos": {
+        name: "Centro de Eventos Premium",
+        icon: "🏰",
+        segment: "premium",
+        description: "Local exclusivo con coordinador y servicios todo incluido",
+        idealFor: ["matrimonio", "quinceanos", "corporativo", "graduacion"]
+    },
+    hacienda: {
+        name: "Hacienda / Fundo",
+        icon: "🏡",
+        segment: "premium",
+        description: "Propiedad rural exclusiva para eventos de lujo",
+        idealFor: ["matrimonio", "corporativo", "aniversario"]
+    }
 };
 
-// Event types mapping
+// Segmentos de categorías (para filtros)
+const LOCALE_SEGMENTS = {
+    indoor: { name: "Espacios Cerrados", icon: "🏠", description: "Salones con aire acondicionado" },
+    outdoor: { name: "Al Aire Libre", icon: "🌿", description: "Jardines, terrazas, quintas" },
+    recreation: { name: "Recreativos", icon: "🎯", description: "Con instalaciones deportivas" },
+    premium: { name: "Premium", icon: "⭐", description: "Servicio todo incluido" }
+};
+
+// ========================================
+// TIPOS DE EVENTOS - ESTRUCTURA SIMPLE
+// ========================================
+
 const EVENT_TYPES = {
     cumpleanos: { name: "Cumpleaños", icon: "🎂" },
-    matrimonio: { name: "Matrimonio", icon: "💒" },
     quinceanos: { name: "XV Años", icon: "👸" },
-    corporativo: { name: "Corporativo", icon: "🏢" },
-    bautizo: { name: "Bautizo", icon: "⛪" },
     graduacion: { name: "Graduación", icon: "🎓" },
-    "baby-shower": { name: "Baby Shower", icon: "👶" },
-    familiar: { name: "Reunión Familiar", icon: "👨‍👩‍👧‍👦" },
+    matrimonio: { name: "Matrimonio", icon: "💒" },
     aniversario: { name: "Aniversario", icon: "💕" },
-    "team-building": { name: "Team Building", icon: "🤝" },
-    reunion: { name: "Reunión Social", icon: "🎉" },
-    pedida: { name: "Pedida de Mano", icon: "💍" }
+    familiar: { name: "Reunión Familiar", icon: "👨‍👩‍👧‍👦" },
+    "baby-shower": { name: "Baby Shower", icon: "👶" },
+    bautizo: { name: "Bautizo", icon: "⛪" },
+    corporativo: { name: "Corporativo", icon: "🏢" },
+    integracion: { name: "Team Building", icon: "🤝" }
 };
 
 // Helper functions

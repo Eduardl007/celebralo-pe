@@ -401,7 +401,7 @@
                         <li><a href="../index.html" class="nav-link">Inicio</a></li>
                         <li><a href="locales.html" class="nav-link">Locales</a></li>
                         <li><a href="servicios.html" class="nav-link active">Servicios</a></li>
-                        <li><a href="paquetes.html" class="nav-link">Paquetes</a></li>
+                        <!-- OCULTO: <li><a href="paquetes.html" class="nav-link">Paquetes</a></li> -->
                         <li><a href="como-funciona.html" class="nav-link">Como Funciona?</a></li>
                     </ul>
 
@@ -444,29 +444,25 @@
                     <span class="emoji">✨</span>
                     <span>Todos</span>
                 </button>
-                <button class="category-btn" data-category="catering">
+                <button class="category-btn" data-category="gastronomia">
                     <span class="emoji">🍽️</span>
-                    <span>Catering</span>
+                    <span>Gastronomía</span>
                 </button>
                 <button class="category-btn" data-category="musica">
                     <span class="emoji">🎵</span>
-                    <span>Musica y DJ</span>
+                    <span>Música</span>
                 </button>
                 <button class="category-btn" data-category="fotografia">
                     <span class="emoji">📸</span>
-                    <span>Fotografia</span>
+                    <span>Fotografía</span>
                 </button>
                 <button class="category-btn" data-category="decoracion">
                     <span class="emoji">🎈</span>
-                    <span>Decoracion</span>
+                    <span>Decoración</span>
                 </button>
                 <button class="category-btn" data-category="animacion">
-                    <span class="emoji">🤹</span>
-                    <span>Animacion</span>
-                </button>
-                <button class="category-btn" data-category="pasteleria">
-                    <span class="emoji">🎂</span>
-                    <span>Pasteleria</span>
+                    <span class="emoji">🎭</span>
+                    <span>Animación</span>
                 </button>
                 <button class="category-btn" data-category="mobiliario">
                     <span class="emoji">🪑</span>
@@ -533,7 +529,7 @@
                 <div class="chatbot-messages" id="chatbotMessages"></div>
                 <div class="chatbot-quick-actions" id="quickActions">
                     <button class="quick-action" data-action="precios">💰 Ver precios</button>
-                    <button class="quick-action" data-action="paquetes">📦 Paquetes</button>
+                    <!-- OCULTO: <button class="quick-action" data-action="paquetes">📦 Paquetes</button> -->
                     <button class="quick-action" data-action="ayuda">❓ Ayuda</button>
                 </div>
                 <form class="chatbot-input" id="chatbotForm">
@@ -673,21 +669,44 @@
             });
         }
 
+        // Mapeo de categorías agrupadas
+        const CATEGORY_GROUPS = {
+            gastronomia: ['catering', 'pasteleria'],
+            musica: ['dj', 'banda'],
+            fotografia: ['fotografia'],
+            decoracion: ['decoracion'],
+            animacion: ['animacion'],
+            mobiliario: ['mobiliario']
+        };
+
         function loadServices() {
             const container = document.getElementById('servicesGrid');
             container.innerHTML = '<div class="loading-spinner" style="grid-column: 1/-1; text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>';
 
             setTimeout(() => {
-                const filters = {
-                    sortBy: currentSort,
-                    verified: true
-                };
+                let services = [...SERVICIOS_DATA];
 
+                // Filtrar por categoría agrupada
                 if (currentCategory !== 'all') {
-                    filters.category = currentCategory;
+                    const allowedCategories = CATEGORY_GROUPS[currentCategory] || [currentCategory];
+                    services = services.filter(service => allowedCategories.includes(service.category));
                 }
 
-                const services = filterServices(filters);
+                // Ordenar
+                if (currentSort) {
+                    switch (currentSort) {
+                        case 'price-asc':
+                            services.sort((a, b) => (a.pricing.basePrice || 0) - (b.pricing.basePrice || 0));
+                            break;
+                        case 'price-desc':
+                            services.sort((a, b) => (b.pricing.basePrice || 0) - (a.pricing.basePrice || 0));
+                            break;
+                        case 'rating':
+                            services.sort((a, b) => b.rating - a.rating);
+                            break;
+                    }
+                }
+
                 renderServices(container, services);
                 document.getElementById('resultsCount').textContent = services.length;
             }, 300);
@@ -706,7 +725,10 @@
             }
 
             container.innerHTML = services.map(service => {
-                const categoryInfo = SERVICE_CATEGORIES[service.category] || { name: service.category, icon: '🎉' };
+                // Usar helper para obtener info de categoría con soporte de aliases
+                const categoryInfo = typeof getServiceCategoryInfo === 'function'
+                    ? getServiceCategoryInfo(service.category)
+                    : (SERVICE_CATEGORIES[service.category] || { name: service.category, icon: '🎉' });
                 const basePrice = service.pricing.basePrice || (service.pricing.packages && service.pricing.packages[0].price) || 0;
                 const priceUnit = service.pricing.type === 'per-person' ? '/persona' : service.pricing.type === 'per-item' ? '' : '/evento';
 
