@@ -26,8 +26,9 @@ const SERVICIOS_DATA = [
         rating: 4.9,
         reviewsCount: 78,
         images: [
-            "assets/images/servicios/catering-1.jpg",
-            "assets/images/servicios/catering-2.jpg"
+            "https://images.unsplash.com/photo-1555244162-803834f70033?w=800",
+            "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800",
+            "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800"
         ],
         icon: "🍽️",
         description: "Servicio de catering con especialidad en comida norteña y opciones internacionales. Menús personalizados para cada tipo de evento.",
@@ -122,8 +123,9 @@ const SERVICIOS_DATA = [
         rating: 4.7,
         reviewsCount: 54,
         images: [
-            "assets/images/servicios/dj-1.jpg",
-            "assets/images/servicios/dj-2.jpg"
+            "https://images.unsplash.com/photo-1571266028243-e4733b0f0bb0?w=800",
+            "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+            "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800"
         ],
         icon: "🎵",
         description: "DJ con amplia experiencia en todo tipo de eventos. Música variada: cumbia, reggaetón, salsa, rock, electrónica y más.",
@@ -208,8 +210,9 @@ const SERVICIOS_DATA = [
         rating: 4.8,
         reviewsCount: 63,
         images: [
-            "assets/images/servicios/foto-1.jpg",
-            "assets/images/servicios/foto-2.jpg"
+            "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800",
+            "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=800",
+            "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=800"
         ],
         icon: "📸",
         description: "Capturamos los momentos más especiales de tu evento con calidad profesional. Fotografía artística y video cinematográfico.",
@@ -305,8 +308,9 @@ const SERVICIOS_DATA = [
         rating: 4.6,
         reviewsCount: 41,
         images: [
-            "assets/images/servicios/decoracion-1.jpg",
-            "assets/images/servicios/decoracion-2.jpg"
+            "https://images.unsplash.com/photo-1478146059778-26028b07395a?w=800",
+            "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800",
+            "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800"
         ],
         icon: "🎈",
         description: "Transformamos espacios en ambientes mágicos. Especialistas en decoración temática para todo tipo de eventos.",
@@ -391,7 +395,9 @@ const SERVICIOS_DATA = [
         rating: 4.7,
         reviewsCount: 35,
         images: [
-            "assets/images/servicios/animacion-1.jpg"
+            "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=800",
+            "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=800",
+            "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=800"
         ],
         icon: "🤹",
         description: "Shows infantiles con animadores profesionales. Payasos, magos, personajes de Disney y mucho más para hacer felices a los pequeños.",
@@ -476,8 +482,9 @@ const SERVICIOS_DATA = [
         rating: 4.8,
         reviewsCount: 52,
         images: [
-            "assets/images/servicios/tortas-1.jpg",
-            "assets/images/servicios/tortas-2.jpg"
+            "https://images.unsplash.com/photo-1558301211-0d8c8ddee6ec?w=800",
+            "https://images.unsplash.com/photo-1535254973040-607b474cb50d?w=800",
+            "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800"
         ],
         icon: "🎂",
         description: "Tortas artesanales personalizadas y bocaditos para eventos. Especialistas en tortas temáticas y mesas de dulces.",
@@ -574,7 +581,9 @@ const SERVICIOS_DATA = [
         rating: 4.5,
         reviewsCount: 28,
         images: [
-            "assets/images/servicios/mobiliario-1.jpg"
+            "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800",
+            "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800",
+            "https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=800"
         ],
         icon: "🪑",
         description: "Alquiler de mobiliario para eventos: sillas, mesas, carpas, manteles y más. Todo lo que necesitas para montar tu evento.",
@@ -659,7 +668,9 @@ const SERVICIOS_DATA = [
         rating: 4.9,
         reviewsCount: 45,
         images: [
-            "assets/images/servicios/grupo-1.jpg"
+            "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+            "https://images.unsplash.com/photo-1501612780327-45045538702b?w=800",
+            "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800"
         ],
         icon: "🎤",
         description: "Orquesta versátil con repertorio de cumbia norteña, salsa, merengue, baladas y más. La mejor música para poner a bailar a todos.",

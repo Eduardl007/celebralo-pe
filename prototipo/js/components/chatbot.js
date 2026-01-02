@@ -292,16 +292,20 @@ class EventBot {
         // Crear burbuja de propietario si no existe
         if (document.getElementById('ownerBubble')) return;
 
+        console.log('Creando burbuja para:', this.currentOwner.name);
+
         const bubble = document.createElement('div');
         bubble.id = 'ownerBubble';
         bubble.className = 'owner-bubble';
+        bubble.style.display = 'none'; // Iniciar oculta
+        bubble.style.opacity = '0';
         bubble.innerHTML = `
-            <div class="owner-bubble-avatar">${this.currentOwner.avatar}</div>
+            <div class="owner-bubble-avatar">${this.currentOwner.avatar || this.currentOwner.name?.charAt(0) || 'P'}</div>
             <div class="owner-bubble-content">
                 <div class="owner-bubble-name">${this.currentOwner.name}</div>
-                <div class="owner-bubble-status">Disponible para chat</div>
+                <div class="owner-bubble-status">💬 Disponible para chat</div>
             </div>
-            <div class="owner-bubble-close" onclick="event.stopPropagation(); document.getElementById('ownerBubble').classList.add('hidden');">
+            <div class="owner-bubble-close" onclick="event.stopPropagation(); document.getElementById('ownerBubble').style.display='none';">
                 <i class="fas fa-times"></i>
             </div>
         `;
@@ -314,9 +318,15 @@ class EventBot {
 
         document.body.appendChild(bubble);
 
-        // Mostrar después de 2 segundos
+        // Mostrar después de 2 segundos con animación
         setTimeout(() => {
+            console.log('Mostrando burbuja del propietario');
             bubble.style.display = 'flex';
+            // Pequeño delay para que la transición funcione
+            setTimeout(() => {
+                bubble.style.opacity = '1';
+                bubble.style.transform = 'translateX(0)';
+            }, 50);
         }, 2000);
     }
 
