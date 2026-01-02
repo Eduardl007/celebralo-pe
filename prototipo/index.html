@@ -680,6 +680,50 @@
             </div>
         </footer>
 
+        <!-- Survey Button -->
+        <a href="pages/encuesta.html" class="survey-float" id="surveyFloat" title="Tu opinión nos importa">
+            <span class="survey-icon">📋</span>
+            <span class="survey-text">¿1 min? Opina</span>
+        </a>
+        <style>
+            .survey-float {
+                position: fixed;
+                bottom: 100px;
+                right: 24px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 12px 16px;
+                border-radius: 50px;
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+                z-index: 999;
+                transition: all 0.3s ease;
+                animation: pulse-survey 2s infinite;
+            }
+            .survey-float:hover {
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+            }
+            .survey-icon { font-size: 18px; }
+            @keyframes pulse-survey {
+                0%, 100% { box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4); }
+                50% { box-shadow: 0 4px 25px rgba(102, 126, 234, 0.6); }
+            }
+            @media (max-width: 768px) {
+                .survey-float {
+                    bottom: 90px;
+                    right: 16px;
+                    padding: 10px 14px;
+                    font-size: 13px;
+                }
+            }
+        </style>
+
         <!-- Chatbot -->
         <div class="chatbot" id="chatbot">
             <button class="chatbot-trigger" id="chatbotTrigger" aria-label="Abrir chat">
