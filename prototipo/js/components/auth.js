@@ -493,6 +493,52 @@ class Auth {
     }
 }
 
+// Login rápido con cuenta demo
+async function loginAsDemo() {
+    if (window.auth) {
+        const auth = window.auth;
+
+        // Mostrar loading
+        showToast('info', 'Ingresando...', 'Conectando con cuenta demo');
+
+        // Simular delay de API
+        await new Promise(resolve => setTimeout(resolve, 800));
+
+        // Crear usuario demo
+        auth.currentUser = {
+            id: 999,
+            name: 'Usuario Demo',
+            email: 'demo@celebralope.pe',
+            phone: '999 888 777',
+            avatar: 'UD',
+            role: 'demo'
+        };
+
+        // Guardar en storage
+        storage.set('celebralope_user', auth.currentUser);
+
+        // Registrar en Google Sheets
+        if (typeof sendToGoogleSheets === 'function') {
+            sendToGoogleSheets('Logins', {
+                id: 'LOGIN-DEMO-' + Date.now(),
+                contacto: 'demo@celebralope.pe',
+                metodo: 'demo',
+                fecha: new Date().toLocaleDateString('es-PE'),
+                hora: new Date().toLocaleTimeString('es-PE'),
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        if (window.analytics) {
+            analytics.trackUserLogin('demo');
+        }
+
+        showToast('success', '¡Bienvenido!', 'Has ingresado como Usuario Demo');
+        auth.closeModal();
+        auth.updateUIForLoggedInUser();
+    }
+}
+
 // Global function to open auth modal (called from HTML)
 function openAuthModal(type = 'login') {
     if (window.auth) {
