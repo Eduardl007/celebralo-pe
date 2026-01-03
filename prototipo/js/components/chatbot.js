@@ -722,9 +722,19 @@ class EventBot {
                 }
             }
 
+            // Si estamos en modo propuesta, manejar ajustes
+            if (this.context.stage === 'advisor_proposal') {
+                const adjustmentResponse = this.handleProposalAdjustment(normalizedMsg);
+                if (adjustmentResponse) {
+                    this.addBotMessage(adjustmentResponse.text, adjustmentResponse.options);
+                    this.logInteraction(message, adjustmentResponse.text);
+                    return;
+                }
+            }
+
             // Intentar asesoría inteligente para ideas de eventos
             // Detecta frases como "quiero una boda elegante para 150 personas"
-            if (message.length > 15 && !this.isSimpleQuestion(normalizedMsg)) {
+            if (message.length > 10 && !this.isSimpleQuestion(normalizedMsg)) {
                 const advisorResponse = this.generateAdvisorResponse(normalizedMsg);
                 if (advisorResponse) {
                     this.addBotMessage(advisorResponse.text, advisorResponse.options);
@@ -1280,6 +1290,7 @@ class EventBot {
             eventType: null,
             style: null,
             guests: null,
+            budget: null,
             services: [],
             keywords: []
         };
@@ -1294,6 +1305,15 @@ class EventBot {
             }
         }
 
+        // Detectar palabras clave adicionales para eventos
+        if (!idea.eventType) {
+            if (msgLower.includes('fiesta') || msgLower.includes('celebr')) {
+                idea.eventType = 'cumpleanos';
+            } else if (msgLower.includes('reunion') || msgLower.includes('empresa')) {
+                idea.eventType = 'corporativo';
+            }
+        }
+
         // Detectar estilo
         for (const [style, keywords] of Object.entries(this.eventStyles)) {
             if (keywords.some(kw => msgLower.includes(kw))) {
@@ -1302,10 +1322,27 @@ class EventBot {
             }
         }
 
-        // Detectar número de invitados
-        const guestMatch = msgLower.match(/(\d+)\s*(personas?|invitados?|gente)/);
-        if (guestMatch) {
-            idea.guests = parseInt(guestMatch[1]);
+        // Detectar número de invitados (múltiples patrones)
+        const guestPatterns = [
+            /(\d+)\s*(personas?|invitados?|gente|asistentes?)/i,
+            /para\s*(\d+)/i,
+            /de\s*(\d+)\s*(a\s*\d+)?/i,
+            /(\d+)\s*-\s*(\d+)/i
+        ];
+
+        for (const pattern of guestPatterns) {
+            const match = msgLower.match(pattern);
+            if (match) {
+                idea.guests = parseInt(match[1]);
+                break;
+            }
+        }
+
+        // Detectar presupuesto
+        const budgetMatch = msgLower.match(/(\d+(?:,\d{3})*(?:\.\d+)?)\s*(soles?|s\/\.?)/i) ||
+                           msgLower.match(/presupuesto\s*(?:de)?\s*(\d+)/i);
+        if (budgetMatch) {
+            idea.budget = parseInt(budgetMatch[1].replace(',', ''));
         }
 
         // Detectar servicios mencionados usando las categorías definidas
@@ -1442,49 +1479,91 @@ class EventBot {
             this.context.eventIdea = idea;
             this.context.stage = 'advisor_proposal';
 
-            let responseText = `<strong>🎯 ¡Entendí tu idea!</strong><br><br>`;
-            responseText += `Estás pensando en un <strong>${proposal.eventName}</strong>`;
+            // Construir respuesta estructurada
+            let responseText = `<strong>🎯 ¡Perfecto! Armé esta propuesta para ti:</strong><br><br>`;
+
+            // Resumen del evento
+            responseText += `<div style="background: linear-gradient(135deg, #667eea11, #764ba211); padding: 12px; border-radius: 12px; margin-bottom: 12px;">`;
+            responseText += `<strong>📌 Tu evento:</strong> ${proposal.eventName}`;
             if (proposal.styleName !== 'personalizado') {
-                responseText += ` con estilo <strong>${proposal.styleName}</strong>`;
+                responseText += ` <em>(${proposal.styleName})</em>`;
             }
-            responseText += `.<br><br>`;
+            responseText += `<br>`;
+            responseText += `<strong>👥 Invitados:</strong> ${proposal.guests} personas<br>`;
+            responseText += `<strong>💰 Inversión estimada:</strong> S/ ${proposal.budgetEstimate.min.toLocaleString()} - S/ ${proposal.budgetEstimate.max.toLocaleString()}`;
+            responseText += `</div>`;
 
-            responseText += `<strong>📋 Mi propuesta para ti:</strong><br>`;
-            responseText += `• 👥 Para ${proposal.guests} personas<br>`;
-            responseText += `• 💰 Presupuesto estimado: S/ ${proposal.budgetEstimate.min.toLocaleString()} - ${proposal.budgetEstimate.max.toLocaleString()}<br><br>`;
-
+            // Locales recomendados
             if (proposal.matchingLocales.length > 0) {
-                responseText += `<strong>🏛️ Locales recomendados:</strong><br>`;
-                proposal.matchingLocales.forEach(l => {
-                    responseText += `• ${l.name} (S/ ${l.price.toLocaleString()})<br>`;
+                responseText += `<strong>🏛️ Locales ideales:</strong><br>`;
+                proposal.matchingLocales.forEach((l, i) => {
+                    responseText += `${i + 1}. <strong>${l.name}</strong> - S/ ${l.price.toLocaleString()}<br>`;
                 });
                 responseText += `<br>`;
+            } else {
+                responseText += `<strong>🏛️ Locales:</strong> Te ayudo a encontrar el ideal<br><br>`;
             }
 
-            responseText += `<strong>🎉 Servicios sugeridos:</strong><br>`;
+            // Servicios incluidos
+            responseText += `<strong>🎉 Servicios recomendados:</strong><br>`;
+            let serviciosList = [];
             proposal.services.forEach(s => {
                 const serviceData = this.serviceCategories[s];
                 if (serviceData) {
-                    responseText += `• ${serviceData.icon} ${serviceData.name}<br>`;
+                    serviciosList.push(`${serviceData.icon} ${serviceData.name}`);
                 }
             });
+            responseText += serviciosList.join(' • ') + `<br><br>`;
 
-            responseText += `<br>¿Te gustaría que ajuste algo de esta propuesta?`;
+            // Pregunta de seguimiento
+            responseText += `<em>¿Quieres ajustar algo o procedemos a cotizar?</em>`;
 
             return {
                 text: responseText,
                 options: {
                     localeLinks: proposal.matchingLocales,
                     buttons: [
-                        { text: '✅ Me gusta, cotizar', value: 'cotizar evento completo' },
-                        { text: '🔄 Ajustar propuesta', value: 'quiero cambiar algo' },
-                        { text: '💬 Más opciones', value: 'ver mas opciones' }
+                        { text: '✅ Cotizar ahora', value: 'cotizar este evento' },
+                        { text: '👥 Cambiar invitados', value: 'cambiar cantidad de personas' },
+                        { text: '🎉 Otros servicios', value: 'ver otros servicios' }
                     ]
                 }
             };
         }
 
-        // Si no detectó nada específico, pedir más información
+        // Si detectó algo parcial, pedir más detalles
+        return null;
+    }
+
+    // Manejar ajustes a la propuesta
+    handleProposalAdjustment(message) {
+        if (!this.context.eventIdea) return null;
+
+        const msgLower = message.toLowerCase();
+
+        // Cambiar cantidad de personas
+        if (msgLower.includes('cambiar') && (msgLower.includes('persona') || msgLower.includes('invitado'))) {
+            return {
+                text: `¿Cuántas personas asistirán a tu evento?<br><br>
+                    <em>Ejemplo: "seremos 80 personas"</em>`,
+                options: {
+                    buttons: [
+                        { text: '50 personas', value: 'para 50 personas' },
+                        { text: '100 personas', value: 'para 100 personas' },
+                        { text: '150 personas', value: 'para 150 personas' },
+                        { text: '200+ personas', value: 'para 200 personas' }
+                    ]
+                }
+            };
+        }
+
+        // Si da un nuevo número, actualizar propuesta
+        const newGuests = message.match(/(\d+)/);
+        if (newGuests && this.context.stage === 'advisor_proposal') {
+            this.context.eventIdea.guests = parseInt(newGuests[1]);
+            return this.generateAdvisorResponse(message);
+        }
+
         return null;
     }
 
@@ -1673,17 +1752,22 @@ class EventBot {
         }
 
         // Usuario tiene una idea de evento
-        if (this.matchKeywords(message, ['tengo idea', 'tengo una idea', 'mi idea'])) {
+        if (this.matchKeywords(message, ['tengo idea', 'tengo una idea', 'mi idea', 'quiero hacer', 'quiero organizar', 'necesito hacer'])) {
+            this.context.stage = 'waiting_idea';
             return {
-                text: `¡Perfecto! 💡 Cuéntame tu idea y te armo una propuesta completa.<br><br>
-                    Incluye detalles como:<br>
-                    • ¿Qué tipo de evento? (boda, quinceaños, cumpleaños...)<br>
-                    • ¿Cuántas personas aproximadamente?<br>
-                    • ¿Qué estilo te gustaría? (elegante, rústico, moderno...)<br>
-                    • ¿Qué servicios necesitas? (comida, música, fotos...)<br><br>
-                    <em>Ejemplo: "Una fiesta de 15 años elegante para 200 personas con buffet y DJ"</em>`,
+                text: `¡Genial! 💡 Cuéntame tu idea en una frase y te armo la propuesta.<br><br>
+                    <strong>Solo dime:</strong> tipo de evento + personas + lo que necesitas<br><br>
+                    <em>Ejemplos:</em><br>
+                    • "Boda elegante para 150 con buffet y DJ"<br>
+                    • "Quinceaños para 100 personas"<br>
+                    • "Cumpleaños infantil para 30 niños"`,
                 options: {
-                    buttons: []
+                    buttons: [
+                        { text: '💒 Matrimonio', value: 'quiero organizar un matrimonio' },
+                        { text: '🎀 Quinceaños', value: 'quiero organizar quinceaños' },
+                        { text: '🎂 Cumpleaños', value: 'quiero organizar cumpleaños' },
+                        { text: '💼 Corporativo', value: 'quiero organizar evento corporativo' }
+                    ]
                 }
             };
         }
