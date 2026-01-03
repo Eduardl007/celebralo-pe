@@ -177,6 +177,11 @@ const ESTRUCTURA_HOJAS = {
     Busquedas: [
         'tipoEvento', 'fecha', 'invitados', 'categoria',
         'fechaBusqueda', 'horaBusqueda', 'timestamp'
+    ],
+
+    Encuestas: [
+        'facilidad', 'confianza', 'usaria', 'nps', 'mejoras',
+        'contacto', 'fecha', 'hora', 'timestamp'
     ]
 };
 

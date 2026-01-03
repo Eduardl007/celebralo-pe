@@ -1,9 +1,10 @@
 /* ========================================
-   CELÉBRALO PE - Chatbot "Celé" v3.0
-   Tu asistente festivo con flujo guiado
+   CELÉBRALO PE - Chatbot "Celé" v4.0
+   Tu asesor inteligente de eventos
+   + IA Asesora para completar ideas
    + Chat con propietarios
    + Persistencia de conversaciones
-   + Enlaces a recomendaciones
+   + Recomendaciones personalizadas
    ======================================== */
 
 class EventBot {
@@ -11,11 +12,11 @@ class EventBot {
         this.isOpen = false;
         this.messages = [];
         this.isTyping = false;
-        this.mode = 'assistant'; // 'assistant' o 'owner'
+        this.mode = 'assistant'; // 'assistant', 'owner' o 'advisor'
         this.currentOwner = null;
         this.currentLocal = null;
 
-        // Contexto mejorado para flujo guiado
+        // Contexto mejorado para asesoría inteligente
         this.context = {
             eventType: null,
             date: null,
@@ -24,12 +25,37 @@ class EventBot {
             stage: 'greeting',
             userName: null,
             preferences: [],
-            searchHistory: []
+            searchHistory: [],
+            // Nuevo: contexto de asesoría
+            eventIdea: null,
+            eventStyle: null,
+            requiredServices: [],
+            suggestedLocales: [],
+            suggestedServices: []
         };
 
         // Configuración del wizard
         this.wizardSteps = ['event_type', 'guests', 'budget', 'recommendations'];
         this.currentStep = 0;
+
+        // Palabras clave para detectar ideas de eventos
+        this.eventKeywords = {
+            matrimonio: ['boda', 'matrimonio', 'casamiento', 'novia', 'novio', 'altar', 'anillos'],
+            quinceanos: ['quinceaños', 'quince', 'quinceañera', '15 años', 'vals'],
+            cumpleanos: ['cumpleaños', 'cumple', 'aniversario', 'fiesta de'],
+            corporativo: ['empresa', 'corporativo', 'conferencia', 'reunión', 'seminario', 'capacitación'],
+            bautizo: ['bautizo', 'bautismo', 'primera comunión', 'comunion'],
+            graduacion: ['graduación', 'grado', 'promoción', 'egresado']
+        };
+
+        // Estilos de eventos
+        this.eventStyles = {
+            elegante: ['elegante', 'formal', 'sofisticado', 'lujoso', 'glamour', 'clásico'],
+            rustico: ['rústico', 'campestre', 'bohemio', 'natural', 'vintage', 'campo'],
+            moderno: ['moderno', 'minimalista', 'contemporáneo', 'urbano', 'trendy'],
+            tematico: ['temático', 'hawaiano', 'tropical', 'disco', 'años 80', 'mexicano'],
+            infantil: ['infantil', 'niños', 'animación', 'payasos', 'princesas', 'superhéroes']
+        };
 
         // Storage keys
         this.STORAGE_KEY = 'celebralo_chat_history';
@@ -76,7 +102,8 @@ class EventBot {
             setTimeout(() => {
                 this.addBotMessage(this.getGreeting(), {
                     buttons: [
-                        { text: '🎊 Organizar evento', value: 'organizar_evento' },
+                        { text: '💡 Tengo una idea', value: 'tengo idea de evento' },
+                        { text: '🏛️ Ver locales', value: 'ver locales' },
                         { text: '🔍 Solo explorar', value: 'explorar' }
                     ]
                 });
@@ -297,15 +324,13 @@ class EventBot {
         const bubble = document.createElement('div');
         bubble.id = 'ownerBubble';
         bubble.className = 'owner-bubble';
-        bubble.style.display = 'none'; // Iniciar oculta
-        bubble.style.opacity = '0';
         bubble.innerHTML = `
             <div class="owner-bubble-avatar">${this.currentOwner.avatar || this.currentOwner.name?.charAt(0) || 'P'}</div>
             <div class="owner-bubble-content">
                 <div class="owner-bubble-name">${this.currentOwner.name}</div>
-                <div class="owner-bubble-status">💬 Disponible para chat</div>
+                <div class="owner-bubble-status">💬 Chatea con el proveedor</div>
             </div>
-            <div class="owner-bubble-close" onclick="event.stopPropagation(); document.getElementById('ownerBubble').style.display='none';">
+            <div class="owner-bubble-close" onclick="event.stopPropagation(); document.getElementById('ownerBubble').remove();">
                 <i class="fas fa-times"></i>
             </div>
         `;
@@ -316,18 +341,11 @@ class EventBot {
             }
         });
 
-        document.body.appendChild(bubble);
-
-        // Mostrar después de 2 segundos con animación
+        // Mostrar después de 1.5 segundos
         setTimeout(() => {
-            console.log('Mostrando burbuja del propietario');
-            bubble.style.display = 'flex';
-            // Pequeño delay para que la transición funcione
-            setTimeout(() => {
-                bubble.style.opacity = '1';
-                bubble.style.transform = 'translateX(0)';
-            }, 50);
-        }, 2000);
+            document.body.appendChild(bubble);
+            console.log('Burbuja del propietario visible');
+        }, 1500);
     }
 
     // Generar ID único para el chat con el proveedor
@@ -365,7 +383,7 @@ class EventBot {
             this.addBotMessage(`¡Hola! 👋 Soy <strong>${this.currentOwner.name}</strong>, propietario ${typeText} <strong>${this.currentLocal.name}</strong>.<br><br>
                 ¿En qué puedo ayudarte? Puedo responder sobre:<br>
                 • 📅 Disponibilidad de fechas<br>
-                • 💰 Precios y paquetes<br>
+                • 💰 Precios y servicios<br>
                 • 🎉 Detalles ${typeText}<br>
                 • 📋 Reservaciones`);
         }
@@ -499,7 +517,7 @@ class EventBot {
         const actionMap = {
             precios: '¿Cuáles son los precios?',
             disponibilidad: 'Quiero ver disponibilidad',
-            paquetes: 'Muéstrame los paquetes',
+            servicios: 'Muéstrame los servicios',
             ayuda: 'Necesito ayuda',
             organizar_evento: 'Quiero organizar un evento',
             explorar: 'Solo quiero explorar opciones'
@@ -681,11 +699,32 @@ class EventBot {
                 }
             }
 
+            // Intentar asesoría inteligente para ideas de eventos
+            // Detecta frases como "quiero una boda elegante para 150 personas"
+            if (message.length > 15 && !this.isSimpleQuestion(normalizedMsg)) {
+                const advisorResponse = this.generateAdvisorResponse(normalizedMsg);
+                if (advisorResponse) {
+                    this.addBotMessage(advisorResponse.text, advisorResponse.options);
+                    this.logInteraction(message, advisorResponse.text);
+                    return;
+                }
+            }
+
             const response = this.generateResponse(normalizedMsg);
             this.addBotMessage(response.text, response.options);
             this.logInteraction(message, response.text);
 
         }, delay);
+    }
+
+    // Detectar si es una pregunta simple
+    isSimpleQuestion(message) {
+        const simplePatterns = [
+            'hola', 'buenos', 'buenas', 'gracias', 'adios', 'chao',
+            'precio', 'cuanto', 'cuánto', 'ayuda', 'ver locales',
+            'ver servicios', 'cotizar', 'disponibilidad'
+        ];
+        return simplePatterns.some(p => message.includes(p));
     }
 
     // ==========================================
@@ -709,7 +748,7 @@ class EventBot {
                     options: {
                         buttons: [
                             { text: '📝 Solicitar cotización', value: 'quiero cotización' },
-                            { text: '📦 Ver paquetes', value: 'paquetes disponibles' }
+                            { text: '💰 Ver precios', value: 'precios' }
                         ]
                     }
                 };
@@ -745,7 +784,7 @@ class EventBot {
                 return {
                     text: `💰 <strong>Precios de ${provider.name}:</strong><br><br>
                         ${packagesText}<br><br>
-                        ¿Te gustaría más información sobre algún paquete?`,
+                        ¿Te gustaría más información?`,
                     options: {
                         buttons: [
                             { text: '📋 Cotización personalizada', value: 'quiero cotización' }
@@ -763,7 +802,7 @@ class EventBot {
                     options: {
                         buttons: [
                             { text: '📋 Cotización', value: 'quiero cotización' },
-                            { text: '📦 Ver paquetes', value: 'paquetes disponibles' }
+                            { text: '✨ Ver servicios', value: 'servicios incluidos' }
                         ]
                     }
                 };
@@ -802,15 +841,15 @@ class EventBot {
             }
         }
 
-        // Paquetes (para servicios)
-        if (isService && this.matchKeywords(message, ['paquete', 'combo', 'opcion'])) {
+        // Opciones de servicio
+        if (isService && this.matchKeywords(message, ['opcion', 'combo', 'incluye'])) {
             const packages = provider.pricing?.packages || [];
             const packagesText = packages.map(p =>
                 `<strong>${p.name}</strong> - S/ ${p.price}<br>${p.description}`
             ).join('<br><br>');
 
             return {
-                text: `📦 <strong>Paquetes de ${provider.name}:</strong><br><br>${packagesText}`,
+                text: `✨ <strong>Opciones de ${provider.name}:</strong><br><br>${packagesText}`,
                 options: {
                     buttons: [
                         { text: '📋 Solicitar cotización', value: 'quiero cotización' }
@@ -870,7 +909,7 @@ class EventBot {
                     buttons: [
                         { text: '💰 Precios', value: 'precios' },
                         { text: '📅 Disponibilidad', value: 'disponibilidad' },
-                        { text: isService ? '📦 Paquetes' : '✨ Servicios', value: isService ? 'paquetes' : 'servicios incluidos' }
+                        { text: '✨ Servicios', value: 'servicios incluidos' }
                     ]
                 }
             };
@@ -957,13 +996,13 @@ class EventBot {
                 text: `¡Perfecto! 🔍 Explora libremente. Puedo ayudarte con:<br><br>
                     • 🏛️ <strong>Locales</strong> - "muéstrame locales"<br>
                     • 💰 <strong>Precios</strong> - "¿cuánto cuesta?"<br>
-                    • 📦 <strong>Paquetes</strong> - "ver paquetes"<br>
-                    • 🎉 <strong>Servicios</strong> - "qué servicios tienen"<br><br>
+                    • 🎉 <strong>Servicios</strong> - "qué servicios tienen"<br>
+                    • 📋 <strong>Cotizar</strong> - "quiero cotizar"<br><br>
                     ¿Qué te gustaría ver primero?`,
                 options: {
                     buttons: [
                         { text: '🏛️ Ver locales', value: 'ver locales' },
-                        { text: '📦 Ver paquetes', value: 'ver paquetes' },
+                        { text: '🎉 Ver servicios', value: 'ver servicios' },
                         { text: '💰 Ver precios', value: 'precios' }
                     ]
                 }
@@ -1176,7 +1215,7 @@ class EventBot {
             options: {
                 localeLinks: localeLinks,
                 buttons: [
-                    { text: '📦 Ver paquetes', value: 'paquetes para mi evento' },
+                    { text: '📋 Cotizar evento', value: 'cotizar' },
                     { text: '🔄 Buscar de nuevo', value: 'organizar evento' }
                 ]
             }
@@ -1209,6 +1248,245 @@ class EventBot {
     }
 
     // ==========================================
+    // ASESOR INTELIGENTE DE EVENTOS
+    // ==========================================
+
+    // Analizar idea del usuario y extraer información
+    analyzeEventIdea(message) {
+        const idea = {
+            eventType: null,
+            style: null,
+            guests: null,
+            services: [],
+            keywords: []
+        };
+
+        const msgLower = message.toLowerCase();
+
+        // Detectar tipo de evento
+        for (const [type, keywords] of Object.entries(this.eventKeywords)) {
+            if (keywords.some(kw => msgLower.includes(kw))) {
+                idea.eventType = type;
+                break;
+            }
+        }
+
+        // Detectar estilo
+        for (const [style, keywords] of Object.entries(this.eventStyles)) {
+            if (keywords.some(kw => msgLower.includes(kw))) {
+                idea.style = style;
+                break;
+            }
+        }
+
+        // Detectar número de invitados
+        const guestMatch = msgLower.match(/(\d+)\s*(personas?|invitados?|gente)/);
+        if (guestMatch) {
+            idea.guests = parseInt(guestMatch[1]);
+        }
+
+        // Detectar servicios mencionados
+        const serviceKeywords = {
+            catering: ['comida', 'buffet', 'catering', 'banquete', 'cena', 'almuerzo'],
+            dj: ['música', 'dj', 'sonido', 'disco', 'baile'],
+            foto: ['foto', 'fotografía', 'fotógrafo', 'fotos'],
+            video: ['video', 'filmación', 'drone'],
+            decoracion: ['decoración', 'flores', 'globos', 'luces', 'ambientación'],
+            torta: ['torta', 'pastel', 'cake', 'postre']
+        };
+
+        for (const [service, keywords] of Object.entries(serviceKeywords)) {
+            if (keywords.some(kw => msgLower.includes(kw))) {
+                idea.services.push(service);
+            }
+        }
+
+        return idea;
+    }
+
+    // Generar propuesta completa basada en la idea
+    generateEventProposal(idea) {
+        const eventNames = {
+            matrimonio: 'Matrimonio',
+            quinceanos: 'Fiesta de XV Años',
+            cumpleanos: 'Celebración de Cumpleaños',
+            corporativo: 'Evento Corporativo',
+            bautizo: 'Bautizo',
+            graduacion: 'Graduación'
+        };
+
+        const styleNames = {
+            elegante: 'elegante y sofisticado',
+            rustico: 'rústico y natural',
+            moderno: 'moderno y minimalista',
+            tematico: 'temático y divertido',
+            infantil: 'infantil y colorido'
+        };
+
+        // Servicios recomendados por tipo de evento
+        const recommendedServices = {
+            matrimonio: ['catering', 'foto', 'video', 'dj', 'decoracion', 'torta'],
+            quinceanos: ['catering', 'foto', 'video', 'dj', 'decoracion', 'torta'],
+            cumpleanos: ['catering', 'foto', 'decoracion', 'torta'],
+            corporativo: ['catering', 'foto', 'sonido'],
+            bautizo: ['catering', 'foto', 'decoracion', 'torta'],
+            graduacion: ['catering', 'foto', 'dj', 'decoracion']
+        };
+
+        const eventType = idea.eventType || 'cumpleanos';
+        const eventName = eventNames[eventType] || 'Evento';
+        const styleName = idea.style ? styleNames[idea.style] : 'personalizado';
+        const guests = idea.guests || 100;
+        const services = idea.services.length > 0
+            ? idea.services
+            : recommendedServices[eventType] || ['catering', 'decoracion'];
+
+        // Buscar locales que coincidan
+        this.context.eventType = { type: eventType, name: eventName };
+        this.context.guests = { min: guests * 0.8, max: guests * 1.2, exact: guests };
+        const matchingLocales = this.getMatchingLocales();
+
+        // Buscar servicios disponibles
+        const availableServices = this.getMatchingServices(services);
+
+        // Calcular presupuesto estimado
+        const budgetEstimate = this.calculateBudgetEstimate(guests, services);
+
+        return {
+            eventType,
+            eventName,
+            styleName,
+            guests,
+            services,
+            matchingLocales,
+            availableServices,
+            budgetEstimate
+        };
+    }
+
+    // Obtener servicios que coincidan
+    getMatchingServices(serviceTypes) {
+        if (typeof SERVICIOS_DATA === 'undefined') return [];
+
+        const categoryMap = {
+            catering: 'catering',
+            dj: 'musica',
+            foto: 'fotografia',
+            video: 'fotografia',
+            decoracion: 'decoracion',
+            torta: 'tortas'
+        };
+
+        const results = [];
+        for (const type of serviceTypes) {
+            const category = categoryMap[type];
+            if (category) {
+                const service = SERVICIOS_DATA.find(s =>
+                    s.category === category && s.id !== 0
+                );
+                if (service) {
+                    results.push({
+                        name: service.name,
+                        slug: service.slug,
+                        category: type,
+                        price: service.pricing?.packages?.[0]?.price || 'Consultar'
+                    });
+                }
+            }
+        }
+        return results.slice(0, 4);
+    }
+
+    // Calcular presupuesto estimado
+    calculateBudgetEstimate(guests, services) {
+        let total = 0;
+
+        // Costo base del local (promedio)
+        total += 1200;
+
+        // Costo por servicio
+        const serviceCosts = {
+            catering: guests * 45, // S/ 45 por persona
+            dj: 500,
+            foto: 400,
+            video: 600,
+            decoracion: 500,
+            torta: 250
+        };
+
+        for (const service of services) {
+            total += serviceCosts[service] || 300;
+        }
+
+        return {
+            min: Math.round(total * 0.8),
+            max: Math.round(total * 1.2),
+            average: Math.round(total)
+        };
+    }
+
+    // Generar respuesta de asesoría
+    generateAdvisorResponse(message) {
+        const idea = this.analyzeEventIdea(message);
+
+        // Si detectó alguna idea de evento
+        if (idea.eventType || idea.style || idea.guests || idea.services.length > 0) {
+            const proposal = this.generateEventProposal(idea);
+            this.context.eventIdea = idea;
+            this.context.stage = 'advisor_proposal';
+
+            let responseText = `<strong>🎯 ¡Entendí tu idea!</strong><br><br>`;
+            responseText += `Estás pensando en un <strong>${proposal.eventName}</strong>`;
+            if (proposal.styleName !== 'personalizado') {
+                responseText += ` con estilo <strong>${proposal.styleName}</strong>`;
+            }
+            responseText += `.<br><br>`;
+
+            responseText += `<strong>📋 Mi propuesta para ti:</strong><br>`;
+            responseText += `• 👥 Para ${proposal.guests} personas<br>`;
+            responseText += `• 💰 Presupuesto estimado: S/ ${proposal.budgetEstimate.min.toLocaleString()} - ${proposal.budgetEstimate.max.toLocaleString()}<br><br>`;
+
+            if (proposal.matchingLocales.length > 0) {
+                responseText += `<strong>🏛️ Locales recomendados:</strong><br>`;
+                proposal.matchingLocales.forEach(l => {
+                    responseText += `• ${l.name} (S/ ${l.price.toLocaleString()})<br>`;
+                });
+                responseText += `<br>`;
+            }
+
+            responseText += `<strong>🎉 Servicios sugeridos:</strong><br>`;
+            const serviceNames = {
+                catering: '🍽️ Catering',
+                dj: '🎵 DJ y Sonido',
+                foto: '📸 Fotografía',
+                video: '🎥 Video',
+                decoracion: '🎈 Decoración',
+                torta: '🎂 Torta'
+            };
+            proposal.services.forEach(s => {
+                responseText += `• ${serviceNames[s] || s}<br>`;
+            });
+
+            responseText += `<br>¿Te gustaría que ajuste algo de esta propuesta?`;
+
+            return {
+                text: responseText,
+                options: {
+                    localeLinks: proposal.matchingLocales,
+                    buttons: [
+                        { text: '✅ Me gusta, cotizar', value: 'cotizar evento completo' },
+                        { text: '🔄 Ajustar propuesta', value: 'quiero cambiar algo' },
+                        { text: '💬 Más opciones', value: 'ver mas opciones' }
+                    ]
+                }
+            };
+        }
+
+        // Si no detectó nada específico, pedir más información
+        return null;
+    }
+
+    // ==========================================
     // RESPUESTAS GENERALES
     // ==========================================
 
@@ -1229,7 +1507,7 @@ class EventBot {
                 options: {
                     buttons: [
                         { text: '💵 Buscar por presupuesto', value: 'organizar evento' },
-                        { text: '📦 Ver paquetes', value: 'paquetes' }
+                        { text: '🎉 Ver servicios', value: 'ver servicios' }
                     ]
                 }
             };
@@ -1259,21 +1537,20 @@ class EventBot {
             };
         }
 
-        // Paquetes
-        if (this.matchKeywords(message, ['paquete', 'combo', 'todo incluido', 'bundle'])) {
+        // Ver servicios
+        if (this.matchKeywords(message, ['ver servicios', 'servicios disponibles', 'que servicios'])) {
             return {
-                text: `<strong>📦 Paquetes Todo-en-Uno:</strong><br><br>
-                    <strong>🎉 Paquete Esencial</strong> - S/ 1,500<br>
-                    Local + Mobiliario + Sonido<br><br>
-                    <strong>⭐ Paquete Completo</strong> - S/ 3,800<br>
-                    Local + Catering + DJ + Foto<br><br>
-                    <strong>👑 Paquete Premium</strong> - S/ 6,500<br>
-                    Todo incluido + Decoración + Video<br><br>
-                    <strong>Ahorra hasta 15%</strong> vs contratar por separado`,
+                text: `<strong>🎉 Servicios Disponibles:</strong><br><br>
+                    🍽️ <strong>Catering</strong> - Buffets y menús personalizados<br>
+                    🎵 <strong>DJ y Sonido</strong> - Música en vivo y equipos<br>
+                    📸 <strong>Fotografía y Video</strong> - Cobertura profesional<br>
+                    🎈 <strong>Decoración</strong> - Ambientación temática<br>
+                    🎂 <strong>Tortas y Postres</strong> - Diseños personalizados<br><br>
+                    ¿Te gustaría cotizar algún servicio?`,
                 options: {
                     buttons: [
-                        { text: '📋 Ver detalles', value: 'detalles paquetes' },
-                        { text: '🎨 Armar mi paquete', value: 'personalizar paquete' }
+                        { text: '📋 Cotizar servicios', value: 'cotizar' },
+                        { text: '🏛️ Ver locales', value: 'ver locales' }
                     ]
                 }
             };
@@ -1314,7 +1591,7 @@ class EventBot {
                     localeLinks: weddingLocales.map(l => ({ name: l.name, slug: l.slug })),
                     buttons: [
                         { text: '📅 Verificar disponibilidad', value: 'disponibilidad matrimonio' },
-                        { text: '📦 Paquetes de boda', value: 'paquete matrimonio' }
+                        { text: '📋 Cotizar boda', value: 'cotizar' }
                     ]
                 }
             };
@@ -1333,8 +1610,8 @@ class EventBot {
                     Todos verificados y con garantía ✓`,
                 options: {
                     buttons: [
-                        { text: '📋 Ver servicios', value: 'ver todos servicios' },
-                        { text: '📦 Armar paquete', value: 'armar paquete' }
+                        { text: '📋 Ver servicios', value: 'ver servicios' },
+                        { text: '💰 Cotizar', value: 'cotizar' }
                     ]
                 }
             };
@@ -1378,8 +1655,8 @@ class EventBot {
                 text: `<strong>🤝 Estoy aquí para ayudarte</strong><br><br>
                     Puedo asistirte con:<br>
                     • Buscar locales ideales<br>
-                    • Armar paquetes personalizados<br>
-                    • Cotizar tu evento<br>
+                    • Encontrar servicios para tu evento<br>
+                    • Cotizar tu evento completo<br>
                     • Resolver cualquier duda<br><br>
                     Todo se gestiona por esta plataforma para tu seguridad.`,
                 options: {
@@ -1391,13 +1668,29 @@ class EventBot {
             };
         }
 
+        // Usuario tiene una idea de evento
+        if (this.matchKeywords(message, ['tengo idea', 'tengo una idea', 'mi idea'])) {
+            return {
+                text: `¡Perfecto! 💡 Cuéntame tu idea y te armo una propuesta completa.<br><br>
+                    Incluye detalles como:<br>
+                    • ¿Qué tipo de evento? (boda, quinceaños, cumpleaños...)<br>
+                    • ¿Cuántas personas aproximadamente?<br>
+                    • ¿Qué estilo te gustaría? (elegante, rústico, moderno...)<br>
+                    • ¿Qué servicios necesitas? (comida, música, fotos...)<br><br>
+                    <em>Ejemplo: "Una fiesta de 15 años elegante para 200 personas con buffet y DJ"</em>`,
+                options: {
+                    buttons: []
+                }
+            };
+        }
+
         // Saludos
         if (this.matchKeywords(message, ['hola', 'buenos', 'buenas', 'hi', 'hey'])) {
             return {
                 text: this.getGreeting(),
                 options: {
                     buttons: [
-                        { text: '🎊 Organizar evento', value: 'organizar_evento' },
+                        { text: '💡 Tengo una idea', value: 'tengo idea de evento' },
                         { text: '🔍 Solo explorar', value: 'explorar' }
                     ]
                 }
@@ -1411,7 +1704,7 @@ class EventBot {
                 options: {
                     buttons: [
                         { text: '🏛️ Ver locales', value: 'ver locales' },
-                        { text: '📦 Ver paquetes', value: 'paquetes' },
+                        { text: '🎉 Ver servicios', value: 'ver servicios' },
                         { text: '👋 Eso es todo', value: 'adios' }
                     ]
                 }
@@ -1432,14 +1725,14 @@ class EventBot {
         return {
             text: `Entiendo. ¿En qué puedo ayudarte?<br><br>
                 • 🏛️ <strong>Buscar locales</strong><br>
-                • 📦 <strong>Ver paquetes</strong><br>
+                • 🎉 <strong>Ver servicios</strong><br>
                 • 💰 <strong>Consultar precios</strong><br>
                 • 🎊 <strong>Planificar tu evento</strong>`,
             options: {
                 buttons: [
                     { text: '🎊 Planificar evento', value: 'organizar evento' },
                     { text: '🏛️ Ver locales', value: 'ver locales' },
-                    { text: '📦 Ver paquetes', value: 'paquetes' }
+                    { text: '🎉 Ver servicios', value: 'ver servicios' }
                 ]
             }
         };
@@ -1458,9 +1751,10 @@ class EventBot {
         else greeting = '¡Buenas noches';
 
         return `${greeting}! 👋<br><br>
-            Soy <strong>Celé</strong>, tu asistente festivo 🎉<br><br>
-            Te ayudo a encontrar el local perfecto para tu evento en Sullana.<br><br>
-            ¿Listo para celebrar?`;
+            Soy <strong>Celé</strong>, tu asesor de eventos 🎉<br><br>
+            <strong>Cuéntame tu idea</strong> y te armo una propuesta completa con local + servicios.<br><br>
+            <em>Ejemplo: "Quiero una boda elegante para 150 personas con buffet y DJ"</em><br><br>
+            ¿Qué tienes en mente?`;
     }
 
     logInteraction(query, response) {
@@ -1488,7 +1782,7 @@ class EventBot {
         if (this.matchKeywords(message, ['precio', 'costo', 'cuanto'])) return 'precios';
         if (this.matchKeywords(message, ['capacidad', 'personas', 'invitados'])) return 'capacidad';
         if (this.matchKeywords(message, ['disponib', 'fecha', 'reserva'])) return 'disponibilidad';
-        if (this.matchKeywords(message, ['paquete', 'combo'])) return 'paquetes';
+        if (this.matchKeywords(message, ['combo', 'todo incluido'])) return 'servicios';
         if (this.matchKeywords(message, ['matrimonio', 'boda'])) return 'matrimonio';
         if (this.matchKeywords(message, ['cumpleaño', 'quinceañ'])) return 'cumpleanos';
         if (this.matchKeywords(message, ['corporativo', 'empresa'])) return 'corporativo';

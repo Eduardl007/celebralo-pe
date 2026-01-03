@@ -1522,7 +1522,7 @@
 /* Owner Bubble - Floating interaction bubble */
 .owner-bubble {
     position: fixed;
-    bottom: 90px;
+    bottom: 100px;
     right: var(--spacing-4);
     display: flex;
     align-items: center;
@@ -1533,10 +1533,10 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
     cursor: pointer;
     transition: all 0.4s ease;
-    z-index: calc(var(--z-fixed) - 1);
-    max-width: 280px;
-    transform: translateX(50px);
+    z-index: 9998;
+    max-width: 300px;
     border: 2px solid var(--primary-100);
+    animation: bubbleSlideIn 0.5s ease forwards;
 }
 
 @keyframes bubbleSlideIn {
