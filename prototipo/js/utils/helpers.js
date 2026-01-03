@@ -350,6 +350,161 @@ function formatFileSize(bytes) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
+// ========================================
+// GOOGLE SHEETS INTEGRATION
+// ========================================
+
+/**
+ * Enviar datos a Google Sheets via Apps Script
+ * @param {string} sheetName - Nombre de la hoja (Reservas, Cotizaciones, etc.)
+ * @param {object} data - Datos a enviar
+ * @returns {Promise<boolean>} - true si se envió correctamente
+ */
+async function sendToGoogleSheets(sheetName, data) {
+    // URL del Google Apps Script Web App (configurar en producción)
+    const GOOGLE_SCRIPT_URL = localStorage.getItem('celebralo_sheets_url') || null;
+
+    // Agregar metadata
+    const payload = {
+        sheet: sheetName,
+        data: {
+            ...data,
+            _timestamp: new Date().toISOString(),
+            _source: 'web_app',
+            _version: '1.0'
+        }
+    };
+
+    // Guardar localmente siempre (respaldo)
+    saveToLocalQueue(sheetName, payload.data);
+
+    // Si no hay URL configurada, solo guardar localmente
+    if (!GOOGLE_SCRIPT_URL) {
+        console.log(`📊 [Local] ${sheetName}:`, payload.data);
+        return true;
+    }
+
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // Apps Script requiere no-cors
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        console.log(`✅ Enviado a Google Sheets [${sheetName}]`);
+
+        // Marcar como sincronizado
+        markAsSynced(sheetName, data.id);
+
+        return true;
+    } catch (error) {
+        console.error(`❌ Error enviando a Google Sheets:`, error);
+        return false;
+    }
+}
+
+/**
+ * Guardar en cola local para sincronización
+ */
+function saveToLocalQueue(sheetName, data) {
+    const key = `celebralo_sheets_${sheetName.toLowerCase()}`;
+    const queue = JSON.parse(localStorage.getItem(key) || '[]');
+
+    // Evitar duplicados por ID
+    const existingIndex = queue.findIndex(item => item.id === data.id);
+    if (existingIndex >= 0) {
+        queue[existingIndex] = { ...data, _synced: false };
+    } else {
+        queue.push({ ...data, _synced: false });
+    }
+
+    // Mantener máximo 500 registros por hoja
+    if (queue.length > 500) {
+        queue.splice(0, queue.length - 500);
+    }
+
+    localStorage.setItem(key, JSON.stringify(queue));
+}
+
+/**
+ * Marcar registro como sincronizado
+ */
+function markAsSynced(sheetName, id) {
+    const key = `celebralo_sheets_${sheetName.toLowerCase()}`;
+    const queue = JSON.parse(localStorage.getItem(key) || '[]');
+
+    const item = queue.find(item => item.id === id);
+    if (item) {
+        item._synced = true;
+        localStorage.setItem(key, JSON.stringify(queue));
+    }
+}
+
+/**
+ * Obtener datos pendientes de sincronización
+ */
+function getPendingSyncData(sheetName = null) {
+    if (sheetName) {
+        const key = `celebralo_sheets_${sheetName.toLowerCase()}`;
+        const queue = JSON.parse(localStorage.getItem(key) || '[]');
+        return queue.filter(item => !item._synced);
+    }
+
+    // Obtener de todas las hojas
+    const sheets = ['reservas', 'cotizaciones', 'usuarios', 'logins', 'feedback', 'busquedas', 'consultas'];
+    const pending = {};
+
+    sheets.forEach(sheet => {
+        const key = `celebralo_sheets_${sheet}`;
+        const queue = JSON.parse(localStorage.getItem(key) || '[]');
+        const unsyncedItems = queue.filter(item => !item._synced);
+        if (unsyncedItems.length > 0) {
+            pending[sheet] = unsyncedItems;
+        }
+    });
+
+    return pending;
+}
+
+/**
+ * Obtener estadísticas de datos locales
+ */
+function getLocalDataStats() {
+    const sheets = ['reservas', 'cotizaciones', 'usuarios', 'logins', 'feedback', 'busquedas', 'consultas'];
+    const stats = {
+        total: 0,
+        synced: 0,
+        pending: 0,
+        bySheet: {}
+    };
+
+    sheets.forEach(sheet => {
+        const key = `celebralo_sheets_${sheet}`;
+        const queue = JSON.parse(localStorage.getItem(key) || '[]');
+        const synced = queue.filter(item => item._synced).length;
+
+        stats.bySheet[sheet] = {
+            total: queue.length,
+            synced: synced,
+            pending: queue.length - synced
+        };
+
+        stats.total += queue.length;
+        stats.synced += synced;
+        stats.pending += queue.length - synced;
+    });
+
+    return stats;
+}
+
+// Exponer función globalmente
+window.sendToGoogleSheets = sendToGoogleSheets;
+window.getPendingSyncData = getPendingSyncData;
+window.getLocalDataStats = getLocalDataStats;
+
 // Export functions
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {

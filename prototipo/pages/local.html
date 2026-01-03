@@ -1485,18 +1485,23 @@
                 return;
             }
 
-            // Guardar datos temporalmente
-            const total = currentLocale.price.base + currentLocale.price.deposit + (currentLocale.price.base * 0.12);
+            // Calcular total (comisión 12% ya está incluida en precio base)
+            const subtotal = currentLocale.price.base;
+            const deposito = currentLocale.price.deposit;
+            const total = subtotal + deposito;
+
             pendingBookingData = {
                 local: currentLocale.name,
+                localId: currentLocale.id,
                 localSlug: currentLocale.slug,
                 fecha: date,
                 fechaFormateada: formatDate(date, 'long'),
                 tipoEvento: eventType,
                 tipoEventoNombre: EVENT_TYPES[eventType]?.name || eventType,
                 invitados: guests,
-                precioBase: currentLocale.price.base,
-                deposito: currentLocale.price.deposit,
+                precioBase: subtotal,
+                deposito: deposito,
+                comisionIncluida: Math.round(subtotal * 0.12), // Para referencia
                 total: total
             };
 
@@ -1529,37 +1534,64 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
             btn.disabled = true;
 
-            const formData = {
-                id: 'RES-' + Date.now(),
-                nombre: document.getElementById('bookingName').value,
-                telefono: document.getElementById('bookingPhone').value,
-                contacto: document.getElementById('bookingEmail').value,
-                mensaje: document.getElementById('bookingMessage').value || '',
-                local: pendingBookingData.local,
-                localSlug: pendingBookingData.localSlug,
-                fechaEvento: pendingBookingData.fecha,
-                tipoEvento: pendingBookingData.tipoEventoNombre,
-                invitados: pendingBookingData.invitados,
-                precioEstimado: pendingBookingData.total,
-                estado: 'pendiente',
-                origen: 'web',
-                fecha: new Date().toLocaleDateString('es-PE'),
-                hora: new Date().toLocaleTimeString('es-PE'),
-                timestamp: new Date().toISOString()
-            };
-
             try {
-                await sendToGoogleSheets('Reservas', formData);
+                // Crear reserva con reservationManager
+                let reservation = null;
+                if (window.reservationManager) {
+                    reservation = reservationManager.createReservation({
+                        tipo: 'local',
+                        providerId: pendingBookingData.localId,
+                        providerName: pendingBookingData.local,
+                        providerSlug: pendingBookingData.localSlug,
+                        providerIcon: currentLocale.icon || '🏠',
+                        fechaEvento: pendingBookingData.fecha,
+                        tipoEvento: pendingBookingData.tipoEventoNombre,
+                        invitados: pendingBookingData.invitados,
+                        precioBase: pendingBookingData.precioBase,
+                        deposito: pendingBookingData.deposito,
+                        precioEstimado: pendingBookingData.total,
+                        clienteNombre: document.getElementById('bookingName').value,
+                        clienteEmail: document.getElementById('bookingEmail').value,
+                        clienteTelefono: document.getElementById('bookingPhone').value,
+                        clienteMensaje: document.getElementById('bookingMessage').value || '',
+                        origen: 'local-detail'
+                    });
+
+                    // Sincronizar con Google Sheets
+                    await reservationManager.syncToGoogleSheets(reservation);
+                } else {
+                    // Fallback si no hay reservationManager
+                    await sendToGoogleSheets('Reservas', {
+                        id: 'RES-' + Date.now(),
+                        tipo: 'local',
+                        proveedor: pendingBookingData.local,
+                        fechaEvento: pendingBookingData.fecha,
+                        tipoEvento: pendingBookingData.tipoEventoNombre,
+                        invitados: pendingBookingData.invitados,
+                        precioEstimado: pendingBookingData.total,
+                        nombre: document.getElementById('bookingName').value,
+                        contacto: document.getElementById('bookingEmail').value,
+                        telefono: document.getElementById('bookingPhone').value,
+                        mensaje: document.getElementById('bookingMessage').value || '',
+                        estado: 'pendiente',
+                        origen: 'local-detail',
+                        fecha: new Date().toLocaleDateString('es-PE'),
+                        hora: new Date().toLocaleTimeString('es-PE'),
+                        timestamp: new Date().toISOString()
+                    });
+                }
 
                 closeBookingModal();
-                showToast('success', '¡Solicitud enviada!', 'Te contactaremos en menos de 24 horas para confirmar tu reserva');
+
+                const resId = reservation ? reservation.id : 'RES-' + Date.now();
+                showToast('success', '¡Reserva enviada!', `ID: ${resId} - Te contactaremos en menos de 24 horas`);
 
                 // Limpiar formulario
                 document.getElementById('bookingRequestForm').reset();
 
             } catch (error) {
                 console.error('Error al enviar:', error);
-                showToast('error', 'Error', 'Hubo un problema. Intenta de nuevo o usa el chat de la plataforma.');
+                showToast('error', 'Error', 'Hubo un problema. Intenta de nuevo o usa el chat.');
             } finally {
                 btn.innerHTML = originalText;
                 btn.disabled = false;

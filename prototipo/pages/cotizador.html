@@ -1310,15 +1310,18 @@
 
             // Calculate totals
             let subtotal = 0;
+            let deposito = 0;
             const items = [];
 
             // Add local
             if (cotizador.selectedLocal) {
                 subtotal += cotizador.selectedLocal.price.base;
+                deposito = cotizador.selectedLocal.price.deposit || 0;
                 items.push({
                     name: cotizador.selectedLocal.name,
                     icon: cotizador.selectedLocal.icon,
-                    price: cotizador.selectedLocal.price.base
+                    price: cotizador.selectedLocal.price.base,
+                    type: 'local'
                 });
             }
 
@@ -1326,9 +1329,10 @@
             cotizador.selectedServices.forEach(service => {
                 const basePrice = service.pricing.basePrice || (service.pricing.packages && service.pricing.packages[0].price) || 0;
                 let servicePrice = basePrice;
+                const isPerPerson = service.pricing.type === 'per-person';
 
                 // If per-person pricing, multiply by guests
-                if (service.pricing.type === 'per-person') {
+                if (isPerPerson) {
                     servicePrice = basePrice * (cotizador.eventDetails.guests || 50);
                 }
 
@@ -1336,11 +1340,14 @@
                 items.push({
                     name: service.name,
                     icon: service.icon,
-                    price: servicePrice
+                    price: servicePrice,
+                    type: 'service',
+                    perPerson: isPerPerson,
+                    basePrice: basePrice
                 });
             });
 
-            // Calculate discount (10% if local + 2+ services)
+            // Calculate discount (10% if local + 2+ services, 5% if 1 service)
             let discount = 0;
             let discountPercent = 0;
             if (cotizador.selectedLocal && cotizador.selectedServices.length >= 2) {
@@ -1351,12 +1358,16 @@
                 discount = subtotal * 0.05;
             }
 
-            const total = subtotal - discount;
+            // Total = Subtotal - Descuento + Depósito (reembolsable)
+            const totalSinDeposito = subtotal - discount;
+            const total = totalSinDeposito + deposito;
 
             // Store totals
             cotizador.subtotal = subtotal;
             cotizador.discount = discount;
             cotizador.discountPercent = discountPercent;
+            cotizador.deposito = deposito;
+            cotizador.totalSinDeposito = totalSinDeposito;
             cotizador.total = total;
 
             // Render summary
@@ -1398,13 +1409,23 @@
                         <span>${formatPrice(subtotal)}</span>
                     </div>
                     ${discountPercent > 0 ? `
-                        <div class="summary-row discount">
-                            <span>Descuento combo</span>
-                            <span>-${discountPercent}%</span>
+                        <div class="summary-row discount" style="color: var(--success);">
+                            <span>Descuento combo (-${discountPercent}%)</span>
+                            <span>-${formatPrice(discount)}</span>
                         </div>
                     ` : ''}
+                    ${deposito > 0 ? `
+                        <div class="summary-row" style="font-size: var(--font-size-sm);">
+                            <span>Depósito reembolsable</span>
+                            <span>${formatPrice(deposito)}</span>
+                        </div>
+                    ` : ''}
+                    <div class="summary-row" style="font-size: var(--font-size-xs); color: var(--text-muted);">
+                        <span>Comisión plataforma</span>
+                        <span>12% incluido</span>
+                    </div>
                     <div class="summary-row total">
-                        <span>Total</span>
+                        <span>Total a pagar</span>
                         <span>${formatPrice(total)}</span>
                     </div>
                 </div>

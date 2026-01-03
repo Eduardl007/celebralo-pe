@@ -835,6 +835,26 @@
                                 <span class="amount" id="bookingPrice">S/ --</span>
                                 <span class="unit" id="bookingUnit">/servicio</span>
                             </div>
+                            <div id="priceEstimate" style="display: none; background: var(--primary-50); padding: 12px; border-radius: 8px; margin-top: 8px; text-align: center;">
+                                <div style="font-size: var(--font-size-sm); color: var(--text-secondary);">Estimado para <span id="guestsDisplay">50</span> personas:</div>
+                                <div style="font-size: var(--font-size-xl); font-weight: 700; color: var(--primary);" id="totalEstimate">S/ 0</div>
+                            </div>
+
+                            <!-- Guests selector for per-person services -->
+                            <div id="guestsSelector" style="display: none; margin-top: 12px;">
+                                <label style="font-size: var(--font-size-sm); color: var(--text-secondary); display: block; margin-bottom: 6px;">
+                                    <i class="fas fa-users"></i> Número de invitados
+                                </label>
+                                <select id="serviceGuests" onchange="updatePriceEstimate()" style="width: 100%;">
+                                    <option value="30">30 personas</option>
+                                    <option value="50" selected>50 personas</option>
+                                    <option value="80">80 personas</option>
+                                    <option value="100">100 personas</option>
+                                    <option value="150">150 personas</option>
+                                    <option value="200">200 personas</option>
+                                    <option value="300">300+ personas</option>
+                                </select>
+                            </div>
 
                             <!-- Calendar -->
                             <div class="booking-calendar" id="bookingCalendar"></div>
@@ -1124,8 +1144,20 @@
 
             // Price
             const basePrice = s.pricing.basePrice || (s.pricing.packages && s.pricing.packages[0].price) || 0;
+            const isPerPerson = s.pricing.type === 'per-person';
+
             document.getElementById('bookingPrice').textContent = `S/ ${basePrice.toLocaleString()}`;
-            document.getElementById('bookingUnit').textContent = s.pricing.type === 'per-person' ? '/persona' : '/servicio';
+            document.getElementById('bookingUnit').textContent = isPerPerson ? '/persona' : '/servicio';
+
+            // Show guests selector and estimate for per-person services
+            if (isPerPerson) {
+                document.getElementById('guestsSelector').style.display = 'block';
+                document.getElementById('priceEstimate').style.display = 'block';
+                updatePriceEstimate();
+            } else {
+                document.getElementById('guestsSelector').style.display = 'none';
+                document.getElementById('priceEstimate').style.display = 'none';
+            }
 
             // Owner
             if (s.owner) {
@@ -1387,6 +1419,17 @@
             }
         }
 
+        function updatePriceEstimate() {
+            if (!currentService || currentService.pricing.type !== 'per-person') return;
+
+            const guests = parseInt(document.getElementById('serviceGuests').value) || 50;
+            const basePrice = currentService.pricing.basePrice || 0;
+            const total = basePrice * guests;
+
+            document.getElementById('guestsDisplay').textContent = guests;
+            document.getElementById('totalEstimate').textContent = `S/ ${total.toLocaleString()}`;
+        }
+
         function openContactModal() {
             document.getElementById('contactModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1410,6 +1453,12 @@
         function submitContact(e) {
             e.preventDefault();
 
+            // Calcular precio según tipo de servicio
+            const basePrice = currentService.pricing.basePrice || 0;
+            const isPerPerson = currentService.pricing.type === 'per-person';
+            const guests = isPerPerson ? parseInt(document.getElementById('serviceGuests').value) || 50 : 0;
+            const precioEstimado = isPerPerson ? basePrice * guests : basePrice;
+
             const formData = {
                 clienteNombre: document.getElementById('contactName').value,
                 clienteTelefono: document.getElementById('contactPhone').value,
@@ -1422,9 +1471,11 @@
                 providerSlug: currentService.slug,
                 providerIcon: currentService.icon,
                 tipo: 'servicio',
-                paquete: null,
-                precioBase: currentService.pricing.basePrice || 0,
-                precioEstimado: currentService.pricing.basePrice || 0
+                invitados: guests,
+                precioBase: basePrice,
+                precioPorPersona: isPerPerson ? basePrice : null,
+                precioEstimado: precioEstimado,
+                origen: 'servicio-detail'
             };
 
             // Crear reserva usando el manager
@@ -1442,15 +1493,20 @@
                     email: formData.clienteEmail,
                     tipoEvento: formData.tipoEvento,
                     fecha: formData.fechaEvento,
+                    invitados: formData.invitados || 0,
                     mensaje: formData.clienteMensaje,
                     servicio: currentService.name,
+                    precioBase: formData.precioBase,
+                    precioEstimado: formData.precioEstimado,
                     tipo: 'servicio',
+                    origen: 'servicio-detail',
                     fechaCreacion: new Date().toLocaleDateString('es-PE'),
                     timestamp: new Date().toISOString()
                 });
             }
 
-            showToast('success', 'Reserva enviada', 'Tu solicitud ha sido registrada. Te contactaremos pronto.');
+            const resId = 'COT-' + Date.now().toString().slice(-6);
+            showToast('success', '¡Cotización enviada!', `ID: ${resId} - Te contactaremos pronto`);
             closeContactModal();
             document.getElementById('contactForm').reset();
 
