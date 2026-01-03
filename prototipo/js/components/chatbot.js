@@ -1,10 +1,13 @@
 /* ========================================
-   CELÉBRALO PE - Chatbot "Celé" v4.0
-   Tu asesor inteligente de eventos
-   + IA Asesora para completar ideas
+   CELÉBRALO PE - Chatbot "Celé" v5.0
+   Asesor Inteligente de Eventos
+   + IA Profesional para asesoría completa
+   + Análisis contextual de ideas
+   + Detección de preferencias y requisitos
    + Chat con propietarios
    + Persistencia de conversaciones
    + Recomendaciones personalizadas
+   Actualizado: 2026-01-02
    ======================================== */
 
 class EventBot {
@@ -16,7 +19,7 @@ class EventBot {
         this.currentOwner = null;
         this.currentLocal = null;
 
-        // Contexto mejorado para asesoría inteligente
+        // Contexto mejorado para asesoría inteligente profesional
         this.context = {
             eventType: null,
             date: null,
@@ -26,29 +29,51 @@ class EventBot {
             userName: null,
             preferences: [],
             searchHistory: [],
-            // Nuevo: contexto de asesoría
+            // Contexto de asesoría IA
             eventIdea: null,
             eventStyle: null,
             requiredServices: [],
+            excludedServices: [],  // Servicios que NO quiere el cliente
             suggestedLocales: [],
-            suggestedServices: []
+            suggestedServices: [],
+            specialRequirements: [], // Requisitos especiales: vegetariano, aire libre, etc.
+            occasion: null,         // Ocasión específica: cumpleaños 50, bodas de plata, etc.
+            conversationHistory: [], // Historial para contexto
+            proposalCount: 0,       // Contador de propuestas generadas
+            lastProposal: null      // Última propuesta para ajustes
         };
 
         // Configuración del wizard
         this.wizardSteps = ['event_type', 'guests', 'budget', 'recommendations'];
         this.currentStep = 0;
 
-        // Palabras clave para detectar ideas de eventos
+        // Palabras clave expandidas para detectar ideas de eventos
         this.eventKeywords = {
-            matrimonio: ['boda', 'matrimonio', 'casamiento', 'novia', 'novio', 'altar', 'anillos'],
-            quinceanos: ['quinceaños', 'quince', 'quinceañera', '15 años', 'vals'],
-            cumpleanos: ['cumpleaños', 'cumple', 'fiesta de'],
-            corporativo: ['empresa', 'corporativo', 'conferencia', 'reunión', 'seminario', 'capacitación'],
-            bautizo: ['bautizo', 'bautismo', 'primera comunión', 'comunion'],
-            graduacion: ['graduación', 'grado', 'promoción', 'egresado'],
-            'baby-shower': ['baby shower', 'baby-shower', 'bebé', 'embarazo'],
-            aniversario: ['aniversario', 'bodas de oro', 'bodas de plata', 'años casados']
+            matrimonio: ['boda', 'matrimonio', 'casamiento', 'casarme', 'casar', 'novia', 'novio', 'altar', 'anillos', 'civil', 'religioso', 'recepción de boda', 'luna de miel'],
+            quinceanos: ['quinceaños', 'quince años', 'quince', 'quinceañera', '15 años', 'vals', 'mis quince', 'la quinceañera', 'fiesta de 15'],
+            cumpleanos: ['cumpleaños', 'cumple', 'fiesta de', 'años cumple', 'mi cumple', 'su cumple', 'festejar años', 'celebrar años', 'mi hijo cumple', 'mi hija cumple'],
+            corporativo: ['empresa', 'corporativo', 'conferencia', 'reunión de trabajo', 'seminario', 'capacitación', 'team building', 'fin de año empresa', 'aniversario empresa', 'lanzamiento', 'inauguración'],
+            bautizo: ['bautizo', 'bautismo', 'primera comunión', 'comunion', 'confirmación', 'presentación del bebé'],
+            graduacion: ['graduación', 'grado', 'promoción', 'egresado', 'egresados', 'bachiller', 'titulación', 'ceremonia de grado'],
+            'baby-shower': ['baby shower', 'baby-shower', 'bebé viene', 'embarazo', 'shower', 'llegada del bebé', 'mamá primeriza'],
+            aniversario: ['aniversario', 'bodas de oro', 'bodas de plata', 'años casados', 'años juntos', 'año de casados', 'renovación de votos']
         };
+
+        // Palabras clave para requisitos especiales
+        this.specialRequirementsKeywords = {
+            'aire-libre': ['aire libre', 'al aire libre', 'exterior', 'jardín', 'campo', 'abierto', 'outdoor'],
+            'techado': ['techado', 'cerrado', 'interior', 'bajo techo', 'cubierto', 'indoor', 'salón cerrado'],
+            'vegetariano': ['vegetariano', 'vegano', 'sin carne', 'comida vegetariana', 'menú vegetariano'],
+            'accesible': ['silla de ruedas', 'accesible', 'discapacidad', 'movilidad reducida', 'rampa'],
+            'estacionamiento': ['estacionamiento', 'parqueo', 'parking', 'cochera', 'donde estacionar'],
+            'musica-vivo': ['música en vivo', 'banda en vivo', 'orquesta', 'grupo musical', 'mariachi'],
+            'infantil': ['niños', 'infantil', 'área de juegos', 'juegos para niños', 'entretenimiento niños'],
+            'elegante': ['elegante', 'formal', 'lujoso', 'premium', 'exclusivo', 'de lujo'],
+            'economico': ['económico', 'barato', 'accesible', 'presupuesto bajo', 'no muy caro', 'ajustado']
+        };
+
+        // Palabras clave para exclusiones (lo que NO quiere)
+        this.exclusionKeywords = ['sin', 'no quiero', 'no necesito', 'nada de', 'excepto', 'menos', 'evitar', 'sin incluir'];
 
         // Estilos de eventos
         this.eventStyles = {
@@ -1284,7 +1309,7 @@ class EventBot {
     // ASESOR INTELIGENTE DE EVENTOS
     // ==========================================
 
-    // Analizar idea del usuario y extraer información
+    // Analizar idea del usuario y extraer información completa
     analyzeEventIdea(message) {
         const idea = {
             eventType: null,
@@ -1292,65 +1317,159 @@ class EventBot {
             guests: null,
             budget: null,
             services: [],
+            excludedServices: [],
+            specialRequirements: [],
+            occasion: null,
+            date: null,
+            timeOfDay: null,
+            confidence: 0,
             keywords: []
         };
 
         const msgLower = message.toLowerCase();
 
-        // Detectar tipo de evento
+        // ===== DETECTAR TIPO DE EVENTO =====
         for (const [type, keywords] of Object.entries(this.eventKeywords)) {
             if (keywords.some(kw => msgLower.includes(kw))) {
                 idea.eventType = type;
+                idea.confidence += 30;
                 break;
             }
         }
 
-        // Detectar palabras clave adicionales para eventos
+        // Detección secundaria de eventos
         if (!idea.eventType) {
-            if (msgLower.includes('fiesta') || msgLower.includes('celebr')) {
+            if (msgLower.includes('fiesta') || msgLower.includes('celebr') || msgLower.includes('festej')) {
                 idea.eventType = 'cumpleanos';
-            } else if (msgLower.includes('reunion') || msgLower.includes('empresa')) {
+                idea.confidence += 15;
+            } else if (msgLower.includes('reunion') || msgLower.includes('empresa') || msgLower.includes('trabajo')) {
                 idea.eventType = 'corporativo';
+                idea.confidence += 15;
             }
         }
 
-        // Detectar estilo
+        // Detectar ocasión específica (ej: cumpleaños 50, bodas de plata)
+        const occasionPatterns = [
+            /cumple(?:años)?\s*(\d+)/i,
+            /(\d+)\s*años?\s*(?:de casados?|juntos)/i,
+            /bodas\s*de\s*(oro|plata|diamante)/i
+        ];
+        for (const pattern of occasionPatterns) {
+            const match = msgLower.match(pattern);
+            if (match) {
+                idea.occasion = match[1] || match[0];
+                idea.confidence += 10;
+                break;
+            }
+        }
+
+        // ===== DETECTAR ESTILO =====
         for (const [style, keywords] of Object.entries(this.eventStyles)) {
             if (keywords.some(kw => msgLower.includes(kw))) {
                 idea.style = style;
+                idea.confidence += 15;
                 break;
             }
         }
 
-        // Detectar número de invitados (múltiples patrones)
+        // ===== DETECTAR NÚMERO DE INVITADOS =====
         const guestPatterns = [
-            /(\d+)\s*(personas?|invitados?|gente|asistentes?)/i,
-            /para\s*(\d+)/i,
-            /de\s*(\d+)\s*(a\s*\d+)?/i,
-            /(\d+)\s*-\s*(\d+)/i
+            /(\d+)\s*(personas?|invitados?|gente|asistentes?|comensales?)/i,
+            /para\s*(\d+)\s*(?:personas?)?/i,
+            /seremos\s*(\d+)/i,
+            /somos\s*(\d+)/i,
+            /como\s*(\d+)\s*(?:personas?)?/i,
+            /aproximadamente\s*(\d+)/i,
+            /unas?\s*(\d+)\s*personas?/i,
+            /entre\s*(\d+)\s*(?:y|a|-)\s*(\d+)/i
         ];
 
         for (const pattern of guestPatterns) {
             const match = msgLower.match(pattern);
             if (match) {
-                idea.guests = parseInt(match[1]);
+                if (match[2]) {
+                    // Rango: tomar el promedio
+                    idea.guests = Math.round((parseInt(match[1]) + parseInt(match[2])) / 2);
+                } else {
+                    idea.guests = parseInt(match[1]);
+                }
+                idea.confidence += 20;
                 break;
             }
         }
 
-        // Detectar presupuesto
-        const budgetMatch = msgLower.match(/(\d+(?:,\d{3})*(?:\.\d+)?)\s*(soles?|s\/\.?)/i) ||
-                           msgLower.match(/presupuesto\s*(?:de)?\s*(\d+)/i);
-        if (budgetMatch) {
-            idea.budget = parseInt(budgetMatch[1].replace(',', ''));
-        }
+        // ===== DETECTAR PRESUPUESTO =====
+        const budgetPatterns = [
+            /(\d+(?:,\d{3})*(?:\.\d+)?)\s*(soles?|s\/\.?)/i,
+            /presupuesto\s*(?:de|:)?\s*(?:s\/\.?\s*)?(\d+)/i,
+            /gastar\s*(?:hasta)?\s*(?:s\/\.?\s*)?(\d+)/i,
+            /(?:tengo|cuento con)\s*(?:s\/\.?\s*)?(\d+)/i,
+            /(?:maximo|máximo|hasta)\s*(?:s\/\.?\s*)?(\d+)/i
+        ];
 
-        // Detectar servicios mencionados usando las categorías definidas
-        for (const [category, data] of Object.entries(this.serviceCategories)) {
-            if (data.keywords.some(kw => msgLower.includes(kw))) {
-                idea.services.push(category);
+        for (const pattern of budgetPatterns) {
+            const match = msgLower.match(pattern);
+            if (match) {
+                idea.budget = parseInt(match[1].replace(/,/g, ''));
+                idea.confidence += 15;
+                break;
             }
         }
+
+        // ===== DETECTAR SERVICIOS SOLICITADOS =====
+        for (const [category, data] of Object.entries(this.serviceCategories)) {
+            if (data.keywords.some(kw => msgLower.includes(kw))) {
+                // Verificar que no esté en contexto de exclusión
+                const isExcluded = this.exclusionKeywords.some(ex => {
+                    const regex = new RegExp(`${ex}\\s+(?:\\w+\\s+)?(?:${data.keywords.join('|')})`, 'i');
+                    return regex.test(msgLower);
+                });
+
+                if (isExcluded) {
+                    idea.excludedServices.push(category);
+                } else {
+                    idea.services.push(category);
+                }
+                idea.confidence += 5;
+            }
+        }
+
+        // ===== DETECTAR REQUISITOS ESPECIALES =====
+        for (const [requirement, keywords] of Object.entries(this.specialRequirementsKeywords)) {
+            if (keywords.some(kw => msgLower.includes(kw))) {
+                idea.specialRequirements.push(requirement);
+                idea.confidence += 5;
+            }
+        }
+
+        // ===== DETECTAR FECHA =====
+        const datePatterns = [
+            /(?:para|en|el)\s*(\d{1,2})\s*(?:de)?\s*(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+            /(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/i,
+            /(próximo|proximo|este|siguiente)\s*(sábado|sabado|domingo|viernes|lunes|martes|miércoles|miercoles|jueves)/i,
+            /(?:en|dentro de)\s*(\d+)\s*(semanas?|meses?|días?)/i
+        ];
+
+        for (const pattern of datePatterns) {
+            const match = msgLower.match(pattern);
+            if (match) {
+                idea.date = match[0];
+                idea.confidence += 10;
+                break;
+            }
+        }
+
+        // ===== DETECTAR HORARIO =====
+        if (msgLower.includes('noche') || msgLower.includes('cena')) {
+            idea.timeOfDay = 'noche';
+        } else if (msgLower.includes('tarde') || msgLower.includes('almuerzo')) {
+            idea.timeOfDay = 'tarde';
+        } else if (msgLower.includes('mañana') || msgLower.includes('desayuno')) {
+            idea.timeOfDay = 'mañana';
+        }
+
+        // Ajustar confianza máxima a 100
+        idea.confidence = Math.min(100, idea.confidence);
 
         return idea;
     }
@@ -1469,99 +1588,454 @@ class EventBot {
         };
     }
 
-    // Generar respuesta de asesoría
+    // Generar respuesta de asesoría profesional
     generateAdvisorResponse(message) {
         const idea = this.analyzeEventIdea(message);
 
-        // Si detectó alguna idea de evento
-        if (idea.eventType || idea.style || idea.guests || idea.services.length > 0) {
+        // Si tiene confianza suficiente (detectó información relevante)
+        if (idea.confidence >= 15 || idea.eventType || idea.guests || idea.services.length > 0) {
             const proposal = this.generateEventProposal(idea);
+
+            // Guardar en contexto para seguimiento
             this.context.eventIdea = idea;
+            this.context.lastProposal = proposal;
+            this.context.proposalCount++;
             this.context.stage = 'advisor_proposal';
+            this.context.excludedServices = idea.excludedServices;
+            this.context.specialRequirements = idea.specialRequirements;
 
-            // Construir respuesta estructurada
-            let responseText = `<strong>🎯 ¡Perfecto! Armé esta propuesta para ti:</strong><br><br>`;
+            // Construir respuesta profesional
+            let responseText = this.buildProfessionalResponse(idea, proposal);
 
-            // Resumen del evento
-            responseText += `<div style="background: linear-gradient(135deg, #667eea11, #764ba211); padding: 12px; border-radius: 12px; margin-bottom: 12px;">`;
-            responseText += `<strong>📌 Tu evento:</strong> ${proposal.eventName}`;
-            if (proposal.styleName !== 'personalizado') {
-                responseText += ` <em>(${proposal.styleName})</em>`;
-            }
-            responseText += `<br>`;
-            responseText += `<strong>👥 Invitados:</strong> ${proposal.guests} personas<br>`;
-            responseText += `<strong>💰 Inversión estimada:</strong> S/ ${proposal.budgetEstimate.min.toLocaleString()} - S/ ${proposal.budgetEstimate.max.toLocaleString()}`;
-            responseText += `</div>`;
-
-            // Locales recomendados
-            if (proposal.matchingLocales.length > 0) {
-                responseText += `<strong>🏛️ Locales ideales:</strong><br>`;
-                proposal.matchingLocales.forEach((l, i) => {
-                    responseText += `${i + 1}. <strong>${l.name}</strong> - S/ ${l.price.toLocaleString()}<br>`;
-                });
-                responseText += `<br>`;
-            } else {
-                responseText += `<strong>🏛️ Locales:</strong> Te ayudo a encontrar el ideal<br><br>`;
-            }
-
-            // Servicios incluidos
-            responseText += `<strong>🎉 Servicios recomendados:</strong><br>`;
-            let serviciosList = [];
-            proposal.services.forEach(s => {
-                const serviceData = this.serviceCategories[s];
-                if (serviceData) {
-                    serviciosList.push(`${serviceData.icon} ${serviceData.name}`);
-                }
-            });
-            responseText += serviciosList.join(' • ') + `<br><br>`;
-
-            // Pregunta de seguimiento
-            responseText += `<em>¿Quieres ajustar algo o procedemos a cotizar?</em>`;
+            // Determinar botones según contexto
+            const buttons = this.getContextualButtons(idea, proposal);
 
             return {
                 text: responseText,
                 options: {
                     localeLinks: proposal.matchingLocales,
-                    buttons: [
-                        { text: '✅ Cotizar ahora', value: 'cotizar este evento' },
-                        { text: '👥 Cambiar invitados', value: 'cambiar cantidad de personas' },
-                        { text: '🎉 Otros servicios', value: 'ver otros servicios' }
-                    ]
+                    buttons: buttons
                 }
             };
         }
 
-        // Si detectó algo parcial, pedir más detalles
+        // Si detectó algo parcial pero necesita más información
+        if (idea.confidence > 0) {
+            return this.askForMoreDetails(idea);
+        }
+
         return null;
     }
 
-    // Manejar ajustes a la propuesta
+    // Construir respuesta profesional estructurada
+    buildProfessionalResponse(idea, proposal) {
+        const isFirstProposal = this.context.proposalCount <= 1;
+
+        // Encabezado personalizado
+        let responseText = isFirstProposal
+            ? `<strong>🎯 ¡Entendido! He preparado esta propuesta para ti:</strong><br><br>`
+            : `<strong>✨ Aquí está tu propuesta actualizada:</strong><br><br>`;
+
+        // Tarjeta del evento
+        responseText += `<div style="background: linear-gradient(135deg, #667eea11, #764ba211); padding: 14px; border-radius: 12px; margin-bottom: 12px; border-left: 3px solid #667eea;">`;
+
+        // Nombre del evento con ocasión si existe
+        responseText += `<strong>📌 ${proposal.eventName}</strong>`;
+        if (idea.occasion) {
+            responseText += ` <em>(${idea.occasion})</em>`;
+        }
+        if (proposal.styleName !== 'personalizado') {
+            responseText += `<br><span style="color: #666;">Estilo: ${proposal.styleName}</span>`;
+        }
+        responseText += `<br><br>`;
+
+        // Detalles del evento
+        responseText += `<strong>👥 Invitados:</strong> ${proposal.guests} personas<br>`;
+
+        if (idea.date) {
+            responseText += `<strong>📅 Fecha:</strong> ${idea.date}<br>`;
+        }
+
+        if (idea.timeOfDay) {
+            const timeLabels = { noche: 'Por la noche', tarde: 'Por la tarde', mañana: 'Por la mañana' };
+            responseText += `<strong>🕐 Horario:</strong> ${timeLabels[idea.timeOfDay]}<br>`;
+        }
+
+        responseText += `<br><strong>💰 Inversión estimada:</strong><br>`;
+        responseText += `<span style="font-size: 1.1em; color: #667eea;">S/ ${proposal.budgetEstimate.min.toLocaleString()} - S/ ${proposal.budgetEstimate.max.toLocaleString()}</span>`;
+        responseText += `</div>`;
+
+        // Requisitos especiales detectados
+        if (idea.specialRequirements.length > 0) {
+            const reqLabels = {
+                'aire-libre': '🌳 Aire libre',
+                'techado': '🏠 Espacio techado',
+                'vegetariano': '🥗 Menú vegetariano',
+                'accesible': '♿ Acceso para sillas de ruedas',
+                'estacionamiento': '🚗 Estacionamiento',
+                'musica-vivo': '🎺 Música en vivo',
+                'infantil': '👶 Área infantil',
+                'elegante': '✨ Ambiente elegante',
+                'economico': '💵 Presupuesto ajustado'
+            };
+            responseText += `<strong>📋 Requisitos especiales:</strong><br>`;
+            responseText += idea.specialRequirements.map(r => reqLabels[r] || r).join(' • ') + `<br><br>`;
+        }
+
+        // Locales recomendados
+        if (proposal.matchingLocales.length > 0) {
+            responseText += `<strong>🏛️ Locales que te recomiendo:</strong><br>`;
+            proposal.matchingLocales.forEach((l, i) => {
+                responseText += `${i + 1}. <strong>${l.name}</strong> - S/ ${l.price.toLocaleString()}<br>`;
+            });
+            responseText += `<br>`;
+        } else {
+            responseText += `<strong>🏛️ Locales:</strong> Tenemos opciones perfectas para ti.<br><br>`;
+        }
+
+        // Servicios recomendados
+        responseText += `<strong>🎉 Servicios recomendados:</strong><br>`;
+        let serviciosList = [];
+        proposal.services.forEach(s => {
+            // No incluir servicios excluidos
+            if (!idea.excludedServices.includes(s)) {
+                const serviceData = this.serviceCategories[s];
+                if (serviceData) {
+                    serviciosList.push(`${serviceData.icon} ${serviceData.name}`);
+                }
+            }
+        });
+        responseText += serviciosList.join(' • ') + `<br>`;
+
+        // Servicios excluidos si los hay
+        if (idea.excludedServices.length > 0) {
+            responseText += `<br><span style="color: #888; font-size: 0.9em;">❌ Sin incluir: `;
+            responseText += idea.excludedServices.map(s => this.serviceCategories[s]?.name || s).join(', ');
+            responseText += `</span><br>`;
+        }
+
+        responseText += `<br>`;
+
+        // Mensaje de cierre contextual
+        if (idea.confidence >= 70) {
+            responseText += `<em>Esta propuesta está muy bien definida. ¿Procedemos a cotizar o hay algo que ajustar?</em>`;
+        } else if (idea.confidence >= 40) {
+            responseText += `<em>¿Te parece bien esta propuesta? Puedo ajustar cualquier detalle.</em>`;
+        } else {
+            responseText += `<em>Es una primera aproximación. Cuéntame más detalles para afinarla mejor.</em>`;
+        }
+
+        return responseText;
+    }
+
+    // Obtener botones contextuales según la información disponible
+    getContextualButtons(idea, proposal) {
+        const buttons = [];
+
+        // Siempre opción de cotizar
+        buttons.push({ text: '✅ Cotizar ahora', value: 'cotizar este evento' });
+
+        // Botones según lo que falte
+        if (!idea.guests) {
+            buttons.push({ text: '👥 Definir invitados', value: 'definir cantidad de invitados' });
+        } else {
+            buttons.push({ text: '👥 Cambiar invitados', value: 'cambiar cantidad de personas' });
+        }
+
+        if (!idea.date) {
+            buttons.push({ text: '📅 Agregar fecha', value: 'definir fecha del evento' });
+        }
+
+        if (idea.services.length < 3) {
+            buttons.push({ text: '➕ Más servicios', value: 'ver todos los servicios' });
+        }
+
+        // Limitar a 4 botones
+        return buttons.slice(0, 4);
+    }
+
+    // Pedir más detalles cuando la información es parcial
+    askForMoreDetails(idea) {
+        let responseText = `<strong>💡 ¡Me encanta la idea!</strong><br><br>`;
+        responseText += `Detecto que estás pensando en `;
+
+        if (idea.eventType) {
+            const eventNames = {
+                matrimonio: 'una boda',
+                quinceanos: 'una fiesta de XV años',
+                cumpleanos: 'un cumpleaños',
+                corporativo: 'un evento corporativo',
+                bautizo: 'un bautizo',
+                graduacion: 'una graduación',
+                'baby-shower': 'un baby shower',
+                aniversario: 'un aniversario'
+            };
+            responseText += `<strong>${eventNames[idea.eventType]}</strong>`;
+        } else {
+            responseText += `un evento especial`;
+        }
+
+        responseText += `. Para darte la mejor propuesta, cuéntame:<br><br>`;
+
+        const questions = [];
+        if (!idea.guests) {
+            questions.push('• ¿Cuántas personas asistirán?');
+        }
+        if (!idea.style) {
+            questions.push('• ¿Qué estilo prefieres? (elegante, rústico, moderno...)');
+        }
+        if (!idea.budget) {
+            questions.push('• ¿Tienes un presupuesto en mente?');
+        }
+
+        responseText += questions.join('<br>') + `<br><br>`;
+        responseText += `<em>O simplemente describe tu evento ideal y armaré una propuesta completa.</em>`;
+
+        return {
+            text: responseText,
+            options: {
+                buttons: [
+                    { text: '💒 Es una boda', value: 'es una boda elegante' },
+                    { text: '🎂 Es un cumpleaños', value: 'es un cumpleaños' },
+                    { text: '🏢 Es corporativo', value: 'es un evento de empresa' },
+                    { text: '🎉 Otro evento', value: 'es otro tipo de evento' }
+                ]
+            }
+        };
+    }
+
+    // Manejar ajustes a la propuesta - Versión mejorada
     handleProposalAdjustment(message) {
         if (!this.context.eventIdea) return null;
 
         const msgLower = message.toLowerCase();
 
-        // Cambiar cantidad de personas
-        if (msgLower.includes('cambiar') && (msgLower.includes('persona') || msgLower.includes('invitado'))) {
+        // ===== CAMBIAR CANTIDAD DE PERSONAS =====
+        if ((msgLower.includes('cambiar') || msgLower.includes('definir')) &&
+            (msgLower.includes('persona') || msgLower.includes('invitado') || msgLower.includes('cantidad'))) {
             return {
-                text: `¿Cuántas personas asistirán a tu evento?<br><br>
-                    <em>Ejemplo: "seremos 80 personas"</em>`,
+                text: `<strong>👥 ¿Cuántas personas asistirán a tu evento?</strong><br><br>
+                    Puedes escribir el número exacto o elegir una opción:`,
                 options: {
                     buttons: [
-                        { text: '50 personas', value: 'para 50 personas' },
-                        { text: '100 personas', value: 'para 100 personas' },
-                        { text: '150 personas', value: 'para 150 personas' },
+                        { text: '30-50 personas', value: 'para 40 personas' },
+                        { text: '80-100 personas', value: 'para 90 personas' },
+                        { text: '120-150 personas', value: 'para 135 personas' },
                         { text: '200+ personas', value: 'para 200 personas' }
                     ]
                 }
             };
         }
 
-        // Si da un nuevo número, actualizar propuesta
-        const newGuests = message.match(/(\d+)/);
+        // ===== DEFINIR FECHA =====
+        if (msgLower.includes('fecha') || msgLower.includes('cuando') || msgLower.includes('día')) {
+            return {
+                text: `<strong>📅 ¿Cuándo será tu evento?</strong><br><br>
+                    Puedes decirme:<br>
+                    • Una fecha específica: "15 de marzo"<br>
+                    • Aproximado: "en 2 meses", "próximo sábado"<br>
+                    • Solo el mes: "en abril"`,
+                options: {
+                    buttons: [
+                        { text: '📆 En 1 mes', value: 'el evento es en 1 mes' },
+                        { text: '📆 En 2-3 meses', value: 'el evento es en 2 meses' },
+                        { text: '📆 En 6 meses', value: 'el evento es en 6 meses' },
+                        { text: '📆 Aún no definido', value: 'la fecha aún no está definida' }
+                    ]
+                }
+            };
+        }
+
+        // ===== AGREGAR/CAMBIAR SERVICIOS =====
+        if (msgLower.includes('servicio') || msgLower.includes('agregar') || msgLower.includes('quitar') ||
+            msgLower.includes('más servicio') || msgLower.includes('otros servicio')) {
+
+            let serviciosText = '';
+            for (const [key, data] of Object.entries(this.serviceCategories)) {
+                const isIncluded = this.context.eventIdea.services.includes(key);
+                const isExcluded = this.context.excludedServices?.includes(key);
+                const status = isExcluded ? '❌' : (isIncluded ? '✅' : '⬜');
+                serviciosText += `${status} ${data.icon} ${data.name}<br>`;
+            }
+
+            return {
+                text: `<strong>🎉 Servicios disponibles:</strong><br><br>
+                    ${serviciosText}<br>
+                    Dime cuáles quieres agregar o quitar.<br>
+                    <em>Ej: "agregar banda" o "sin animación"</em>`,
+                options: {
+                    buttons: [
+                        { text: '🍽️ Agregar catering', value: 'agregar catering' },
+                        { text: '📸 Agregar fotografía', value: 'agregar fotografía' },
+                        { text: '🎺 Agregar banda', value: 'agregar banda' },
+                        { text: '✅ Mantener así', value: 'mantener servicios actuales' }
+                    ]
+                }
+            };
+        }
+
+        // ===== CAMBIAR ESTILO =====
+        if (msgLower.includes('estilo') || msgLower.includes('tema')) {
+            return {
+                text: `<strong>🎨 ¿Qué estilo prefieres para tu evento?</strong>`,
+                options: {
+                    buttons: [
+                        { text: '✨ Elegante', value: 'quiero estilo elegante' },
+                        { text: '🌿 Rústico', value: 'quiero estilo rústico' },
+                        { text: '🏙️ Moderno', value: 'quiero estilo moderno' },
+                        { text: '🎭 Temático', value: 'quiero estilo temático' }
+                    ]
+                }
+            };
+        }
+
+        // ===== CAMBIAR PRESUPUESTO =====
+        if (msgLower.includes('presupuesto') || msgLower.includes('precio') || msgLower.includes('costo')) {
+            return {
+                text: `<strong>💰 ¿Cuál es tu presupuesto aproximado?</strong><br><br>
+                    Esto me ayuda a recomendarte opciones adecuadas:`,
+                options: {
+                    buttons: [
+                        { text: 'Hasta S/ 3,000', value: 'mi presupuesto es 3000 soles' },
+                        { text: 'S/ 3,000-5,000', value: 'mi presupuesto es 4000 soles' },
+                        { text: 'S/ 5,000-10,000', value: 'mi presupuesto es 7000 soles' },
+                        { text: 'S/ 10,000+', value: 'mi presupuesto es 10000 soles' }
+                    ]
+                }
+            };
+        }
+
+        // ===== COTIZAR EVENTO =====
+        if (msgLower.includes('cotizar') || msgLower.includes('cotización')) {
+            // Redirigir al cotizador con datos pre-llenados
+            if (typeof window !== 'undefined') {
+                const eventData = this.context.eventIdea;
+                const queryParams = new URLSearchParams({
+                    tipo: eventData.eventType || 'evento',
+                    invitados: eventData.guests || 100,
+                    estilo: eventData.style || 'personalizado'
+                });
+                setTimeout(() => {
+                    window.location.href = `pages/cotizador.html?${queryParams.toString()}`;
+                }, 500);
+            }
+
+            return {
+                text: `<strong>📋 ¡Excelente decisión!</strong><br><br>
+                    Te llevo al cotizador con los datos de tu evento pre-cargados...<br><br>
+                    <em>En unos segundos podrás completar tu solicitud.</em>`,
+                options: {}
+            };
+        }
+
+        // ===== MANTENER SERVICIOS =====
+        if (msgLower.includes('mantener') && msgLower.includes('servicio')) {
+            return {
+                text: `<strong>✅ ¡Perfecto!</strong><br><br>
+                    Los servicios quedan como están. ¿Hay algo más que quieras ajustar?`,
+                options: {
+                    buttons: [
+                        { text: '✅ Cotizar ahora', value: 'cotizar este evento' },
+                        { text: '👥 Ver propuesta', value: 'ver mi propuesta actual' }
+                    ]
+                }
+            };
+        }
+
+        // ===== AGREGAR SERVICIO ESPECÍFICO =====
+        if (msgLower.includes('agregar')) {
+            for (const [key, data] of Object.entries(this.serviceCategories)) {
+                if (data.keywords.some(kw => msgLower.includes(kw))) {
+                    if (!this.context.eventIdea.services.includes(key)) {
+                        this.context.eventIdea.services.push(key);
+                    }
+                    // Quitar de excluidos si estaba
+                    this.context.excludedServices = this.context.excludedServices?.filter(s => s !== key) || [];
+
+                    return {
+                        text: `<strong>✅ ${data.icon} ${data.name} agregado</strong><br><br>
+                            Ahora tu evento incluye este servicio. ¿Quieres agregar algo más?`,
+                        options: {
+                            buttons: [
+                                { text: '➕ Más servicios', value: 'ver todos los servicios' },
+                                { text: '✅ Cotizar ahora', value: 'cotizar este evento' },
+                                { text: '👁️ Ver propuesta', value: 'ver mi propuesta actual' }
+                            ]
+                        }
+                    };
+                }
+            }
+        }
+
+        // ===== VER PROPUESTA ACTUAL =====
+        if (msgLower.includes('ver propuesta') || msgLower.includes('propuesta actual') || msgLower.includes('mi propuesta')) {
+            const proposal = this.generateEventProposal(this.context.eventIdea);
+            return {
+                text: this.buildProfessionalResponse(this.context.eventIdea, proposal),
+                options: {
+                    localeLinks: proposal.matchingLocales,
+                    buttons: this.getContextualButtons(this.context.eventIdea, proposal)
+                }
+            };
+        }
+
+        // ===== SI HAY UN NÚMERO, PROBABLEMENTE SEAN INVITADOS =====
+        const newGuests = message.match(/(\d+)\s*(personas?)?/);
         if (newGuests && this.context.stage === 'advisor_proposal') {
-            this.context.eventIdea.guests = parseInt(newGuests[1]);
-            return this.generateAdvisorResponse(message);
+            const num = parseInt(newGuests[1]);
+            if (num >= 10 && num <= 1000) {
+                this.context.eventIdea.guests = num;
+                const proposal = this.generateEventProposal(this.context.eventIdea);
+                this.context.lastProposal = proposal;
+
+                return {
+                    text: this.buildProfessionalResponse(this.context.eventIdea, proposal),
+                    options: {
+                        localeLinks: proposal.matchingLocales,
+                        buttons: this.getContextualButtons(this.context.eventIdea, proposal)
+                    }
+                };
+            }
+        }
+
+        // ===== DETECTAR NUEVAS PREFERENCIAS Y ACTUALIZAR =====
+        const newIdea = this.analyzeEventIdea(message);
+        if (newIdea.confidence > 10) {
+            // Fusionar nueva información con la existente
+            if (newIdea.guests) this.context.eventIdea.guests = newIdea.guests;
+            if (newIdea.style) this.context.eventIdea.style = newIdea.style;
+            if (newIdea.date) this.context.eventIdea.date = newIdea.date;
+            if (newIdea.budget) this.context.eventIdea.budget = newIdea.budget;
+            if (newIdea.services.length > 0) {
+                newIdea.services.forEach(s => {
+                    if (!this.context.eventIdea.services.includes(s)) {
+                        this.context.eventIdea.services.push(s);
+                    }
+                });
+            }
+            if (newIdea.excludedServices.length > 0) {
+                this.context.eventIdea.excludedServices = [
+                    ...(this.context.eventIdea.excludedServices || []),
+                    ...newIdea.excludedServices
+                ];
+            }
+            if (newIdea.specialRequirements.length > 0) {
+                this.context.eventIdea.specialRequirements = [
+                    ...(this.context.eventIdea.specialRequirements || []),
+                    ...newIdea.specialRequirements
+                ];
+            }
+
+            const proposal = this.generateEventProposal(this.context.eventIdea);
+            this.context.lastProposal = proposal;
+
+            return {
+                text: this.buildProfessionalResponse(this.context.eventIdea, proposal),
+                options: {
+                    localeLinks: proposal.matchingLocales,
+                    buttons: this.getContextualButtons(this.context.eventIdea, proposal)
+                }
+            };
         }
 
         return null;
@@ -1833,20 +2307,35 @@ class EventBot {
     getGreeting() {
         const hour = new Date().getHours();
         let greeting = 'Hola';
+        let timeEmoji = '✨';
 
-        if (hour >= 5 && hour < 12) greeting = '¡Buenos días';
-        else if (hour >= 12 && hour < 19) greeting = '¡Buenas tardes';
-        else greeting = '¡Buenas noches';
+        if (hour >= 5 && hour < 12) {
+            greeting = '¡Buenos días';
+            timeEmoji = '🌅';
+        } else if (hour >= 12 && hour < 19) {
+            greeting = '¡Buenas tardes';
+            timeEmoji = '☀️';
+        } else {
+            greeting = '¡Buenas noches';
+            timeEmoji = '🌙';
+        }
 
-        return `${greeting}! 👋<br><br>
-            Soy <strong>Celé</strong>, tu asesor de eventos 🎉<br><br>
-            <strong>Cuéntame tu idea</strong> y te armo una propuesta completa con local + servicios.<br><br>
-            <em>Ejemplo: "Quiero una boda elegante para 150 personas con buffet y DJ"</em><br><br>
-            ¿Qué tienes en mente?`;
+        return `${greeting}! ${timeEmoji}<br><br>
+            Soy <strong>Celé</strong>, tu asesor inteligente de eventos en <strong>Celébralo pe</strong>.<br><br>
+            <div style="background: linear-gradient(135deg, #667eea11, #764ba211); padding: 12px; border-radius: 10px; margin: 8px 0;">
+            💡 <strong>¿Cómo puedo ayudarte?</strong><br><br>
+            Cuéntame tu idea de evento y te prepararé una propuesta personalizada con local y servicios incluidos.
+            </div><br>
+            <em style="color: #666;">Ejemplo: "Quiero organizar una boda elegante para 120 personas en un jardín"</em>`;
     }
 
     logInteraction(query, response) {
         const category = this.categorizeQuery(query.toLowerCase());
+
+        // Determinar el modo actual del chat
+        const modoChat = this.mode === 'advisor' || this.context.stage === 'advisor_proposal'
+            ? 'asesor_ia'
+            : (this.mode === 'owner' ? 'propietario' : 'asistente');
 
         if (typeof sendToGoogleSheets === 'function') {
             sendToGoogleSheets('Consultas', {
@@ -1854,15 +2343,52 @@ class EventBot {
                 consulta: query,
                 respuesta: response.substring(0, 200).replace(/<[^>]*>/g, ''),
                 categoria: category,
-                contexto: JSON.stringify(this.context),
+                modoChat: modoChat,
+                localId: this.currentLocal?.id || null,
+                servicioId: this.providerType === 'servicio' ? this.currentLocal?.id : null,
                 fecha: new Date().toLocaleDateString('es-PE'),
                 hora: new Date().toLocaleTimeString('es-PE'),
                 timestamp: new Date().toISOString()
             });
         }
 
+        // Registrar propuesta de IA si estamos en modo asesor
+        if (modoChat === 'asesor_ia' && this.context.lastProposal) {
+            this.logProposalIA();
+        }
+
         if (window.analytics) {
             analytics.trackChatbotMessage(category);
+        }
+    }
+
+    // Registrar propuesta generada por el asesor IA
+    logProposalIA() {
+        if (!this.context.eventIdea || !this.context.lastProposal) return;
+
+        const proposal = this.context.lastProposal;
+        const idea = this.context.eventIdea;
+
+        if (typeof sendToGoogleSheets === 'function') {
+            sendToGoogleSheets('PropuestasIA', {
+                id: 'PIA-' + Date.now(),
+                tipoEvento: proposal.eventType || 'no_especificado',
+                estiloEvento: proposal.styleName || 'personalizado',
+                cantidadInvitados: proposal.guests || 0,
+                presupuestoEstimadoMin: proposal.budgetEstimate?.min || 0,
+                presupuestoEstimadoMax: proposal.budgetEstimate?.max || 0,
+                localesRecomendados: proposal.matchingLocales?.map(l => l.name).join(', ') || '',
+                serviciosRecomendados: proposal.services?.join(', ') || '',
+                ideaOriginal: JSON.stringify({
+                    confidence: idea.confidence,
+                    specialRequirements: idea.specialRequirements,
+                    excludedServices: idea.excludedServices
+                }),
+                aceptada: false, // Se actualizará si el usuario cotiza
+                fecha: new Date().toLocaleDateString('es-PE'),
+                hora: new Date().toLocaleTimeString('es-PE'),
+                timestamp: new Date().toISOString()
+            });
         }
     }
 
