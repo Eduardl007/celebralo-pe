@@ -3,13 +3,13 @@
    Base de datos en Google Sheets (SEGURO)
 
    IMPORTANTE: Las credenciales NO están en el código.
-   Se usan a través de Netlify Functions para seguridad.
+   Se usan a través de Vercel/Netlify Functions para seguridad.
    ======================================== */
 
 /**
  * CONFIGURACIÓN DE GOOGLE SHEETS
  *
- * Las credenciales sensibles están en variables de entorno de Netlify.
+ * Las credenciales sensibles están en variables de entorno del servidor.
  * Este archivo solo contiene configuración pública.
  */
 const GOOGLE_SHEETS_CONFIG = {
@@ -45,12 +45,14 @@ const GOOGLE_SHEETS_CONFIG = {
 };
 
 /**
- * Detectar si estamos en producción (Netlify) o desarrollo local
+ * Detectar si estamos en producción (Vercel/Netlify) o desarrollo local
  */
 function isProduction() {
     const hostname = window.location.hostname;
-    return hostname.includes('netlify.app') ||
+    return hostname.includes('vercel.app') ||
+           hostname.includes('netlify.app') ||
            hostname.includes('celebralo.pe') ||
+           hostname.includes('celebralo-pe') ||
            hostname.includes('celebralope');
 }
 
