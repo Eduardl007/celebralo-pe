@@ -780,8 +780,9 @@
                 </div>
                 <div class="chatbot-messages" id="chatbotMessages"></div>
                 <div class="chatbot-quick-actions" id="quickActions">
+                    <button class="quick-action" data-action="cotizar">📦 Cotizar</button>
                     <button class="quick-action" data-action="precios">💰 Precios</button>
-                    <button class="quick-action" data-action="disponibilidad">📅 Disponibilidad</button>
+                    <button class="quick-action" data-action="ayuda">❓ Ayuda</button>
                 </div>
                 <form class="chatbot-input" id="chatbotForm">
                     <input type="text" id="chatInput" placeholder="Escribe tu mensaje..." autocomplete="off">
@@ -1426,13 +1427,13 @@
                             <span>Depósito de garantía</span>
                             <span>${formatPrice(currentLocale.price.deposit)}</span>
                         </div>
-                        <div class="price-row">
-                            <span>Comisión Celébralo pe</span>
-                            <span>${formatPrice(currentLocale.price.base * 0.12)}</span>
+                        <div class="price-row" style="color: var(--text-muted); font-size: var(--font-size-sm);">
+                            <span>Comisión plataforma</span>
+                            <span>12% incluido</span>
                         </div>
                         <div class="price-row total">
-                            <span>Total</span>
-                            <span>${formatPrice(currentLocale.price.base + currentLocale.price.deposit + currentLocale.price.base * 0.12)}</span>
+                            <span>Total estimado</span>
+                            <span>${formatPrice(currentLocale.price.base + currentLocale.price.deposit)}</span>
                         </div>
                     </div>
 

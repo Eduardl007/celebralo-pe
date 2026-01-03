@@ -520,52 +520,48 @@
                         <div class="filter-group">
                             <label>Tipo de Evento</label>
                             <div class="filter-options">
-                                <!-- Fiestas -->
+                                <!-- Celebraciones -->
                                 <div class="filter-subgroup">
-                                    <span class="filter-subgroup-title">🎉 Fiestas</span>
+                                    <span class="filter-subgroup-title">💒 Celebraciones</span>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="matrimonio">
+                                        <span>💒 Matrimonio</span>
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="quinceanos">
+                                        <span>👑 Fiesta de XV Años</span>
+                                    </label>
                                     <label class="filter-option">
                                         <input type="checkbox" name="eventType" value="cumpleanos">
                                         <span>🎂 Cumpleaños</span>
                                     </label>
                                     <label class="filter-option">
-                                        <input type="checkbox" name="eventType" value="quinceanos">
-                                        <span>👸 Quinceañeros</span>
-                                    </label>
-                                    <label class="filter-option">
-                                        <input type="checkbox" name="eventType" value="graduacion">
-                                        <span>🎓 Graduación</span>
+                                        <input type="checkbox" name="eventType" value="aniversario">
+                                        <span>💑 Aniversario</span>
                                     </label>
                                 </div>
                                 <!-- Momentos Especiales -->
                                 <div class="filter-subgroup">
                                     <span class="filter-subgroup-title">💫 Momentos Especiales</span>
                                     <label class="filter-option">
-                                        <input type="checkbox" name="eventType" value="baby-shower">
-                                        <span>👶 Bienvenida de Bebé</span>
-                                    </label>
-                                    <label class="filter-option">
                                         <input type="checkbox" name="eventType" value="bautizo">
-                                        <span>⛪ Bautizo y Comunión</span>
+                                        <span>👶 Bautizo</span>
                                     </label>
                                     <label class="filter-option">
-                                        <input type="checkbox" name="eventType" value="aniversario">
-                                        <span>💝 Aniversario</span>
+                                        <input type="checkbox" name="eventType" value="baby-shower">
+                                        <span>🍼 Baby Shower</span>
+                                    </label>
+                                    <label class="filter-option">
+                                        <input type="checkbox" name="eventType" value="graduacion">
+                                        <span>🎓 Graduación</span>
                                     </label>
                                 </div>
-                                <!-- Eventos Sociales -->
+                                <!-- Corporativos -->
                                 <div class="filter-subgroup">
-                                    <span class="filter-subgroup-title">✨ Eventos Sociales</span>
-                                    <label class="filter-option">
-                                        <input type="checkbox" name="eventType" value="matrimonio">
-                                        <span>💒 Matrimonio</span>
-                                    </label>
+                                    <span class="filter-subgroup-title">🏢 Corporativos</span>
                                     <label class="filter-option">
                                         <input type="checkbox" name="eventType" value="corporativo">
-                                        <span>🏢 Empresarial</span>
-                                    </label>
-                                    <label class="filter-option">
-                                        <input type="checkbox" name="eventType" value="integracion">
-                                        <span>🤝 Confraternidad</span>
+                                        <span>🏢 Evento Corporativo</span>
                                     </label>
                                 </div>
                             </div>
@@ -833,17 +829,16 @@
             }
         }
 
-        // Nombres de categorías para mostrar en filtros activos
+        // Nombres de categorías para mostrar en filtros activos (8 tipos estandarizados)
         const CATEGORY_LABELS = {
-            'cumpleanos': '🎂 Cumpleaños',
-            'quinceanos': '👸 Quinceañeros',
-            'graduacion': '🎓 Graduación',
-            'baby-shower': '👶 Bienvenida de Bebé',
-            'bautizo': '⛪ Bautizo y Comunión',
-            'aniversario': '💝 Aniversario',
             'matrimonio': '💒 Matrimonio',
-            'corporativo': '🏢 Empresarial',
-            'integracion': '🤝 Confraternidad'
+            'quinceanos': '👑 Fiesta de XV Años',
+            'cumpleanos': '🎂 Cumpleaños',
+            'corporativo': '🏢 Evento Corporativo',
+            'bautizo': '👶 Bautizo',
+            'graduacion': '🎓 Graduación',
+            'baby-shower': '🍼 Baby Shower',
+            'aniversario': '💑 Aniversario'
         };
 
         function updateActiveFilters() {

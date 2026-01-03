@@ -187,12 +187,12 @@
    Form Elements
    ---------------------------------------- */
 .form-group {
-    margin-bottom: var(--spacing-4);
+    margin-bottom: var(--spacing-3);
 }
 
 .form-group label {
     display: block;
-    margin-bottom: var(--spacing-2);
+    margin-bottom: var(--spacing-1);
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-medium);
     color: var(--text-primary);
@@ -222,12 +222,12 @@ input[type="search"],
 textarea,
 select {
     width: 100%;
-    padding: var(--spacing-3) var(--spacing-4);
-    font-size: var(--font-size-base);
+    padding: var(--spacing-2) var(--spacing-3);
+    font-size: var(--font-size-sm);
     color: var(--text-primary);
     background-color: var(--white);
-    border: 2px solid var(--border-light);
-    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
     transition: all var(--transition-fast);
 }
 
@@ -678,12 +678,12 @@ textarea.error:focus {
 .modal-content {
     position: relative;
     width: 100%;
-    max-width: 480px;
-    max-height: 90vh;
+    max-width: 400px;
+    max-height: 85vh;
     background-color: var(--white);
-    border-radius: var(--radius-2xl);
+    border-radius: var(--radius-xl);
     box-shadow: var(--shadow-2xl);
-    overflow: hidden;
+    overflow-y: auto;
     animation: fadeInUp var(--transition-slow) ease-out;
 }
 

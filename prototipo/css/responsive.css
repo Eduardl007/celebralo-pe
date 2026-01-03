@@ -381,7 +381,13 @@
 
     /* Auth Modal */
     .auth-modal {
-        padding: var(--spacing-6);
+        padding: var(--spacing-4);
+        max-width: 95vw;
+    }
+
+    .modal-content {
+        max-height: 80vh;
+        max-width: 95vw;
     }
 
     .form-row-2 {

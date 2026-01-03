@@ -1684,18 +1684,18 @@
    Auth Modal
    ---------------------------------------- */
 .auth-modal {
-    max-width: 440px;
-    padding: var(--spacing-8);
+    max-width: 380px;
+    padding: var(--spacing-5);
 }
 
 .auth-header {
     text-align: center;
-    margin-bottom: var(--spacing-6);
+    margin-bottom: var(--spacing-4);
 }
 
 .auth-header h2 {
-    font-size: var(--font-size-2xl);
-    margin-bottom: var(--spacing-2);
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-1);
 }
 
 .auth-header p {
