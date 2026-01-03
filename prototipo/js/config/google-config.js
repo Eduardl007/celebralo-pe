@@ -47,17 +47,20 @@ const ESTRUCTURA_HOJAS = {
 
     // Registro de usuarios
     Usuarios: [
-        'id', 'nombre', 'apellido', 'email', 'telefono',
-        'tipoRegistro', 'estado', 'fechaRegistro', 'timestamp',
-        'userAgent', 'source'
+        'id', 'nombre', 'apellido', 'contacto', 'telefono',
+        'tipo_registro', 'estado', 'fecha', 'hora', 'timestamp'
+    ],
+
+    // Registro de logins
+    Logins: [
+        'id', 'contacto', 'metodo', 'fecha', 'hora', 'timestamp'
     ],
 
     // Reservas de locales y servicios
     Reservas: [
-        'id', 'usuario', 'email', 'telefono', 'tipoEvento',
-        'fechaEvento', 'cantidadInvitados', 'local', 'localId',
-        'serviciosAdicionales', 'precioTotal', 'estado',
-        'metodoPago', 'fechaReserva', 'timestamp'
+        'id', 'tipo', 'proveedor', 'fechaEvento', 'tipoEvento',
+        'invitados', 'precioEstimado', 'nombre', 'contacto', 'telefono',
+        'mensaje', 'estado', 'origen', 'fecha', 'hora', 'timestamp'
     ],
 
     // Consultas del chatbot
@@ -97,8 +100,8 @@ const ESTRUCTURA_HOJAS = {
 
     // Historial de búsquedas
     Busquedas: [
-        'tipoEvento', 'fecha', 'invitados', 'categoria',
-        'presupuestoMax', 'distrito', 'fechaBusqueda', 'horaBusqueda', 'timestamp'
+        'id', 'tipo_evento', 'fecha_evento', 'invitados', 'categoria',
+        'fecha', 'hora', 'timestamp'
     ],
 
     // Encuestas de satisfacción
@@ -115,11 +118,19 @@ const ESTRUCTURA_HOJAS = {
         'ideaOriginal', 'aceptada', 'fecha', 'hora', 'timestamp'
     ],
 
-    // Chats con propietarios
+    // Chats con propietarios (resumen de conversaciones)
     ChatsProveedores: [
         'id', 'usuarioId', 'proveedorId', 'proveedorNombre',
         'tipoProveedor', 'mensajesCount', 'ultimoMensaje',
         'estado', 'fechaInicio', 'fechaUltimoMensaje', 'timestamp'
+    ],
+
+    // Mensajes individuales con proveedores
+    MensajesProveedores: [
+        'id', 'tipo', 'proveedorNombre', 'proveedorId',
+        'localServicio', 'localServicioSlug', 'tipoProveedor',
+        'mensaje', 'usuarioNombre', 'usuarioEmail', 'usuarioTelefono',
+        'estado', 'fecha', 'hora', 'timestamp'
     ]
 };
 
@@ -263,7 +274,7 @@ function getStats() {
   const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   const stats = {};
 
-  const hojas = ['Usuarios', 'Reservas', 'Cotizaciones', 'Proveedores', 'Consultas', 'PropuestasIA'];
+  const hojas = ['Usuarios', 'Logins', 'Reservas', 'Cotizaciones', 'Proveedores', 'Consultas', 'PropuestasIA', 'MensajesProveedores'];
 
   hojas.forEach(nombre => {
     const sheet = ss.getSheetByName(nombre);
@@ -288,12 +299,14 @@ function sendDailyReport() {
 📅 Fecha: \${stats.fecha}
 ⏰ Hora: \${stats.hora}
 
-👥 Usuarios totales: \${stats.Usuarios || 0}
+👥 Usuarios registrados: \${stats.Usuarios || 0}
+🔐 Logins totales: \${stats.Logins || 0}
 📋 Reservas: \${stats.Reservas || 0}
 💰 Cotizaciones: \${stats.Cotizaciones || 0}
 🏢 Proveedores: \${stats.Proveedores || 0}
 💬 Consultas chatbot: \${stats.Consultas || 0}
 🤖 Propuestas IA: \${stats.PropuestasIA || 0}
+📨 Mensajes a proveedores: \${stats.MensajesProveedores || 0}
   \`;
 
   // Descomentar para activar envío de email
