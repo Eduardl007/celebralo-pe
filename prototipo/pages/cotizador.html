@@ -484,6 +484,143 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Carrusel de Servicios */
+        .services-carousel-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-2);
+        }
+
+        .services-carousel {
+            display: flex;
+            gap: var(--spacing-4);
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding: var(--spacing-2) 0;
+            flex: 1;
+        }
+
+        .services-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .carousel-btn {
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-full);
+            background: var(--white);
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .carousel-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+        }
+
+        .service-card {
+            flex-shrink: 0;
+            width: 280px;
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-4);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .service-card:hover {
+            border-color: var(--primary-300);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .service-card.selected {
+            border-color: var(--primary);
+            background: var(--primary-50);
+        }
+
+        .service-card-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-3);
+        }
+
+        .service-card-content h4 {
+            font-size: var(--font-size-base);
+            margin-bottom: var(--spacing-1);
+            color: var(--text-primary);
+        }
+
+        .service-card-content p {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-3);
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .service-card-price {
+            display: flex;
+            align-items: baseline;
+            gap: var(--spacing-1);
+        }
+
+        .service-card-price .price {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+        }
+
+        .service-card-price .unit {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        .service-card-check {
+            position: absolute;
+            top: var(--spacing-3);
+            right: var(--spacing-3);
+            width: 24px;
+            height: 24px;
+            border-radius: var(--radius-full);
+            background: var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 12px;
+            transition: all var(--transition-fast);
+        }
+
+        .service-card-check.active {
+            background: var(--success);
+        }
+
+        @media (max-width: 768px) {
+            .carousel-btn {
+                display: none;
+            }
+
+            .service-card {
+                width: 260px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -574,13 +711,14 @@
                                     <label for="eventType">Tipo de Evento *</label>
                                     <select id="eventType" required>
                                         <option value="">Selecciona...</option>
-                                        <option value="cumpleanos">🎂 Cumpleanos</option>
                                         <option value="matrimonio">💒 Matrimonio</option>
-                                        <option value="quinceanos">👸 XV Anos</option>
-                                        <option value="corporativo">🏢 Corporativo</option>
-                                        <option value="bautizo">⛪ Bautizo</option>
-                                        <option value="graduacion">🎓 Graduacion</option>
-                                        <option value="baby-shower">👶 Baby Shower</option>
+                                        <option value="quinceanos">👑 Fiesta de XV Años</option>
+                                        <option value="cumpleanos">🎂 Cumpleaños</option>
+                                        <option value="corporativo">🏢 Evento Corporativo</option>
+                                        <option value="bautizo">👶 Bautizo</option>
+                                        <option value="graduacion">🎓 Graduación</option>
+                                        <option value="baby-shower">🍼 Baby Shower</option>
+                                        <option value="aniversario">💑 Aniversario</option>
                                     </select>
                                 </div>
 
@@ -1045,38 +1183,66 @@
         function loadServices() {
             const container = document.getElementById('servicesGrid');
 
+            // Categorías actualizadas según el sistema
             const serviceGroups = [
                 { category: 'catering', title: 'Catering', emoji: '🍽️' },
-                { category: 'musica', title: 'Musica', emoji: '🎵' },
-                { category: 'fotografia', title: 'Fotografia', emoji: '📸' },
-                { category: 'decoracion', title: 'Decoracion', emoji: '🎈' },
-                { category: 'pasteleria', title: 'Pasteleria', emoji: '🎂' }
+                { category: 'dj', title: 'DJ y Sonido', emoji: '🎵' },
+                { category: 'fotografia', title: 'Fotografía y Video', emoji: '📸' },
+                { category: 'decoracion', title: 'Decoración', emoji: '🎈' },
+                { category: 'pasteleria', title: 'Tortas y Postres', emoji: '🎂' },
+                { category: 'animacion', title: 'Animación', emoji: '🎭' },
+                { category: 'banda', title: 'Banda/Orquesta', emoji: '🎺' },
+                { category: 'mobiliario', title: 'Mobiliario', emoji: '🪑' }
             ];
 
-            container.innerHTML = serviceGroups.map(group => {
-                const services = SERVICIOS_DATA.filter(s => s.category === group.category);
-                if (services.length === 0) return '';
+            // Crear carrusel de servicios
+            container.innerHTML = `
+                <div class="services-carousel-container">
+                    <button class="carousel-btn carousel-prev" onclick="scrollServices(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="services-carousel" id="servicesCarousel">
+                        ${serviceGroups.map(group => {
+                            const services = SERVICIOS_DATA.filter(s => s.category === group.category);
+                            if (services.length === 0) return '';
 
-                const service = services[0]; // Get first service of each category
-                const basePrice = service.pricing.basePrice || (service.pricing.packages && service.pricing.packages[0].price) || 0;
-                const isSelected = cotizador.selectedServices.some(s => s.id === service.id);
+                            const service = services[0];
+                            const basePrice = service.pricing?.basePrice || (service.pricing?.packages && service.pricing.packages[0]?.price) || 0;
+                            const isSelected = cotizador.selectedServices.some(s => s.id === service.id);
 
-                return `
-                    <div class="service-option ${isSelected ? 'selected' : ''}" onclick="toggleService(${service.id})">
-                        <div class="service-option-info">
-                            <span class="service-option-icon">${service.icon}</span>
-                            <div class="service-option-details">
-                                <h4>${service.name}</h4>
-                                <p>${service.shortDescription}</p>
-                            </div>
-                        </div>
-                        <div class="service-option-price">
-                            <div class="price">${formatPrice(basePrice)}</div>
-                            <div class="unit">${service.pricing.type === 'per-person' ? '/persona' : ''}</div>
-                        </div>
+                            return `
+                                <div class="service-card ${isSelected ? 'selected' : ''}" onclick="toggleService(${service.id})">
+                                    <div class="service-card-icon">${group.emoji}</div>
+                                    <div class="service-card-content">
+                                        <h4>${group.title}</h4>
+                                        <p>${service.shortDescription || service.name}</p>
+                                        <div class="service-card-price">
+                                            <span class="price">${formatPrice(basePrice)}</span>
+                                            ${service.pricing?.type === 'per-person' ? '<span class="unit">/persona</span>' : ''}
+                                        </div>
+                                    </div>
+                                    <div class="service-card-check ${isSelected ? 'active' : ''}">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
                     </div>
-                `;
-            }).join('');
+                    <button class="carousel-btn carousel-next" onclick="scrollServices(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        // Función para scroll del carrusel
+        function scrollServices(direction) {
+            const carousel = document.getElementById('servicesCarousel');
+            const scrollAmount = 320; // Ancho de una tarjeta + gap
+            carousel.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
         }
 
         function toggleService(serviceId) {
@@ -1155,9 +1321,12 @@
 
             // Calculate discount (10% if local + 2+ services)
             let discount = 0;
+            let discountPercent = 0;
             if (cotizador.selectedLocal && cotizador.selectedServices.length >= 2) {
+                discountPercent = 10;
                 discount = subtotal * 0.10;
             } else if (cotizador.selectedLocal && cotizador.selectedServices.length === 1) {
+                discountPercent = 5;
                 discount = subtotal * 0.05;
             }
 
@@ -1166,17 +1335,19 @@
             // Store totals
             cotizador.subtotal = subtotal;
             cotizador.discount = discount;
+            cotizador.discountPercent = discountPercent;
             cotizador.total = total;
 
             // Render summary
             const eventNames = {
-                cumpleanos: 'Cumpleanos',
                 matrimonio: 'Matrimonio',
-                quinceanos: 'XV Anos',
-                corporativo: 'Corporativo',
+                quinceanos: 'Fiesta de XV Años',
+                cumpleanos: 'Cumpleaños',
+                corporativo: 'Evento Corporativo',
                 bautizo: 'Bautizo',
-                graduacion: 'Graduacion',
-                'baby-shower': 'Baby Shower'
+                graduacion: 'Graduación',
+                'baby-shower': 'Baby Shower',
+                aniversario: 'Aniversario'
             };
 
             body.innerHTML = `
@@ -1205,10 +1376,10 @@
                         <span>Subtotal</span>
                         <span>${formatPrice(subtotal)}</span>
                     </div>
-                    ${discount > 0 ? `
+                    ${discountPercent > 0 ? `
                         <div class="summary-row discount">
                             <span>Descuento combo</span>
-                            <span>-${formatPrice(discount)}</span>
+                            <span>-${discountPercent}%</span>
                         </div>
                     ` : ''}
                     <div class="summary-row total">
@@ -1219,7 +1390,17 @@
             `;
 
             footer.style.display = 'block';
-            document.getElementById('discountBadge').style.display = discount > 0 ? 'flex' : 'none';
+
+            const discountBadge = document.getElementById('discountBadge');
+            if (discountPercent > 0) {
+                discountBadge.style.display = 'flex';
+                discountBadge.innerHTML = `
+                    <i class="fas fa-tag"></i>
+                    <span>¡${discountPercent}% de descuento aplicado!</span>
+                `;
+            } else {
+                discountBadge.style.display = 'none';
+            }
         }
 
         function confirmBooking() {
@@ -1231,14 +1412,14 @@
             showToast('success', 'Reserva iniciada!', 'Redirigiendo al proceso de pago...');
 
             setTimeout(() => {
-                alert(`PROTOTIPO: Resumen de Cotizacion\n\n` +
+                alert(`PROTOTIPO: Resumen de Cotización\n\n` +
                     `Evento: ${cotizador.eventDetails.type}\n` +
                     `Fecha: ${cotizador.eventDetails.date}\n` +
                     `Invitados: ${cotizador.eventDetails.guests}\n` +
                     `Local: ${cotizador.selectedLocal.name}\n` +
                     `Servicios: ${cotizador.selectedServices.map(s => s.name).join(', ') || 'Ninguno'}\n\n` +
                     `Subtotal: ${formatPrice(cotizador.subtotal)}\n` +
-                    `Descuento: ${formatPrice(cotizador.discount)}\n` +
+                    `Descuento: ${cotizador.discountPercent > 0 ? cotizador.discountPercent + '%' : 'Sin descuento'}\n` +
                     `TOTAL: ${formatPrice(cotizador.total)}`);
             }, 1000);
         }

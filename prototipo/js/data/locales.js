@@ -859,20 +859,19 @@ const LOCALE_SEGMENTS = {
 };
 
 // ========================================
-// TIPOS DE EVENTOS - ESTRUCTURA SIMPLE
+// TIPOS DE EVENTOS - ESTANDARIZADOS
+// Actualizado: 2026-01-02
 // ========================================
 
 const EVENT_TYPES = {
-    cumpleanos: { name: "Cumpleaños", icon: "🎂" },
-    quinceanos: { name: "XV Años", icon: "👸" },
-    graduacion: { name: "Graduación", icon: "🎓" },
     matrimonio: { name: "Matrimonio", icon: "💒" },
-    aniversario: { name: "Aniversario", icon: "💕" },
-    familiar: { name: "Reunión Familiar", icon: "👨‍👩‍👧‍👦" },
-    "baby-shower": { name: "Baby Shower", icon: "👶" },
-    bautizo: { name: "Bautizo", icon: "⛪" },
-    corporativo: { name: "Corporativo", icon: "🏢" },
-    integracion: { name: "Team Building", icon: "🤝" }
+    quinceanos: { name: "Fiesta de XV Años", icon: "👑" },
+    cumpleanos: { name: "Cumpleaños", icon: "🎂" },
+    corporativo: { name: "Evento Corporativo", icon: "🏢" },
+    bautizo: { name: "Bautizo", icon: "👶" },
+    graduacion: { name: "Graduación", icon: "🎓" },
+    "baby-shower": { name: "Baby Shower", icon: "🍼" },
+    aniversario: { name: "Aniversario", icon: "💑" }
 };
 
 // Helper functions

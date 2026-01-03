@@ -1100,9 +1100,9 @@ class EventBot {
         const eventTypes = {
             'matrimonio': { type: 'matrimonio', icon: '💒', name: 'Matrimonio' },
             'boda': { type: 'matrimonio', icon: '💒', name: 'Matrimonio' },
-            'xv': { type: 'quinceanos', icon: '👑', name: 'XV Años' },
-            'quince': { type: 'quinceanos', icon: '👑', name: 'XV Años' },
-            'quinceañ': { type: 'quinceanos', icon: '👑', name: 'XV Años' },
+            'xv': { type: 'quinceanos', icon: '👑', name: 'Fiesta de XV Años' },
+            'quince': { type: 'quinceanos', icon: '👑', name: 'Fiesta de XV Años' },
+            'quinceañ': { type: 'quinceanos', icon: '👑', name: 'Fiesta de XV Años' },
             'cumple': { type: 'cumpleanos', icon: '🎂', name: 'Cumpleaños' },
             'corporativo': { type: 'corporativo', icon: '🏢', name: 'Evento Corporativo' },
             'empresa': { type: 'corporativo', icon: '🏢', name: 'Evento Corporativo' },
@@ -1479,7 +1479,7 @@ class EventBot {
         const eventNames = {
             matrimonio: 'Matrimonio',
             quinceanos: 'Fiesta de XV Años',
-            cumpleanos: 'Celebración de Cumpleaños',
+            cumpleanos: 'Cumpleaños',
             corporativo: 'Evento Corporativo',
             bautizo: 'Bautizo',
             graduacion: 'Graduación',
