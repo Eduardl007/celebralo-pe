@@ -355,55 +355,36 @@ function formatFileSize(bytes) {
 // ========================================
 
 /**
- * Enviar datos a Google Sheets via Apps Script
+ * Enviar datos a Google Sheets via Proxy Seguro
  * @param {string} sheetName - Nombre de la hoja (Reservas, Cotizaciones, etc.)
  * @param {object} data - Datos a enviar
  * @returns {Promise<boolean>} - true si se envió correctamente
  */
 async function sendToGoogleSheets(sheetName, data) {
-    // URL del Google Apps Script Web App (configurar en producción)
-    const GOOGLE_SCRIPT_URL = localStorage.getItem('celebralo_sheets_url') || null;
-
-    // Agregar metadata
-    const payload = {
-        sheet: sheetName,
-        data: {
-            ...data,
-            _timestamp: new Date().toISOString(),
-            _source: 'web_app',
-            _version: '1.0'
+    // Usar el servicio seguro de googleSheets si está disponible
+    if (typeof googleSheets !== 'undefined' && googleSheets.sendData) {
+        try {
+            const result = await googleSheets.sendData(sheetName, data);
+            if (result.success) {
+                console.log(`✅ Enviado a Google Sheets [${sheetName}]`);
+                return true;
+            }
+            console.warn(`⚠️ Guardado localmente [${sheetName}]`);
+            return true; // Guardado localmente es éxito parcial
+        } catch (error) {
+            console.error(`❌ Error enviando a Google Sheets:`, error);
+            return false;
         }
-    };
-
-    // Guardar localmente siempre (respaldo)
-    saveToLocalQueue(sheetName, payload.data);
-
-    // Si no hay URL configurada, solo guardar localmente
-    if (!GOOGLE_SCRIPT_URL) {
-        console.log(`📊 [Local] ${sheetName}:`, payload.data);
-        return true;
     }
 
-    try {
-        const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors', // Apps Script requiere no-cors
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        });
-
-        console.log(`✅ Enviado a Google Sheets [${sheetName}]`);
-
-        // Marcar como sincronizado
-        markAsSynced(sheetName, data.id);
-
-        return true;
-    } catch (error) {
-        console.error(`❌ Error enviando a Google Sheets:`, error);
-        return false;
-    }
+    // Fallback: guardar localmente si el servicio no está disponible
+    console.log(`📊 [Local] ${sheetName}:`, data);
+    saveToLocalQueue(sheetName, {
+        ...data,
+        _timestamp: new Date().toISOString(),
+        _source: 'web_app'
+    });
+    return true;
 }
 
 /**
