@@ -644,11 +644,74 @@ class EventBot {
         this.renderMessage(message);
     }
 
+    /**
+     * SEGURIDAD: Sanitizar texto de mensaje para prevenir XSS
+     * Permite solo tags HTML seguros para formato básico
+     */
+    sanitizeMessageText(text) {
+        if (!text || typeof text !== 'string') return '';
+
+        // Si está disponible el Sanitizer global, usarlo
+        if (typeof window.Sanitizer !== 'undefined' && window.Sanitizer.sanitizeHtml) {
+            return window.Sanitizer.sanitizeHtml(text);
+        }
+
+        // Fallback: sanitización básica inline
+        // Escapar todo excepto tags permitidos básicos
+        const allowedTags = ['b', 'i', 'strong', 'em', 'br', 'p', 'span', 'div', 'ul', 'li', 'a'];
+
+        // Primero escapar todo
+        let sanitized = text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#x27;');
+
+        // Restaurar tags permitidos (sin atributos peligrosos)
+        allowedTags.forEach(tag => {
+            // Tag de apertura simple
+            const openPattern = new RegExp(`&lt;(${tag})&gt;`, 'gi');
+            sanitized = sanitized.replace(openPattern, `<$1>`);
+
+            // Tag de cierre
+            const closePattern = new RegExp(`&lt;/(${tag})&gt;`, 'gi');
+            sanitized = sanitized.replace(closePattern, `</$1>`);
+
+            // Tag con class (solo class permitido)
+            const classPattern = new RegExp(
+                `&lt;(${tag})\\s+class=&quot;([a-zA-Z0-9\\-_\\s]+)&quot;&gt;`,
+                'gi'
+            );
+            sanitized = sanitized.replace(classPattern, `<$1 class="$2">`);
+        });
+
+        // Restaurar links seguros (solo href con http/https/mailto/tel, y target)
+        sanitized = sanitized.replace(
+            /&lt;a\s+href=&quot;((?:https?:\/\/|mailto:|tel:)[^"&]+)&quot;(?:\s+target=&quot;(_blank)&quot;)?(?:\s+class=&quot;([a-zA-Z0-9\-_\s]+)&quot;)?&gt;/gi,
+            (match, href, target, className) => {
+                let attrs = `href="${href}"`;
+                if (target) attrs += ` target="${target}" rel="noopener noreferrer"`;
+                if (className) attrs += ` class="${className}"`;
+                return `<a ${attrs}>`;
+            }
+        );
+
+        // Prevenir cualquier evento JS que pudiera haber quedado
+        sanitized = sanitized.replace(/on\w+\s*=/gi, 'data-blocked=');
+        sanitized = sanitized.replace(/javascript:/gi, 'blocked:');
+
+        return sanitized;
+    }
+
     renderMessage(message, animate = true) {
         const div = document.createElement('div');
         div.className = `chat-message ${message.type}`;
         if (!animate) div.style.animation = 'none';
-        div.innerHTML = message.text;
+
+        // SEGURIDAD: Sanitizar HTML para prevenir XSS
+        const sanitizedText = this.sanitizeMessageText(message.text);
+        div.innerHTML = sanitizedText;
 
         // Añadir botones si existen
         if (message.options && message.options.buttons) {

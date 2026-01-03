@@ -2,6 +2,20 @@
 
 [build]
   publish = "."
+  functions = "netlify/functions"
+
+# Variables de entorno requeridas (configurar en Netlify Dashboard):
+# - GOOGLE_SHEETS_URL: URL del Google Apps Script Web App
+
+[functions]
+  # Directorio de funciones
+  directory = "netlify/functions"
+
+# API Proxy - Redirige /api/* a las funciones
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
 
 # Redireccion de landing como pagina principal alternativa
 [[redirects]]

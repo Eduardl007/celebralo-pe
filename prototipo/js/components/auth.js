@@ -145,11 +145,16 @@ class Auth {
                 role: 'user'
             };
 
-            // Save to storage
-            if (remember) {
-                storage.set('celebralope_user', this.currentUser);
+            // Save to storage (SEGURO: usar almacenamiento cifrado)
+            if (typeof UserStorage !== 'undefined') {
+                await UserStorage.saveSession(this.currentUser, remember);
             } else {
-                sessionStorage.set('celebralope_user', this.currentUser);
+                // Fallback legacy
+                if (remember) {
+                    storage.set('celebralope_user', this.currentUser);
+                } else {
+                    sessionStorage.set('celebralope_user', this.currentUser);
+                }
             }
 
             // Registrar login en Google Sheets
@@ -234,7 +239,12 @@ class Auth {
                 role: 'user'
             };
 
-            storage.set('celebralope_user', this.currentUser);
+            // SEGURO: usar almacenamiento cifrado
+            if (typeof UserStorage !== 'undefined') {
+                await UserStorage.saveSession(this.currentUser, true);
+            } else {
+                storage.set('celebralope_user', this.currentUser);
+            }
 
             // Registrar usuario en Google Sheets
             if (typeof sendToGoogleSheets === 'function') {
@@ -281,7 +291,12 @@ class Auth {
             role: 'user'
         };
 
-        storage.set('celebralope_user', this.currentUser);
+        // SEGURO: usar almacenamiento cifrado
+        if (typeof UserStorage !== 'undefined') {
+            await UserStorage.saveSession(this.currentUser, true);
+        } else {
+            storage.set('celebralope_user', this.currentUser);
+        }
 
         // Registrar en Google Sheets
         if (typeof sendToGoogleSheets === 'function') {
@@ -317,7 +332,12 @@ class Auth {
             role: 'user'
         };
 
-        storage.set('celebralope_user', this.currentUser);
+        // SEGURO: usar almacenamiento cifrado
+        if (typeof UserStorage !== 'undefined') {
+            await UserStorage.saveSession(this.currentUser, true);
+        } else {
+            storage.set('celebralope_user', this.currentUser);
+        }
 
         // Registrar en Google Sheets
         if (typeof sendToGoogleSheets === 'function') {
@@ -339,9 +359,14 @@ class Auth {
         this.updateUIForLoggedInUser();
     }
 
-    checkSession() {
-        // Check localStorage first, then sessionStorage
-        this.currentUser = storage.get('celebralope_user') || sessionStorage.get('celebralope_user');
+    async checkSession() {
+        // SEGURO: Usar almacenamiento cifrado primero
+        if (typeof UserStorage !== 'undefined') {
+            this.currentUser = await UserStorage.getSession();
+        } else {
+            // Fallback legacy
+            this.currentUser = storage.get('celebralope_user') || sessionStorage.get('celebralope_user');
+        }
 
         if (this.currentUser) {
             this.updateUIForLoggedInUser();
@@ -467,6 +492,13 @@ class Auth {
 
     logout() {
         this.currentUser = null;
+
+        // SEGURO: Limpiar almacenamiento cifrado
+        if (typeof UserStorage !== 'undefined') {
+            UserStorage.logout();
+        }
+
+        // También limpiar storage legacy
         storage.remove('celebralope_user');
         sessionStorage.set('celebralope_user', null);
 
@@ -514,8 +546,12 @@ async function loginAsDemo() {
             role: 'demo'
         };
 
-        // Guardar en storage
-        storage.set('celebralope_user', auth.currentUser);
+        // SEGURO: Guardar en almacenamiento cifrado
+        if (typeof UserStorage !== 'undefined') {
+            await UserStorage.saveSession(auth.currentUser, true);
+        } else {
+            storage.set('celebralope_user', auth.currentUser);
+        }
 
         // Registrar en Google Sheets
         if (typeof sendToGoogleSheets === 'function') {
