@@ -109,6 +109,13 @@ class EventBot {
         this.STORAGE_KEY = 'celebralo_chat_history';
         this.OWNER_CHATS_KEY = 'celebralo_owner_chats';
 
+        // Cola de mensajes para prevenir race conditions
+        this._messageQueue = [];
+        this._isProcessingQueue = false;
+
+        // Referencias a handlers para cleanup (prevenir memory leaks)
+        this._boundHandlers = {};
+
         this.init();
     }
 
@@ -785,57 +792,98 @@ class EventBot {
         }, 100);
     }
 
+    /**
+     * Agregar mensaje a la cola y procesar
+     * Previene race conditions al procesar mensajes en orden
+     */
     processMessage(message) {
+        // Agregar a la cola
+        this._messageQueue.push(message);
+
+        // Si ya estamos procesando, la cola se encargará
+        if (!this._isProcessingQueue) {
+            this._processQueue();
+        }
+    }
+
+    /**
+     * Procesar cola de mensajes secuencialmente
+     */
+    async _processQueue() {
+        if (this._isProcessingQueue || this._messageQueue.length === 0) {
+            return;
+        }
+
+        this._isProcessingQueue = true;
+
+        while (this._messageQueue.length > 0) {
+            const message = this._messageQueue.shift();
+            await this._processMessageInternal(message);
+        }
+
+        this._isProcessingQueue = false;
+    }
+
+    /**
+     * Procesar un mensaje individual (lógica original)
+     */
+    async _processMessageInternal(message) {
         this.showTyping();
         const normalizedMsg = message.toLowerCase();
-        const delay = 600 + Math.random() * 600;
 
-        setTimeout(() => {
-            this.hideTyping();
+        // Delay fijo para simular escritura (sin aleatorio para evitar race conditions)
+        await this._sleep(700);
 
-            // Si estamos en modo propietario, usar respuestas de propietario
-            if (this.mode === 'owner') {
-                const response = this.generateOwnerResponse(normalizedMsg);
-                this.addBotMessage(response.text, response.options);
+        this.hideTyping();
+
+        // Si estamos en modo propietario, usar respuestas de propietario
+        if (this.mode === 'owner') {
+            const response = this.generateOwnerResponse(normalizedMsg);
+            this.addBotMessage(response.text, response.options);
+            return;
+        }
+
+        // Flujo del asistente
+        if (this.context.stage !== 'free_chat') {
+            const wizardResponse = this.handleWizardFlow(normalizedMsg);
+            if (wizardResponse) {
+                this.addBotMessage(wizardResponse.text, wizardResponse.options);
+                this.logInteraction(message, wizardResponse.text);
                 return;
             }
+        }
 
-            // Flujo del asistente
-            if (this.context.stage !== 'free_chat') {
-                const wizardResponse = this.handleWizardFlow(normalizedMsg);
-                if (wizardResponse) {
-                    this.addBotMessage(wizardResponse.text, wizardResponse.options);
-                    this.logInteraction(message, wizardResponse.text);
-                    return;
-                }
+        // Si estamos en modo propuesta, manejar ajustes
+        if (this.context.stage === 'advisor_proposal') {
+            const adjustmentResponse = this.handleProposalAdjustment(normalizedMsg);
+            if (adjustmentResponse) {
+                this.addBotMessage(adjustmentResponse.text, adjustmentResponse.options);
+                this.logInteraction(message, adjustmentResponse.text);
+                return;
             }
+        }
 
-            // Si estamos en modo propuesta, manejar ajustes
-            if (this.context.stage === 'advisor_proposal') {
-                const adjustmentResponse = this.handleProposalAdjustment(normalizedMsg);
-                if (adjustmentResponse) {
-                    this.addBotMessage(adjustmentResponse.text, adjustmentResponse.options);
-                    this.logInteraction(message, adjustmentResponse.text);
-                    return;
-                }
+        // Intentar asesoría inteligente para ideas de eventos
+        // Detecta frases como "quiero una boda elegante para 150 personas"
+        if (message.length > 10 && !this.isSimpleQuestion(normalizedMsg)) {
+            const advisorResponse = this.generateAdvisorResponse(normalizedMsg);
+            if (advisorResponse) {
+                this.addBotMessage(advisorResponse.text, advisorResponse.options);
+                this.logInteraction(message, advisorResponse.text);
+                return;
             }
+        }
 
-            // Intentar asesoría inteligente para ideas de eventos
-            // Detecta frases como "quiero una boda elegante para 150 personas"
-            if (message.length > 10 && !this.isSimpleQuestion(normalizedMsg)) {
-                const advisorResponse = this.generateAdvisorResponse(normalizedMsg);
-                if (advisorResponse) {
-                    this.addBotMessage(advisorResponse.text, advisorResponse.options);
-                    this.logInteraction(message, advisorResponse.text);
-                    return;
-                }
-            }
+        const response = this.generateResponse(normalizedMsg);
+        this.addBotMessage(response.text, response.options);
+        this.logInteraction(message, response.text);
+    }
 
-            const response = this.generateResponse(normalizedMsg);
-            this.addBotMessage(response.text, response.options);
-            this.logInteraction(message, response.text);
-
-        }, delay);
+    /**
+     * Helper para sleep asíncrono
+     */
+    _sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     // Detectar si es una pregunta simple

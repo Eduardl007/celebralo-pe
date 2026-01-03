@@ -78,10 +78,19 @@ function saveAppState() {
 // Global Event Listeners
 function initGlobalEventListeners() {
     // Handle all clicks for tracking (analytics placeholder)
+    // Usando throttle para evitar sobrecarga en clicks rápidos
+    const throttledTrack = typeof throttle === 'function'
+        ? throttle((trackable) => {
+            trackEvent(trackable.dataset.track, trackable.dataset);
+        }, 200)
+        : (trackable) => {
+            trackEvent(trackable.dataset.track, trackable.dataset);
+        };
+
     document.addEventListener('click', (e) => {
         const trackable = e.target.closest('[data-track]');
         if (trackable) {
-            trackEvent(trackable.dataset.track, trackable.dataset);
+            throttledTrack(trackable);
         }
     });
 

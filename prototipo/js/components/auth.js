@@ -10,6 +10,15 @@ class Auth {
         this.currentUser = null;
         this.dropdownOpen = false;
 
+        // Referencias a event handlers para poder limpiarlos (prevenir memory leaks)
+        this._boundHandlers = {
+            escapeKey: null,
+            outsideClick: null
+        };
+
+        // Flag para evitar listeners duplicados
+        this._listenersAttached = false;
+
         this.init();
     }
 
@@ -28,12 +37,13 @@ class Auth {
             closeBtn.addEventListener('click', () => this.closeModal());
         }
 
-        // Close on escape key
-        document.addEventListener('keydown', (e) => {
+        // Close on escape key (guardamos referencia para poder limpiar)
+        this._boundHandlers.escapeKey = (e) => {
             if (e.key === 'Escape' && this.modal.classList.contains('active')) {
                 this.closeModal();
             }
-        });
+        };
+        document.addEventListener('keydown', this._boundHandlers.escapeKey);
 
         // Login form submission
         const loginFormElement = document.getElementById('loginFormElement');
@@ -442,12 +452,22 @@ class Auth {
             });
 
             // Close dropdown when clicking outside
-            document.addEventListener('click', (e) => {
+            // IMPORTANTE: Limpiar listener anterior si existe (prevenir memory leak)
+            if (this._boundHandlers.outsideClick) {
+                document.removeEventListener('click', this._boundHandlers.outsideClick);
+            }
+
+            // Crear nuevo handler y guardar referencia
+            this._boundHandlers.outsideClick = (e) => {
                 if (!userMenuContainer.contains(e.target)) {
                     dropdown.classList.remove('active');
                     this.dropdownOpen = false;
                 }
-            });
+            };
+            document.addEventListener('click', this._boundHandlers.outsideClick);
+
+            // Marcar que los listeners están activos
+            this._listenersAttached = true;
 
             // Update message badge
             this.updateMessageBadge();
@@ -490,8 +510,28 @@ class Auth {
         }
     }
 
+    /**
+     * Limpiar event listeners para prevenir memory leaks
+     */
+    cleanup() {
+        if (this._boundHandlers.escapeKey) {
+            document.removeEventListener('keydown', this._boundHandlers.escapeKey);
+            this._boundHandlers.escapeKey = null;
+        }
+
+        if (this._boundHandlers.outsideClick) {
+            document.removeEventListener('click', this._boundHandlers.outsideClick);
+            this._boundHandlers.outsideClick = null;
+        }
+
+        this._listenersAttached = false;
+    }
+
     logout() {
         this.currentUser = null;
+
+        // Limpiar event listeners
+        this.cleanup();
 
         // SEGURO: Limpiar almacenamiento cifrado
         if (typeof UserStorage !== 'undefined') {
