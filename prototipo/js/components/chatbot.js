@@ -42,10 +42,12 @@ class EventBot {
         this.eventKeywords = {
             matrimonio: ['boda', 'matrimonio', 'casamiento', 'novia', 'novio', 'altar', 'anillos'],
             quinceanos: ['quinceaños', 'quince', 'quinceañera', '15 años', 'vals'],
-            cumpleanos: ['cumpleaños', 'cumple', 'aniversario', 'fiesta de'],
+            cumpleanos: ['cumpleaños', 'cumple', 'fiesta de'],
             corporativo: ['empresa', 'corporativo', 'conferencia', 'reunión', 'seminario', 'capacitación'],
             bautizo: ['bautizo', 'bautismo', 'primera comunión', 'comunion'],
-            graduacion: ['graduación', 'grado', 'promoción', 'egresado']
+            graduacion: ['graduación', 'grado', 'promoción', 'egresado'],
+            'baby-shower': ['baby shower', 'baby-shower', 'bebé', 'embarazo'],
+            aniversario: ['aniversario', 'bodas de oro', 'bodas de plata', 'años casados']
         };
 
         // Estilos de eventos
@@ -55,6 +57,27 @@ class EventBot {
             moderno: ['moderno', 'minimalista', 'contemporáneo', 'urbano', 'trendy'],
             tematico: ['temático', 'hawaiano', 'tropical', 'disco', 'años 80', 'mexicano'],
             infantil: ['infantil', 'niños', 'animación', 'payasos', 'princesas', 'superhéroes']
+        };
+
+        // Categorías de locales disponibles
+        this.localCategories = {
+            salon: { name: 'Salón de eventos', icon: '🏛️' },
+            quinta: { name: 'Quinta/Hacienda', icon: '🏡' },
+            club: { name: 'Club/Centro recreacional', icon: '🎪' },
+            terraza: { name: 'Terraza', icon: '🌆' },
+            'centro-eventos': { name: 'Centro de eventos', icon: '🎊' }
+        };
+
+        // Categorías de servicios disponibles
+        this.serviceCategories = {
+            catering: { name: 'Catering', icon: '🍽️', keywords: ['comida', 'buffet', 'catering', 'banquete', 'cena', 'almuerzo', 'menu'] },
+            dj: { name: 'DJ y Sonido', icon: '🎵', keywords: ['música', 'dj', 'sonido', 'disco', 'baile'] },
+            fotografia: { name: 'Fotografía y Video', icon: '📸', keywords: ['foto', 'fotografía', 'fotógrafo', 'fotos', 'video', 'filmación', 'drone'] },
+            decoracion: { name: 'Decoración', icon: '🎈', keywords: ['decoración', 'flores', 'globos', 'luces', 'ambientación'] },
+            pasteleria: { name: 'Tortas y Postres', icon: '🎂', keywords: ['torta', 'pastel', 'cake', 'postre', 'bocaditos'] },
+            animacion: { name: 'Animación', icon: '🎭', keywords: ['animación', 'animador', 'payaso', 'show', 'entretenimiento', 'mago'] },
+            banda: { name: 'Banda/Orquesta', icon: '🎺', keywords: ['banda', 'orquesta', 'música en vivo', 'grupo musical', 'mariachi'] },
+            mobiliario: { name: 'Mobiliario', icon: '🪑', keywords: ['mesas', 'sillas', 'mobiliario', 'carpas', 'toldos', 'menaje'] }
         };
 
         // Storage keys
@@ -1285,19 +1308,10 @@ class EventBot {
             idea.guests = parseInt(guestMatch[1]);
         }
 
-        // Detectar servicios mencionados
-        const serviceKeywords = {
-            catering: ['comida', 'buffet', 'catering', 'banquete', 'cena', 'almuerzo'],
-            dj: ['música', 'dj', 'sonido', 'disco', 'baile'],
-            foto: ['foto', 'fotografía', 'fotógrafo', 'fotos'],
-            video: ['video', 'filmación', 'drone'],
-            decoracion: ['decoración', 'flores', 'globos', 'luces', 'ambientación'],
-            torta: ['torta', 'pastel', 'cake', 'postre']
-        };
-
-        for (const [service, keywords] of Object.entries(serviceKeywords)) {
-            if (keywords.some(kw => msgLower.includes(kw))) {
-                idea.services.push(service);
+        // Detectar servicios mencionados usando las categorías definidas
+        for (const [category, data] of Object.entries(this.serviceCategories)) {
+            if (data.keywords.some(kw => msgLower.includes(kw))) {
+                idea.services.push(category);
             }
         }
 
@@ -1312,7 +1326,9 @@ class EventBot {
             cumpleanos: 'Celebración de Cumpleaños',
             corporativo: 'Evento Corporativo',
             bautizo: 'Bautizo',
-            graduacion: 'Graduación'
+            graduacion: 'Graduación',
+            'baby-shower': 'Baby Shower',
+            aniversario: 'Aniversario'
         };
 
         const styleNames = {
@@ -1323,14 +1339,16 @@ class EventBot {
             infantil: 'infantil y colorido'
         };
 
-        // Servicios recomendados por tipo de evento
+        // Servicios recomendados por tipo de evento (usando categorías reales)
         const recommendedServices = {
-            matrimonio: ['catering', 'foto', 'video', 'dj', 'decoracion', 'torta'],
-            quinceanos: ['catering', 'foto', 'video', 'dj', 'decoracion', 'torta'],
-            cumpleanos: ['catering', 'foto', 'decoracion', 'torta'],
-            corporativo: ['catering', 'foto', 'sonido'],
-            bautizo: ['catering', 'foto', 'decoracion', 'torta'],
-            graduacion: ['catering', 'foto', 'dj', 'decoracion']
+            matrimonio: ['catering', 'fotografia', 'dj', 'decoracion', 'pasteleria', 'banda'],
+            quinceanos: ['catering', 'fotografia', 'dj', 'decoracion', 'pasteleria'],
+            cumpleanos: ['catering', 'fotografia', 'decoracion', 'pasteleria', 'animacion'],
+            corporativo: ['catering', 'fotografia', 'mobiliario'],
+            bautizo: ['catering', 'fotografia', 'decoracion', 'pasteleria'],
+            graduacion: ['catering', 'fotografia', 'dj', 'decoracion'],
+            'baby-shower': ['catering', 'decoracion', 'pasteleria', 'fotografia'],
+            aniversario: ['catering', 'fotografia', 'decoracion', 'pasteleria', 'banda']
         };
 
         const eventType = idea.eventType || 'cumpleanos';
@@ -1368,33 +1386,20 @@ class EventBot {
     getMatchingServices(serviceTypes) {
         if (typeof SERVICIOS_DATA === 'undefined') return [];
 
-        const categoryMap = {
-            catering: 'catering',
-            dj: 'musica',
-            foto: 'fotografia',
-            video: 'fotografia',
-            decoracion: 'decoracion',
-            torta: 'tortas'
-        };
-
         const results = [];
         for (const type of serviceTypes) {
-            const category = categoryMap[type];
-            if (category) {
-                const service = SERVICIOS_DATA.find(s =>
-                    s.category === category && s.id !== 0
-                );
-                if (service) {
-                    results.push({
-                        name: service.name,
-                        slug: service.slug,
-                        category: type,
-                        price: service.pricing?.packages?.[0]?.price || 'Consultar'
-                    });
-                }
+            // Buscar servicio por categoría exacta
+            const service = SERVICIOS_DATA.find(s => s.category === type);
+            if (service) {
+                results.push({
+                    name: service.name,
+                    slug: service.slug,
+                    category: type,
+                    price: service.pricing?.packages?.[0]?.price || service.pricing?.basePrice || 'Consultar'
+                });
             }
         }
-        return results.slice(0, 4);
+        return results.slice(0, 5);
     }
 
     // Calcular presupuesto estimado
@@ -1404,14 +1409,16 @@ class EventBot {
         // Costo base del local (promedio)
         total += 1200;
 
-        // Costo por servicio
+        // Costo por servicio (basado en categorías reales)
         const serviceCosts = {
             catering: guests * 45, // S/ 45 por persona
             dj: 500,
-            foto: 400,
-            video: 600,
+            fotografia: 450,
             decoracion: 500,
-            torta: 250
+            pasteleria: 280,
+            animacion: 350,
+            banda: 800,
+            mobiliario: 400
         };
 
         for (const service of services) {
@@ -1455,16 +1462,11 @@ class EventBot {
             }
 
             responseText += `<strong>🎉 Servicios sugeridos:</strong><br>`;
-            const serviceNames = {
-                catering: '🍽️ Catering',
-                dj: '🎵 DJ y Sonido',
-                foto: '📸 Fotografía',
-                video: '🎥 Video',
-                decoracion: '🎈 Decoración',
-                torta: '🎂 Torta'
-            };
             proposal.services.forEach(s => {
-                responseText += `• ${serviceNames[s] || s}<br>`;
+                const serviceData = this.serviceCategories[s];
+                if (serviceData) {
+                    responseText += `• ${serviceData.icon} ${serviceData.name}<br>`;
+                }
             });
 
             responseText += `<br>¿Te gustaría que ajuste algo de esta propuesta?`;
@@ -1539,14 +1541,14 @@ class EventBot {
 
         // Ver servicios
         if (this.matchKeywords(message, ['ver servicios', 'servicios disponibles', 'que servicios'])) {
+            let servicesText = `<strong>🎉 Servicios Disponibles:</strong><br><br>`;
+            for (const [key, data] of Object.entries(this.serviceCategories)) {
+                servicesText += `${data.icon} <strong>${data.name}</strong><br>`;
+            }
+            servicesText += `<br>¿Te gustaría cotizar algún servicio?`;
+
             return {
-                text: `<strong>🎉 Servicios Disponibles:</strong><br><br>
-                    🍽️ <strong>Catering</strong> - Buffets y menús personalizados<br>
-                    🎵 <strong>DJ y Sonido</strong> - Música en vivo y equipos<br>
-                    📸 <strong>Fotografía y Video</strong> - Cobertura profesional<br>
-                    🎈 <strong>Decoración</strong> - Ambientación temática<br>
-                    🎂 <strong>Tortas y Postres</strong> - Diseños personalizados<br><br>
-                    ¿Te gustaría cotizar algún servicio?`,
+                text: servicesText,
                 options: {
                     buttons: [
                         { text: '📋 Cotizar servicios', value: 'cotizar' },
@@ -1597,16 +1599,18 @@ class EventBot {
             };
         }
 
-        // Servicios
-        if (this.matchKeywords(message, ['servicio', 'catering', 'dj', 'foto', 'decoración'])) {
+        // Servicios con precios
+        if (this.matchKeywords(message, ['servicio', 'catering', 'dj', 'foto', 'decoración', 'animacion', 'banda', 'torta'])) {
             return {
                 text: `<strong>🎉 Servicios Disponibles:</strong><br><br>
                     🍽️ <strong>Catering</strong> - Desde S/ 35/persona<br>
-                    🎵 <strong>DJ Profesional</strong> - Desde S/ 400<br>
-                    📸 <strong>Fotografía</strong> - Desde S/ 350<br>
-                    🎥 <strong>Video</strong> - Desde S/ 500<br>
+                    🎵 <strong>DJ y Sonido</strong> - Desde S/ 400<br>
+                    📸 <strong>Fotografía y Video</strong> - Desde S/ 350<br>
                     🎈 <strong>Decoración</strong> - Desde S/ 450<br>
-                    🎂 <strong>Tortas</strong> - Desde S/ 150<br><br>
+                    🎂 <strong>Tortas y Postres</strong> - Desde S/ 150<br>
+                    🎭 <strong>Animación</strong> - Desde S/ 300<br>
+                    🎺 <strong>Banda/Orquesta</strong> - Desde S/ 700<br>
+                    🪑 <strong>Mobiliario</strong> - Desde S/ 350<br><br>
                     Todos verificados y con garantía ✓`,
                 options: {
                     buttons: [
