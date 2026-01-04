@@ -105,6 +105,44 @@ class EventBot {
             mobiliario: { name: 'Mobiliario', icon: '🪑', keywords: ['mesas', 'sillas', 'mobiliario', 'carpas', 'toldos', 'menaje'] }
         };
 
+        // Números en texto para detección inteligente
+        this.textNumbers = {
+            'veinte': 20, 'treinta': 30, 'cuarenta': 40, 'cincuenta': 50,
+            'sesenta': 60, 'setenta': 70, 'ochenta': 80, 'noventa': 90,
+            'cien': 100, 'ciento': 100, 'doscientos': 200, 'doscientas': 200,
+            'trescientos': 300, 'trescientas': 300, 'cuatrocientos': 400,
+            'quinientos': 500, 'quinientas': 500,
+            // Expresiones coloquiales
+            'poquitos': 25, 'pocos': 30, 'varios': 50, 'bastantes': 80,
+            'hartos': 100, 'un montón': 150, 'montón': 150, 'muchos': 120,
+            'full': 150, 'un chingo': 200, 'banda': 100
+        };
+
+        // Expresiones coloquiales peruanas para eventos
+        this.colloquialExpressions = {
+            // Tipos de evento
+            'juerga': 'cumpleanos', 'jato': 'cumpleanos', 'tonazo': 'cumpleanos',
+            'matri': 'matrimonio', 'boda civil': 'matrimonio', 'boda reli': 'matrimonio',
+            'fiesta de promoción': 'graduacion', 'promo': 'graduacion',
+            'baby': 'baby-shower', 'shower': 'baby-shower',
+            // Estilos
+            'piola': 'moderno', 'bacán': 'elegante', 'chévere': 'moderno',
+            'tranqui': 'rustico', 'relajado': 'rustico', 'casual': 'moderno',
+            'de lujo': 'elegante', 'top': 'elegante', 'premium': 'elegante',
+            // Tamaño
+            'íntimo': 'pequeño', 'familiar': 'mediano', 'grande': 'grande',
+            'mega': 'grande', 'masivo': 'grande'
+        };
+
+        // Contexto emocional del evento
+        this.emotionalContext = {
+            sorpresa: ['sorpresa', 'secreto', 'sin que sepa', 'no sabe', 'escondidas'],
+            romantico: ['romántico', 'especial', 'inolvidable', 'único', 'amor'],
+            familiar: ['familia', 'familiar', 'todos juntos', 'reunir', 'reencuentro'],
+            divertido: ['divertido', 'loco', 'alocado', 'bailar', 'fiestón', 'rumbear'],
+            formal: ['formal', 'serio', 'profesional', 'ejecutivo', 'importante']
+        };
+
         // Storage keys
         this.STORAGE_KEY = 'celebralo_chat_history';
         this.OWNER_CHATS_KEY = 'celebralo_owner_chats';
@@ -1373,12 +1411,20 @@ class EventBot {
             ];
         }
 
+        // Formatear datos con valores seguros
+        const guestsText = guests?.exact
+            ? `${guests.exact}`
+            : (guests?.min && guests?.max ? `${guests.min}-${guests.max}` : 'Por definir');
+        const budgetText = !budget?.max || budget.max === 99999
+            ? 'Flexible'
+            : `Hasta S/ ${budget.max.toLocaleString()}`;
+
         return {
             text: `🎯 <strong>¡Tengo recomendaciones para ti!</strong><br><br>
                 📋 <strong>Tu evento:</strong><br>
                 • Tipo: ${eventType?.name || 'Evento'}<br>
-                • Invitados: ${guests?.exact || `${guests?.min}-${guests?.max}`} personas<br>
-                • Presupuesto: ${budget?.max === 99999 ? 'Sin límite' : 'Hasta S/ ' + budget?.max?.toLocaleString()}<br><br>
+                • Invitados: ${guestsText} personas<br>
+                • Presupuesto: ${budgetText}<br><br>
                 🏛️ <strong>Locales recomendados:</strong><br>
                 ${recText}`,
             options: {
@@ -1433,29 +1479,54 @@ class EventBot {
             occasion: null,
             date: null,
             timeOfDay: null,
+            emotionalTone: null,
             confidence: 0,
             keywords: []
         };
 
-        const msgLower = message.toLowerCase();
+        const msgLower = message.toLowerCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, ''); // Normalizar acentos
 
-        // ===== DETECTAR TIPO DE EVENTO =====
-        for (const [type, keywords] of Object.entries(this.eventKeywords)) {
-            if (keywords.some(kw => msgLower.includes(kw))) {
-                idea.eventType = type;
-                idea.confidence += 30;
-                break;
+        // ===== DETECTAR EXPRESIONES COLOQUIALES PRIMERO =====
+        for (const [expression, value] of Object.entries(this.colloquialExpressions)) {
+            if (msgLower.includes(expression)) {
+                // Si es tipo de evento
+                if (['cumpleanos', 'matrimonio', 'graduacion', 'baby-shower'].includes(value)) {
+                    if (!idea.eventType) {
+                        idea.eventType = value;
+                        idea.confidence += 25;
+                    }
+                }
+                // Si es estilo
+                if (['moderno', 'elegante', 'rustico'].includes(value)) {
+                    idea.style = value;
+                    idea.confidence += 10;
+                }
             }
         }
 
-        // Detección secundaria de eventos
+        // ===== DETECTAR TIPO DE EVENTO =====
         if (!idea.eventType) {
-            if (msgLower.includes('fiesta') || msgLower.includes('celebr') || msgLower.includes('festej')) {
+            for (const [type, keywords] of Object.entries(this.eventKeywords)) {
+                if (keywords.some(kw => msgLower.includes(kw.normalize('NFD').replace(/[\u0300-\u036f]/g, '')))) {
+                    idea.eventType = type;
+                    idea.confidence += 30;
+                    break;
+                }
+            }
+        }
+
+        // Detección secundaria de eventos (más amplia)
+        if (!idea.eventType) {
+            if (msgLower.match(/fiesta|celebr|festej|parrandear|rumbear|juntada/)) {
                 idea.eventType = 'cumpleanos';
                 idea.confidence += 15;
-            } else if (msgLower.includes('reunion') || msgLower.includes('empresa') || msgLower.includes('trabajo')) {
+            } else if (msgLower.match(/reunion|empresa|trabajo|oficina|corporat|conferen/)) {
                 idea.eventType = 'corporativo';
                 idea.confidence += 15;
+            } else if (msgLower.match(/bebe|nacimiento|embaraz|mama primeriza|papa primerizo/)) {
+                idea.eventType = 'baby-shower';
+                idea.confidence += 20;
             }
         }
 
@@ -1484,28 +1555,67 @@ class EventBot {
         }
 
         // ===== DETECTAR NÚMERO DE INVITADOS =====
-        const guestPatterns = [
-            /(\d+)\s*(personas?|invitados?|gente|asistentes?|comensales?)/i,
-            /para\s*(\d+)\s*(?:personas?)?/i,
-            /seremos\s*(\d+)/i,
-            /somos\s*(\d+)/i,
-            /como\s*(\d+)\s*(?:personas?)?/i,
-            /aproximadamente\s*(\d+)/i,
-            /unas?\s*(\d+)\s*personas?/i,
-            /entre\s*(\d+)\s*(?:y|a|-)\s*(\d+)/i
-        ];
-
-        for (const pattern of guestPatterns) {
-            const match = msgLower.match(pattern);
-            if (match) {
-                if (match[2]) {
-                    // Rango: tomar el promedio
-                    idea.guests = Math.round((parseInt(match[1]) + parseInt(match[2])) / 2);
-                } else {
-                    idea.guests = parseInt(match[1]);
+        // Primero intentar con números en texto
+        for (const [textNum, value] of Object.entries(this.textNumbers)) {
+            const patterns = [
+                new RegExp(`${textNum}\\s*(personas?|invitados?|gente)?`, 'i'),
+                new RegExp(`(?:somos|seremos|como|unas?)\\s*${textNum}`, 'i'),
+                new RegExp(`para\\s*${textNum}`, 'i')
+            ];
+            for (const pattern of patterns) {
+                if (pattern.test(msgLower)) {
+                    idea.guests = value;
+                    idea.confidence += 20;
+                    break;
                 }
-                idea.confidence += 20;
-                break;
+            }
+            if (idea.guests) break;
+        }
+
+        // Si no encontró número en texto, buscar dígitos
+        if (!idea.guests) {
+            const guestPatterns = [
+                /(\d+)\s*(personas?|invitados?|gente|asistentes?|comensales?)/i,
+                /para\s*(\d+)\s*(?:personas?)?/i,
+                /seremos\s*(\d+)/i,
+                /somos\s*(\d+)/i,
+                /como\s*(\d+)\s*(?:personas?)?/i,
+                /aproximadamente\s*(\d+)/i,
+                /unas?\s*(\d+)\s*personas?/i,
+                /(?:mas|más)\s*de\s*(\d+)/i,
+                /menos\s*de\s*(\d+)/i,
+                /entre\s*(\d+)\s*(?:y|a|-)\s*(\d+)/i
+            ];
+
+            for (const pattern of guestPatterns) {
+                const match = msgLower.match(pattern);
+                if (match) {
+                    if (match[2] && !isNaN(parseInt(match[2]))) {
+                        // Rango: tomar el promedio
+                        idea.guests = Math.round((parseInt(match[1]) + parseInt(match[2])) / 2);
+                    } else {
+                        idea.guests = parseInt(match[1]);
+                    }
+                    idea.confidence += 20;
+                    break;
+                }
+            }
+        }
+
+        // Detección por contexto ("evento chico", "fiesta grande")
+        if (!idea.guests) {
+            if (msgLower.match(/chico|pequeño|intimo|pocas?\s*personas|reducido/)) {
+                idea.guests = 30;
+                idea.confidence += 10;
+            } else if (msgLower.match(/mediano|normal|regular/)) {
+                idea.guests = 80;
+                idea.confidence += 10;
+            } else if (msgLower.match(/grande|amplio|mucha\s*gente|bastante\s*gente/)) {
+                idea.guests = 150;
+                idea.confidence += 10;
+            } else if (msgLower.match(/enorme|masivo|mega|gigante/)) {
+                idea.guests = 250;
+                idea.confidence += 10;
             }
         }
 
@@ -1555,28 +1665,60 @@ class EventBot {
 
         // ===== DETECTAR FECHA =====
         const datePatterns = [
+            // "15 de marzo", "el 20 de abril"
             /(?:para|en|el)\s*(\d{1,2})\s*(?:de)?\s*(enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)/i,
+            // "15/03", "20-04-2025"
             /(\d{1,2})[\/\-](\d{1,2})(?:[\/\-](\d{2,4}))?/i,
-            /(próximo|proximo|este|siguiente)\s*(sábado|sabado|domingo|viernes|lunes|martes|miércoles|miercoles|jueves)/i,
-            /(?:en|dentro de)\s*(\d+)\s*(semanas?|meses?|días?)/i
+            // "este sábado", "el próximo viernes"
+            /(proximo|próximo|este|siguiente|el)\s*(sabado|sábado|domingo|viernes|lunes|martes|miercoles|miércoles|jueves)/i,
+            // "en 2 semanas", "dentro de un mes"
+            /(?:en|dentro de)\s*(\d+|un|una|dos|tres)\s*(semanas?|meses?|dias?|días?)/i,
+            // "a fin de mes", "a inicios de marzo"
+            /(?:a\s*)?(fin|finales|inicios?|mediados)\s*(?:de|del)?\s*(mes|año|enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)?/i,
+            // "para san valentín", "en navidad"
+            /(san valentin|san valentín|navidad|año nuevo|fiestas patrias|halloween|dia de la madre|día de la madre|dia del padre|día del padre)/i,
+            // "el finde", "este weekend"
+            /(finde|fin de semana|weekend)/i
         ];
 
         for (const pattern of datePatterns) {
             const match = msgLower.match(pattern);
             if (match) {
-                idea.date = match[0];
+                idea.date = match[0].trim();
                 idea.confidence += 10;
                 break;
             }
         }
 
         // ===== DETECTAR HORARIO =====
-        if (msgLower.includes('noche') || msgLower.includes('cena')) {
+        if (msgLower.match(/noche|nocturno|cena|after|de noche|por la noche/)) {
             idea.timeOfDay = 'noche';
-        } else if (msgLower.includes('tarde') || msgLower.includes('almuerzo')) {
+            idea.confidence += 5;
+        } else if (msgLower.match(/tarde|almuerzo|lonche|vespertino|por la tarde/)) {
             idea.timeOfDay = 'tarde';
-        } else if (msgLower.includes('mañana') || msgLower.includes('desayuno')) {
+            idea.confidence += 5;
+        } else if (msgLower.match(/mañana|desayuno|brunch|matutino|temprano|por la mañana/)) {
             idea.timeOfDay = 'mañana';
+            idea.confidence += 5;
+        } else if (msgLower.match(/todo el dia|dia completo|día completo|full day/)) {
+            idea.timeOfDay = 'todo el día';
+            idea.confidence += 5;
+        }
+
+        // ===== DETECTAR CONTEXTO EMOCIONAL =====
+        for (const [emotion, keywords] of Object.entries(this.emotionalContext)) {
+            if (keywords.some(kw => msgLower.includes(kw))) {
+                idea.emotionalTone = emotion;
+                idea.confidence += 5;
+                // Ajustar estilo según emoción si no tiene
+                if (!idea.style) {
+                    if (emotion === 'romantico') idea.style = 'elegante';
+                    if (emotion === 'divertido') idea.style = 'moderno';
+                    if (emotion === 'formal') idea.style = 'elegante';
+                    if (emotion === 'familiar') idea.style = 'rustico';
+                }
+                break;
+            }
         }
 
         // Ajustar confianza máxima a 100
@@ -1742,6 +1884,24 @@ class EventBot {
     buildProfessionalResponse(idea, proposal) {
         const isFirstProposal = this.context.proposalCount <= 1;
 
+        // Valores seguros con defaults
+        const safeProposal = {
+            eventName: proposal?.eventName || 'Tu Evento',
+            styleName: proposal?.styleName || 'personalizado',
+            guests: proposal?.guests || 100,
+            budgetEstimate: proposal?.budgetEstimate || { min: 0, max: 0 },
+            matchingLocales: proposal?.matchingLocales || [],
+            services: proposal?.services || []
+        };
+        const safeIdea = {
+            occasion: idea?.occasion || null,
+            date: idea?.date || null,
+            timeOfDay: idea?.timeOfDay || null,
+            specialRequirements: idea?.specialRequirements || [],
+            excludedServices: idea?.excludedServices || [],
+            confidence: idea?.confidence || 0
+        };
+
         // Encabezado personalizado
         let responseText = isFirstProposal
             ? `<strong>🎯 ¡Entendido! He preparado esta propuesta para ti:</strong><br><br>`
@@ -1751,33 +1911,35 @@ class EventBot {
         responseText += `<div style="background: linear-gradient(135deg, #667eea11, #764ba211); padding: 14px; border-radius: 12px; margin-bottom: 12px; border-left: 3px solid #667eea;">`;
 
         // Nombre del evento con ocasión si existe
-        responseText += `<strong>📌 ${proposal.eventName}</strong>`;
-        if (idea.occasion) {
-            responseText += ` <em>(${idea.occasion})</em>`;
+        responseText += `<strong>📌 ${safeProposal.eventName}</strong>`;
+        if (safeIdea.occasion) {
+            responseText += ` <em>(${safeIdea.occasion})</em>`;
         }
-        if (proposal.styleName !== 'personalizado') {
-            responseText += `<br><span style="color: #666;">Estilo: ${proposal.styleName}</span>`;
+        if (safeProposal.styleName !== 'personalizado') {
+            responseText += `<br><span style="color: #666;">Estilo: ${safeProposal.styleName}</span>`;
         }
         responseText += `<br><br>`;
 
         // Detalles del evento
-        responseText += `<strong>👥 Invitados:</strong> ${proposal.guests} personas<br>`;
+        responseText += `<strong>👥 Invitados:</strong> ${safeProposal.guests} personas<br>`;
 
-        if (idea.date) {
-            responseText += `<strong>📅 Fecha:</strong> ${idea.date}<br>`;
+        if (safeIdea.date) {
+            responseText += `<strong>📅 Fecha:</strong> ${safeIdea.date}<br>`;
         }
 
-        if (idea.timeOfDay) {
+        if (safeIdea.timeOfDay) {
             const timeLabels = { noche: 'Por la noche', tarde: 'Por la tarde', mañana: 'Por la mañana' };
-            responseText += `<strong>🕐 Horario:</strong> ${timeLabels[idea.timeOfDay]}<br>`;
+            responseText += `<strong>🕐 Horario:</strong> ${timeLabels[safeIdea.timeOfDay] || safeIdea.timeOfDay}<br>`;
         }
 
         responseText += `<br><strong>💰 Inversión estimada:</strong><br>`;
-        responseText += `<span style="font-size: 1.1em; color: #667eea;">S/ ${proposal.budgetEstimate.min.toLocaleString()} - S/ ${proposal.budgetEstimate.max.toLocaleString()}</span>`;
+        const minBudget = safeProposal.budgetEstimate.min || 0;
+        const maxBudget = safeProposal.budgetEstimate.max || 0;
+        responseText += `<span style="font-size: 1.1em; color: #667eea;">S/ ${minBudget.toLocaleString()} - S/ ${maxBudget.toLocaleString()}</span>`;
         responseText += `</div>`;
 
         // Requisitos especiales detectados
-        if (idea.specialRequirements.length > 0) {
+        if (safeIdea.specialRequirements.length > 0) {
             const reqLabels = {
                 'aire-libre': '🌳 Aire libre',
                 'techado': '🏠 Espacio techado',
@@ -1790,14 +1952,15 @@ class EventBot {
                 'economico': '💵 Presupuesto ajustado'
             };
             responseText += `<strong>📋 Requisitos especiales:</strong><br>`;
-            responseText += idea.specialRequirements.map(r => reqLabels[r] || r).join(' • ') + `<br><br>`;
+            responseText += safeIdea.specialRequirements.map(r => reqLabels[r] || r).join(' • ') + `<br><br>`;
         }
 
         // Locales recomendados
-        if (proposal.matchingLocales.length > 0) {
+        if (safeProposal.matchingLocales.length > 0) {
             responseText += `<strong>🏛️ Locales que te recomiendo:</strong><br>`;
-            proposal.matchingLocales.forEach((l, i) => {
-                responseText += `${i + 1}. <strong>${l.name}</strong> - S/ ${l.price.toLocaleString()}<br>`;
+            safeProposal.matchingLocales.forEach((l, i) => {
+                const price = l.price ? l.price.toLocaleString() : 'Consultar';
+                responseText += `${i + 1}. <strong>${l.name || 'Local'}</strong> - S/ ${price}<br>`;
             });
             responseText += `<br>`;
         } else {
@@ -1807,30 +1970,30 @@ class EventBot {
         // Servicios recomendados
         responseText += `<strong>🎉 Servicios recomendados:</strong><br>`;
         let serviciosList = [];
-        proposal.services.forEach(s => {
+        safeProposal.services.forEach(s => {
             // No incluir servicios excluidos
-            if (!idea.excludedServices.includes(s)) {
+            if (!safeIdea.excludedServices.includes(s)) {
                 const serviceData = this.serviceCategories[s];
                 if (serviceData) {
                     serviciosList.push(`${serviceData.icon} ${serviceData.name}`);
                 }
             }
         });
-        responseText += serviciosList.join(' • ') + `<br>`;
+        responseText += (serviciosList.length > 0 ? serviciosList.join(' • ') : 'Por definir') + `<br>`;
 
         // Servicios excluidos si los hay
-        if (idea.excludedServices.length > 0) {
+        if (safeIdea.excludedServices.length > 0) {
             responseText += `<br><span style="color: #888; font-size: 0.9em;">❌ Sin incluir: `;
-            responseText += idea.excludedServices.map(s => this.serviceCategories[s]?.name || s).join(', ');
+            responseText += safeIdea.excludedServices.map(s => this.serviceCategories[s]?.name || s).join(', ');
             responseText += `</span><br>`;
         }
 
         responseText += `<br>`;
 
         // Mensaje de cierre contextual
-        if (idea.confidence >= 70) {
+        if (safeIdea.confidence >= 70) {
             responseText += `<em>Esta propuesta está muy bien definida. ¿Procedemos a cotizar o hay algo que ajustar?</em>`;
-        } else if (idea.confidence >= 40) {
+        } else if (safeIdea.confidence >= 40) {
             responseText += `<em>¿Te parece bien esta propuesta? Puedo ajustar cualquier detalle.</em>`;
         } else {
             responseText += `<em>Es una primera aproximación. Cuéntame más detalles para afinarla mejor.</em>`;
@@ -2424,32 +2587,19 @@ class EventBot {
 
     getGreeting() {
         const hour = new Date().getHours();
-        let greeting = 'Hola';
-        let timeEmoji = '✨';
-        let marketTip = this.getMarketInsight();
+        let greeting = '¡Hola!';
 
         if (hour >= 5 && hour < 12) {
-            greeting = '¡Buenos días';
-            timeEmoji = '🌅';
+            greeting = '¡Buenos días!';
         } else if (hour >= 12 && hour < 19) {
-            greeting = '¡Buenas tardes';
-            timeEmoji = '☀️';
+            greeting = '¡Buenas tardes!';
         } else {
-            greeting = '¡Buenas noches';
-            timeEmoji = '🌙';
+            greeting = '¡Buenas noches!';
         }
 
-        return `${greeting}! ${timeEmoji}<br><br>
-            Soy <strong>Celé</strong>, tu asesor profesional de eventos.<br><br>
-            <div style="background: linear-gradient(135deg, #667eea11, #764ba211); padding: 14px; border-radius: 12px; margin: 8px 0; border-left: 3px solid #667eea;">
-            <strong>🎯 ¿Cómo puedo ayudarte hoy?</strong><br><br>
-            • Encontrar el local perfecto para tu evento<br>
-            • Cotizar servicios (catering, DJ, decoración)<br>
-            • Armar un presupuesto completo<br>
-            • Asesoría personalizada
-            </div>
-            ${marketTip}<br>
-            <em style="color: #888; font-size: 0.9em;">Solo cuéntame qué tienes en mente...</em>`;
+        return `${greeting} 👋<br><br>
+Soy <strong>Celé</strong>, tu amigo para organizar eventos. 🎉<br><br>
+Cuéntame, ¿qué estás planeando? Un cumple, una boda, una reunión... ¡Lo que sea, te ayudo!`;
     }
 
     // Obtener insight de mercado relevante
