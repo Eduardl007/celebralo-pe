@@ -454,6 +454,7 @@ class ReservationManager {
             await sendToGoogleSheets('Reservas', {
                 id: reservation.id,
                 tipo: reservation.tipo,
+                local: reservation.providerName,
                 proveedor: reservation.providerName,
                 fechaEvento: reservation.fechaEvento,
                 tipoEvento: reservation.tipoEvento,
@@ -466,8 +467,7 @@ class ReservationManager {
                 estado: reservation.estado,
                 origen: reservation.origen,
                 fecha: new Date().toLocaleDateString('es-PE'),
-                hora: new Date().toLocaleTimeString('es-PE'),
-                timestamp: new Date().toISOString()
+                hora: new Date().toLocaleTimeString('es-PE')
             });
             console.log('Reserva sincronizada con Google Sheets');
         } catch (error) {

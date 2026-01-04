@@ -18,13 +18,14 @@ const ALLOWED_SHEETS = [
     'Logins',
     'MensajesProveedores',
     'PropuestasIA',
-    'Encuestas'
+    'Encuestas',
+    'Visitas'
 ];
 
 // Campos permitidos por hoja
 const ALLOWED_FIELDS = {
     Usuarios: ['id', 'nombre', 'apellido', 'email', 'telefono', 'tipoRegistro', 'estado', 'fechaRegistro', 'accion', 'metodo', 'fecha', 'hora'],
-    Reservas: ['id', 'tipo', 'proveedor', 'fechaEvento', 'tipoEvento', 'invitados', 'precioEstimado', 'nombre', 'contacto', 'telefono', 'mensaje', 'estado', 'origen', 'fecha', 'hora', 'serviciosAdicionales'],
+    Reservas: ['id', 'tipo', 'local', 'proveedor', 'fechaEvento', 'tipoEvento', 'invitados', 'precioEstimado', 'nombre', 'contacto', 'telefono', 'mensaje', 'estado', 'origen', 'fecha', 'hora', 'serviciosAdicionales'],
     Consultas: ['id', 'consulta', 'respuesta', 'categoria', 'modoChat', 'fecha', 'hora', 'tipo', 'local', 'localId', 'propietario', 'mensaje', 'estado'],
     Proveedores: ['id', 'nombreNegocio', 'nombreContacto', 'email', 'telefono', 'tipo', 'categoria', 'direccion', 'descripcion', 'capacidad', 'precioDesde', 'estado', 'fechaRegistro'],
     Cotizaciones: ['id', 'nombre', 'email', 'telefono', 'tipoEvento', 'fechaEvento', 'cantidadInvitados', 'serviciosSolicitados', 'presupuesto', 'comentarios', 'estado', 'fechaCotizacion'],
@@ -34,7 +35,8 @@ const ALLOWED_FIELDS = {
     Logins: ['id', 'contacto', 'metodo', 'fecha', 'hora'],
     MensajesProveedores: ['id', 'tipo', 'proveedorNombre', 'proveedorId', 'localServicio', 'localServicioSlug', 'tipoProveedor', 'mensaje', 'usuarioNombre', 'usuarioEmail', 'usuarioTelefono', 'estado', 'fecha', 'hora'],
     PropuestasIA: ['id', 'tipoEvento', 'estiloEvento', 'cantidadInvitados', 'presupuestoEstimadoMin', 'presupuestoEstimadoMax', 'localesRecomendados', 'serviciosRecomendados', 'ideaOriginal', 'aceptada', 'fecha', 'hora'],
-    Encuestas: ['facilidad', 'confianza', 'usaria', 'nps', 'mejoras', 'contacto', 'fecha', 'hora']
+    Encuestas: ['facilidad', 'confianza', 'usaria', 'nps', 'mejoras', 'contacto', 'fecha', 'hora'],
+    Visitas: ['id', 'nombre', 'email', 'telefono', 'local', 'fechaPreferida', 'estado', 'fecha', 'hora']
 };
 
 // Rate limiting simple (en memoria - se resetea con cada cold start)

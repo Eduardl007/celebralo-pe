@@ -1595,25 +1595,18 @@
             const formData = {
                 id: 'VIS-' + Date.now(),
                 nombre: userName,
-                telefono: userPhone,
-                contacto: userEmail,
                 email: userEmail,
-                interes: 'Solicitud de visita - ' + currentLocale.name,
-                origen: 'Pagina de local',
-                campania: 'visita_local',
-                fechaPreferida: preferredDate,
+                telefono: userPhone,
                 local: currentLocale.name,
-                localSlug: currentLocale.slug,
-                tipoSolicitud: 'visita',
+                fechaPreferida: preferredDate,
                 estado: 'pendiente',
                 fecha: new Date().toLocaleDateString('es-PE'),
-                hora: new Date().toLocaleTimeString('es-PE'),
-                timestamp: new Date().toISOString()
+                hora: new Date().toLocaleTimeString('es-PE')
             };
 
             try {
-                // 1. Enviar a Google Sheets
-                await sendToGoogleSheets('Leads', formData);
+                // 1. Enviar a Google Sheets (hoja Visitas)
+                await sendToGoogleSheets('Visitas', formData);
 
                 // 2. Enviar correo de confirmacion al usuario
                 try {
