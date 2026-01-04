@@ -558,8 +558,6 @@
 
     <!-- Google Sheets Integration -->
     <script>
-        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx-Jyco4e_8mvT2stR39kU-vKEaDxvdd6FDosumVFW2ufMNwcrBLM3JEQGr44C5Ajl3/exec';
-
         // Selection handlers
         document.querySelectorAll('.emoji-option, .radio-option, .nps-option').forEach(option => {
             option.addEventListener('click', function() {
@@ -604,12 +602,11 @@
             };
 
             try {
-                // Enviar a Google Sheets
-                await fetch(GOOGLE_SHEETS_URL, {
+                // Enviar a Google Sheets via proxy
+                await fetch('/api/sheets-proxy', {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ sheet: 'Encuestas', data: data })
+                    body: JSON.stringify({ action: 'insert', sheet: 'Encuestas', data: data })
                 });
 
                 // Guardar también localmente

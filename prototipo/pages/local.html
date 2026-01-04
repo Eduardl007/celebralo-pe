@@ -1031,54 +1031,6 @@
         emailjs.init(EMAILJS_PUBLIC_KEY);
     </script>
 
-    <!-- Google Sheets Integration -->
-    <script>
-        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx-Jyco4e_8mvT2stR39kU-vKEaDxvdd6FDosumVFW2ufMNwcrBLM3JEQGr44C5Ajl3/exec';
-
-        async function sendToGoogleSheets(sheetName, data) {
-            console.log('Enviando a Google Sheets:', sheetName, data);
-
-            try {
-                // Método 1: Fetch con POST (preferido)
-                const response = await fetch(GOOGLE_SHEETS_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        sheet: sheetName,
-                        data: data
-                    })
-                });
-
-                console.log('Datos enviados correctamente a:', sheetName);
-                return true;
-
-            } catch (error) {
-                console.error('Error con fetch, intentando método alternativo:', error);
-
-                // Método 2: Fallback con imagen (más compatible)
-                try {
-                    const params = new URLSearchParams({ sheet: sheetName, ...data });
-                    const img = new Image();
-                    img.src = GOOGLE_SHEETS_URL + '?' + params.toString();
-                    console.log('Enviado con método alternativo');
-                    return true;
-                } catch (e) {
-                    console.error('Error en fallback:', e);
-
-                    // Guardar localmente para sincronizar después
-                    const pendingData = JSON.parse(localStorage.getItem('celebralope_pending_' + sheetName) || '[]');
-                    pendingData.push({ ...data, _timestamp: new Date().toISOString() });
-                    localStorage.setItem('celebralope_pending_' + sheetName, JSON.stringify(pendingData));
-                    console.log('Guardado localmente para sincronizar después');
-                    return false;
-                }
-            }
-        }
-    </script>
-
     <!-- Analytics -->
     <script src="../js/analytics.js"></script>
 
@@ -1088,6 +1040,7 @@
     <script src="../js/utils/sanitize.js"></script>
     <script src="../js/utils/secure-storage.js"></script>
     <script src="../js/utils/helpers.js"></script>
+    <script src="../js/services/googleSheets.js"></script>
     <script src="../js/components/header.js"></script>
     <script src="../js/components/chatbot.js"></script>
     <script src="../js/components/auth.js"></script>

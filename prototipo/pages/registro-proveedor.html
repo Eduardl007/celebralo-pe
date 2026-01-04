@@ -913,33 +913,6 @@
         emailjs.init('0dYuscUBKL8b-TRsX');
     </script>
 
-    <!-- Google Sheets Integration -->
-    <iframe name="gsIframe" id="gsIframe" style="display:none;"></iframe>
-    <script>
-        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx-Jyco4e_8mvT2stR39kU-vKEaDxvdd6FDosumVFW2ufMNwcrBLM3JEQGr44C5Ajl3/exec';
-
-        function sendToGoogleSheets(sheetName, data) {
-            return new Promise((resolve) => {
-                try {
-                    const flatData = { sheet: sheetName, ...data };
-                    const params = new URLSearchParams(flatData);
-                    const url = GOOGLE_SHEETS_URL + '?' + params.toString();
-
-                    const iframe = document.getElementById('gsIframe');
-                    iframe.src = url;
-                    iframe.onload = () => resolve(true);
-                    iframe.onerror = () => resolve(true);
-                    setTimeout(() => resolve(true), 5000);
-
-                    console.log('Datos enviados a Google Sheets:', sheetName);
-                } catch (error) {
-                    console.error('Error Google Sheets:', error);
-                    resolve(false);
-                }
-            });
-        }
-    </script>
-
     <!-- Analytics -->
     <script src="../js/analytics.js"></script>
 
@@ -952,6 +925,7 @@
     <script src="../js/utils/sanitize.js"></script>
     <script src="../js/utils/secure-storage.js"></script>
     <script src="../js/utils/helpers.js"></script>
+    <script src="../js/services/googleSheets.js"></script>
     <script src="../js/components/header.js"></script>
     <script src="../js/components/auth.js"></script>
     <script src="../js/components/toast.js"></script>

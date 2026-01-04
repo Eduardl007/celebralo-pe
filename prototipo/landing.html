@@ -649,48 +649,31 @@
         emailjs.init(EMAILJS_PUBLIC_KEY);
     </script>
 
-    <!-- Google Sheets Integration -->
-    <iframe name="gsIframe" id="gsIframe" style="display:none;"></iframe>
+    <!-- Google Sheets Integration via Proxy -->
     <script>
-        const GOOGLE_SHEETS_URL = 'https://script.google.com/macros/s/AKfycbx-Jyco4e_8mvT2stR39kU-vKEaDxvdd6FDosumVFW2ufMNwcrBLM3JEQGr44C5Ajl3/exec';
-
-        function sendToGoogleSheets(sheetName, data) {
-            return new Promise((resolve) => {
-                try {
-                    // Aplanar datos y agregar nombre de hoja
-                    const flatData = {
+        async function sendToGoogleSheets(sheetName, data) {
+            try {
+                const response = await fetch('/api/sheets-proxy', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'insert',
                         sheet: sheetName,
-                        ...data
-                    };
-
-                    console.log('Enviando a Google Sheets:', flatData);
-
-                    // Construir URL con parametros GET (mas confiable que POST)
-                    const params = new URLSearchParams(flatData);
-                    const url = GOOGLE_SHEETS_URL + '?' + params.toString();
-
-                    // Usar iframe oculto para enviar (evita CORS completamente)
-                    const iframe = document.getElementById('gsIframe');
-                    iframe.src = url;
-
-                    iframe.onload = function() {
-                        console.log('Google Sheets - Datos enviados correctamente');
-                        resolve(true);
-                    };
-
-                    iframe.onerror = function() {
-                        console.log('Google Sheets - Enviado (sin confirmacion)');
-                        resolve(true);
-                    };
-
-                    // Timeout de seguridad
-                    setTimeout(() => resolve(true), 5000);
-
-                } catch (error) {
-                    console.error('Error Google Sheets:', error);
-                    resolve(false);
-                }
-            });
+                        data: data
+                    })
+                });
+                const result = await response.json();
+                console.log('Google Sheets:', result.success ? 'OK' : 'Error');
+                return result.success;
+            } catch (error) {
+                console.error('Error Google Sheets:', error);
+                // Guardar localmente como fallback
+                const key = `celebralo_sheets_${sheetName.toLowerCase()}`;
+                const queue = JSON.parse(localStorage.getItem(key) || '[]');
+                queue.push({ ...data, _synced: false });
+                localStorage.setItem(key, JSON.stringify(queue));
+                return false;
+            }
         }
     </script>
     <!-- Announcement Bar -->
