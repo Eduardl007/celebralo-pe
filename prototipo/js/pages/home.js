@@ -85,14 +85,12 @@ function handleSearch(e) {
     // Registrar búsqueda en Google Sheets
     if (typeof sendToGoogleSheets === 'function') {
         sendToGoogleSheets('Busquedas', {
-            id: 'BUSQ-' + Date.now(),
-            tipo_evento: eventType,
-            fecha_evento: eventDate,
+            tipoEvento: eventType,
+            fecha: eventDate,
             invitados: guestCount,
             categoria: tabType,
-            fecha: new Date().toLocaleDateString('es-PE'),
-            hora: new Date().toLocaleTimeString('es-PE'),
-            timestamp: new Date().toISOString()
+            fechaBusqueda: new Date().toLocaleDateString('es-PE'),
+            horaBusqueda: new Date().toLocaleTimeString('es-PE')
         });
     }
     if (window.analytics) {

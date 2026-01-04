@@ -27,7 +27,8 @@ const GOOGLE_SHEETS_CONFIG = {
         feedback: 'Feedback',
         logins: 'Logins',
         busquedas: 'Busquedas',
-        mensajesProveedores: 'MensajesProveedores'
+        mensajesProveedores: 'MensajesProveedores',
+        propuestasIA: 'PropuestasIA'
     },
 
     // Configuración de reintentos

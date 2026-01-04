@@ -16,21 +16,23 @@ const ALLOWED_SHEETS = [
     'Feedback',
     'Busquedas',
     'Logins',
-    'MensajesProveedores'
+    'MensajesProveedores',
+    'PropuestasIA'
 ];
 
 // Campos permitidos por hoja
 const ALLOWED_FIELDS = {
     Usuarios: ['id', 'nombre', 'apellido', 'email', 'telefono', 'tipoRegistro', 'estado', 'fechaRegistro', 'accion', 'metodo', 'fecha', 'hora'],
-    Reservas: ['id', 'tipo', 'proveedor', 'fechaEvento', 'tipoEvento', 'invitados', 'precioEstimado', 'nombre', 'contacto', 'telefono', 'mensaje', 'estado', 'origen', 'fecha', 'hora'],
-    Consultas: ['id', 'consulta', 'respuesta', 'categoria', 'fecha', 'hora'],
+    Reservas: ['id', 'tipo', 'proveedor', 'fechaEvento', 'tipoEvento', 'invitados', 'precioEstimado', 'nombre', 'contacto', 'telefono', 'mensaje', 'estado', 'origen', 'fecha', 'hora', 'serviciosAdicionales'],
+    Consultas: ['id', 'consulta', 'respuesta', 'categoria', 'modoChat', 'fecha', 'hora'],
     Proveedores: ['id', 'nombreNegocio', 'nombreContacto', 'email', 'telefono', 'tipo', 'categoria', 'direccion', 'descripcion', 'capacidad', 'precioDesde', 'estado', 'fechaRegistro'],
     Cotizaciones: ['id', 'nombre', 'email', 'telefono', 'tipoEvento', 'fechaEvento', 'cantidadInvitados', 'serviciosSolicitados', 'presupuesto', 'comentarios', 'estado', 'fechaCotizacion'],
     Leads: ['id', 'nombre', 'email', 'telefono', 'interes', 'origen', 'campania', 'fecha'],
     Feedback: ['id', 'tipo', 'mensaje', 'email', 'calificacion', 'fecha'],
     Busquedas: ['tipoEvento', 'fecha', 'invitados', 'categoria', 'fechaBusqueda', 'horaBusqueda'],
     Logins: ['id', 'contacto', 'metodo', 'fecha', 'hora'],
-    MensajesProveedores: ['id', 'tipo', 'proveedorNombre', 'proveedorId', 'localServicio', 'localServicioSlug', 'tipoProveedor', 'mensaje', 'usuarioNombre', 'usuarioEmail', 'usuarioTelefono', 'estado', 'fecha', 'hora']
+    MensajesProveedores: ['id', 'tipo', 'proveedorNombre', 'proveedorId', 'localServicio', 'localServicioSlug', 'tipoProveedor', 'mensaje', 'usuarioNombre', 'usuarioEmail', 'usuarioTelefono', 'estado', 'fecha', 'hora'],
+    PropuestasIA: ['id', 'tipoEvento', 'estiloEvento', 'cantidadInvitados', 'presupuestoEstimadoMin', 'presupuestoEstimadoMax', 'localesRecomendados', 'serviciosRecomendados', 'ideaOriginal', 'aceptada', 'fecha', 'hora']
 };
 
 // Rate limiting simple (en memoria - se resetea con cada cold start)
