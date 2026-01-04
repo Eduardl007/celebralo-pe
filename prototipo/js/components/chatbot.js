@@ -143,8 +143,10 @@ class EventBot {
             formal: ['formal', 'serio', 'profesional', 'ejecutivo', 'importante']
         };
 
-        // Storage keys
+        // Storage keys y versión para forzar reset cuando hay cambios importantes
+        this.CHAT_VERSION = '5.1';
         this.STORAGE_KEY = 'celebralo_chat_history';
+        this.VERSION_KEY = 'celebralo_chat_version';
         this.OWNER_CHATS_KEY = 'celebralo_owner_chats';
 
         // Cola de mensajes para prevenir race conditions
@@ -210,6 +212,15 @@ class EventBot {
 
     loadChatHistory() {
         try {
+            // Verificar si hay una nueva versión del chat
+            const savedVersion = localStorage.getItem(this.VERSION_KEY);
+            if (savedVersion !== this.CHAT_VERSION) {
+                // Nueva versión: limpiar historial para mostrar nueva bienvenida
+                localStorage.removeItem(this.STORAGE_KEY);
+                localStorage.setItem(this.VERSION_KEY, this.CHAT_VERSION);
+                return; // No cargar historial antiguo
+            }
+
             const saved = localStorage.getItem(this.STORAGE_KEY);
             if (saved) {
                 const data = JSON.parse(saved);
