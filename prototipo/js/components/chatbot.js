@@ -1,5 +1,5 @@
 /* ========================================
-   CELÉBRALO PE - Chatbot "Celé" v8.2
+   CELÉBRALO PE - Chatbot "Celé" v8.3
    Asesora Inteligente de Eventos
    + IA Profesional para asesoría completa
    + Análisis contextual de ideas
@@ -143,11 +143,11 @@ class EventBot {
             formal: ['formal', 'serio', 'profesional', 'ejecutivo', 'importante']
         };
 
-        // Storage keys - Versión 8.2 con sintaxis corregida
-        this.CHAT_VERSION = '8.2';
-        this.STORAGE_KEY = 'cele_hist_v82';
-        this.VERSION_KEY = 'cele_ver_v82';
-        this.OWNER_CHATS_KEY = 'cele_own_v82';
+        // Storage keys - Versión 8.3 con protección anti-undefined
+        this.CHAT_VERSION = '8.3';
+        this.STORAGE_KEY = 'cele_hist_v83';
+        this.VERSION_KEY = 'cele_ver_v83';
+        this.OWNER_CHATS_KEY = 'cele_own_v83';
 
         // Cola de mensajes para prevenir race conditions
         this._messageQueue = [];
@@ -695,7 +695,9 @@ class EventBot {
     }
 
     addBotMessage(text, options = {}) {
-        const message = { type: 'bot', text, options, timestamp: new Date() };
+        // Seguridad: nunca permitir undefined
+        const safeText = text || 'Hola, ¿en qué puedo ayudarte?';
+        const message = { type: 'bot', text: safeText, options, timestamp: new Date() };
 
         if (this.mode === 'owner' && this.currentOwner) {
             const chatId = this.getOwnerChatId();
