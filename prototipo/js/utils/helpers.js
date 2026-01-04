@@ -369,22 +369,25 @@ async function sendToGoogleSheets(sheetName, data) {
                 console.log(`✅ Enviado a Google Sheets [${sheetName}]`);
                 return true;
             }
-            console.warn(`⚠️ Guardado localmente [${sheetName}]`);
-            return true; // Guardado localmente es éxito parcial
+            console.error(`❌ Error en Google Sheets [${sheetName}]:`, result.error);
+            // Guardar localmente como fallback
+            saveToLocalQueue(sheetName, { ...data, _timestamp: new Date().toISOString() });
+            return false;
         } catch (error) {
             console.error(`❌ Error enviando a Google Sheets:`, error);
+            saveToLocalQueue(sheetName, { ...data, _timestamp: new Date().toISOString() });
             return false;
         }
     }
 
     // Fallback: guardar localmente si el servicio no está disponible
-    console.log(`📊 [Local] ${sheetName}:`, data);
+    console.warn(`⚠️ googleSheets no disponible, guardando localmente [${sheetName}]`);
     saveToLocalQueue(sheetName, {
         ...data,
         _timestamp: new Date().toISOString(),
         _source: 'web_app'
     });
-    return true;
+    return false;
 }
 
 /**

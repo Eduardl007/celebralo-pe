@@ -103,13 +103,6 @@ class GoogleSheetsService {
      * @returns {Promise<object>}
      */
     async sendData(sheetName, data) {
-        // Validar nombre de hoja
-        const validSheets = Object.values(GOOGLE_SHEETS_CONFIG.sheets);
-        if (!validSheets.includes(sheetName)) {
-            console.warn(`Hoja no válida: ${sheetName}`);
-            return { success: false, error: 'Hoja no válida' };
-        }
-
         // Validar datos
         if (!data || typeof data !== 'object') {
             console.warn('Datos inválidos para enviar');
@@ -127,19 +120,14 @@ class GoogleSheetsService {
             }
         };
 
-        // En desarrollo local, solo guardar localmente
-        if (!this.isProduction) {
-            console.log(`📊 [DEV] ${sheetName}:`, payload.data);
-            return this.saveLocally(sheetName, payload.data);
-        }
-
         // Si no hay conexión, guardar localmente
         if (!navigator.onLine) {
             console.log(`📴 Sin conexión, guardando localmente: ${sheetName}`);
             return this.saveLocally(sheetName, payload.data);
         }
 
-        // Intentar enviar con reintentos
+        // Siempre intentar enviar al proxy (el proxy valida la hoja)
+        console.log(`📤 Enviando a ${sheetName}...`, payload.data);
         return await this.sendWithRetry(payload, sheetName);
     }
 
@@ -360,7 +348,7 @@ class GoogleSheetsService {
      * Sincronizar datos pendientes (mejorado - sin pérdida de datos)
      */
     async syncPendingData() {
-        if (!this.isProduction || !navigator.onLine || this.isSyncing) {
+        if (!navigator.onLine || this.isSyncing) {
             return;
         }
 
