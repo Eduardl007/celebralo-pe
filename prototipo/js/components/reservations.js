@@ -462,7 +462,7 @@ class ReservationManager {
                 invitados: reservation.invitados,
                 precioEstimado: reservation.precioEstimado,
                 nombre: reservation.clienteNombre,
-                contacto: reservation.clienteEmail,
+                email: reservation.clienteEmail,
                 telefono: reservation.clienteTelefono,
                 mensaje: reservation.clienteMensaje,
                 estado: reservation.estado,

@@ -25,7 +25,7 @@ const ALLOWED_SHEETS = [
 // Campos permitidos por hoja
 const ALLOWED_FIELDS = {
     Usuarios: ['id', 'nombre', 'apellido', 'email', 'telefono', 'tipoRegistro', 'estado', 'fechaRegistro', 'accion', 'metodo', 'fecha', 'hora'],
-    Reservas: ['id', 'tipo', 'local', 'proveedor', 'fechaEvento', 'tipoEvento', 'invitados', 'precioEstimado', 'nombre', 'contacto', 'telefono', 'mensaje', 'estado', 'origen', 'fecha', 'hora', 'serviciosAdicionales'],
+    Reservas: ['id', 'tipo', 'local', 'proveedor', 'fechaEvento', 'tipoEvento', 'invitados', 'precioEstimado', 'nombre', 'email', 'telefono', 'mensaje', 'estado', 'origen', 'fecha', 'hora', 'serviciosAdicionales'],
     Consultas: ['id', 'consulta', 'respuesta', 'categoria', 'modoChat', 'fecha', 'hora', 'tipo', 'local', 'localId', 'propietario', 'mensaje', 'estado'],
     Proveedores: ['id', 'nombreNegocio', 'nombreContacto', 'email', 'telefono', 'tipo', 'categoria', 'direccion', 'descripcion', 'capacidad', 'precioDesde', 'estado', 'fechaRegistro'],
     Cotizaciones: ['id', 'nombre', 'email', 'telefono', 'tipoEvento', 'fechaEvento', 'cantidadInvitados', 'serviciosSolicitados', 'presupuesto', 'comentarios', 'estado', 'fechaCotizacion'],
