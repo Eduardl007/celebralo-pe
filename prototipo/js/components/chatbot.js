@@ -143,8 +143,8 @@ class EventBot {
             formal: ['formal', 'serio', 'profesional', 'ejecutivo', 'importante']
         };
 
-        // Storage keys - Versión 8 con keys nuevas
-        this.CHAT_VERSION = '8.0';
+        // Storage keys - Versión 8.1 con saludo mejorado
+        this.CHAT_VERSION = '8.1';
         this.STORAGE_KEY = 'cele_hist_v8';
         this.VERSION_KEY = 'cele_ver_v8';
         this.OWNER_CHATS_KEY = 'cele_own_v8';
@@ -2610,18 +2610,22 @@ class EventBot {
     getGreeting() {
         const hour = new Date().getHours();
         let greeting = '¡Hola!';
+        let emoji = '✨';
 
         if (hour >= 5 && hour < 12) {
-            greeting = '¡Buenos días!';
+            greeting = '¡Buen día!';
+            emoji = '☀️';
         } else if (hour >= 12 && hour < 19) {
-            greeting = '¡Buenas tardes!';
+            greeting = '¡Hola!';
+            emoji = '👋';
         } else {
             greeting = '¡Buenas noches!';
+            emoji = '🌙';
         }
 
-        return `${greeting} 👋<br><br>
-Soy <strong>Celé</strong>, tu asesora de eventos. 🎉<br><br>
-Cuéntame, ¿qué estás planeando?`;
+        return `${greeting} ${emoji}<br><br>
+Soy <strong>Celé</strong>, tu amiga para organizar eventos perfectos. 🎉<br><br>
+¿Tienes algo en mente? ¡Cuéntame y te ayudo!`;
     }
 
     // Obtener insight de mercado relevante
