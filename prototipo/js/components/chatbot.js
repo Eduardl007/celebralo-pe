@@ -1,5 +1,5 @@
 /* ========================================
-   CELÉBRALO PE - Chatbot "Celé" v5.1
+   CELÉBRALO PE - Chatbot "Celé" v5.2
    Asesora Inteligente de Eventos
    + IA Profesional para asesoría completa
    + Análisis contextual de ideas
@@ -144,7 +144,7 @@ class EventBot {
         };
 
         // Storage keys y versión para forzar reset cuando hay cambios importantes
-        this.CHAT_VERSION = '5.1';
+        this.CHAT_VERSION = '5.2';
         this.STORAGE_KEY = 'celebralo_chat_history';
         this.VERSION_KEY = 'celebralo_chat_version';
         this.OWNER_CHATS_KEY = 'celebralo_owner_chats';
@@ -160,6 +160,8 @@ class EventBot {
     }
 
     init() {
+        console.log('🤖 Celé v' + this.CHAT_VERSION + ' iniciando...');
+
         this.chatbot = document.getElementById('chatbot');
         this.trigger = document.getElementById('chatbotTrigger');
         this.window = document.getElementById('chatbotWindow');
@@ -169,7 +171,10 @@ class EventBot {
         this.quickActions = document.getElementById('quickActions');
         this.closeBtn = document.getElementById('chatbotClose');
 
-        if (!this.chatbot) return;
+        if (!this.chatbot) {
+            console.error('❌ Elemento #chatbot no encontrado');
+            return;
+        }
 
         // Bind events
         this.trigger.addEventListener('click', () => this.toggle());
@@ -194,8 +199,11 @@ class EventBot {
 
         // Initial greeting si no hay historial
         if (this.messages.length === 0) {
+            console.log('💬 Mostrando saludo inicial...');
             setTimeout(() => {
-                this.addBotMessage(this.getGreeting(), {
+                const greeting = this.getGreeting();
+                console.log('📝 Saludo:', greeting);
+                this.addBotMessage(greeting, {
                     buttons: [
                         { text: '💡 Tengo una idea', value: 'tengo idea de evento' },
                         { text: '🏛️ Ver locales', value: 'ver locales' },
@@ -203,6 +211,8 @@ class EventBot {
                     ]
                 });
             }, 500);
+        } else {
+            console.log('📂 Historial cargado:', this.messages.length, 'mensajes');
         }
     }
 
