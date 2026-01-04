@@ -1105,9 +1105,19 @@
         function initCalendar() {
             if (!currentLocale.availability) return;
 
+            // Combinar fechas bloqueadas estáticas con reservas existentes
+            let blockedDates = [...(currentLocale.blockedDates || [])];
+
+            // Agregar fechas de reservas existentes (pendientes y confirmadas)
+            if (window.reservationManager) {
+                const reservedDates = reservationManager.getBlockedDatesForProvider(currentLocale.id, 'local');
+                blockedDates = [...new Set([...blockedDates, ...reservedDates])];
+                console.log(`📅 Fechas ocupadas para ${currentLocale.name}:`, reservedDates);
+            }
+
             localeCalendar = new EventCalendar('#bookingCalendar', {
                 availability: currentLocale.availability,
-                blockedDates: currentLocale.blockedDates || [],
+                blockedDates: blockedDates,
                 showLegend: true,
                 onDateSelect: (date, dateStr) => {
                     selectedDate = dateStr;
@@ -1540,6 +1550,12 @@
 
                 const resId = reservation ? reservation.id : 'RES-' + Date.now();
                 showToast('success', '¡Reserva enviada!', `ID: ${resId} - Te contactaremos en menos de 24 horas`);
+
+                // Bloquear la fecha en el calendario
+                if (localeCalendar && pendingBookingData.fecha) {
+                    localeCalendar.addBlockedDate(pendingBookingData.fecha);
+                    console.log(`📅 Fecha ${pendingBookingData.fecha} bloqueada tras reserva`);
+                }
 
                 // Limpiar formulario
                 document.getElementById('bookingRequestForm').reset();

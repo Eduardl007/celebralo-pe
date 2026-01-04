@@ -1387,9 +1387,17 @@
         function initCalendar(s) {
             if (!s.availability) return;
 
+            // Cargar fechas bloqueadas del servicio + reservas existentes
+            let blockedDates = [...(s.blockedDates || [])];
+            if (window.reservationManager) {
+                const reservedDates = reservationManager.getBlockedDatesForProvider(s.id, 'servicio');
+                blockedDates = [...new Set([...blockedDates, ...reservedDates])];
+                console.log(`📅 Fechas ocupadas para ${s.name}:`, reservedDates);
+            }
+
             serviceCalendar = new EventCalendar('#bookingCalendar', {
                 availability: s.availability,
-                blockedDates: s.blockedDates || [],
+                blockedDates: blockedDates,
                 showLegend: true,
                 onDateSelect: (date, dateStr) => {
                     selectedDate = dateStr;
@@ -1509,6 +1517,13 @@
 
             const resId = 'COT-' + Date.now().toString().slice(-6);
             showToast('success', '¡Cotización enviada!', `ID: ${resId} - Te contactaremos pronto`);
+
+            // Bloquear la fecha en el calendario
+            if (serviceCalendar && selectedDate) {
+                serviceCalendar.addBlockedDate(selectedDate);
+                console.log(`📅 Fecha ${selectedDate} bloqueada tras reserva de servicio`);
+            }
+
             closeContactModal();
             document.getElementById('contactForm').reset();
 

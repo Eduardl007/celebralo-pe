@@ -221,10 +221,11 @@ class ReservationManager {
         );
     }
 
-    getBlockedDatesForProvider(providerId) {
+    getBlockedDatesForProvider(providerId, tipo = null) {
         return this.reservations
             .filter(r =>
                 r.providerId === providerId &&
+                (tipo ? r.tipo === tipo : true) &&
                 (r.estado === 'confirmada' || r.estado === 'pendiente')
             )
             .map(r => r.fechaEvento);
