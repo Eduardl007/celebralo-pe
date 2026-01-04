@@ -1,13 +1,13 @@
 /* ========================================
-   CELÉBRALO PE - Chatbot "Celé" v5.0
-   Asesor Inteligente de Eventos
+   CELÉBRALO PE - Chatbot "Celé" v5.1
+   Asesora Inteligente de Eventos
    + IA Profesional para asesoría completa
    + Análisis contextual de ideas
    + Detección de preferencias y requisitos
    + Chat con propietarios
    + Persistencia de conversaciones
    + Recomendaciones personalizadas
-   Actualizado: 2026-01-02
+   Actualizado: 2026-01-04
    ======================================== */
 
 class EventBot {
@@ -603,6 +603,7 @@ class EventBot {
 
         this.addUserMessage(message);
         this.input.value = '';
+        this.input.focus();
         this.processMessage(message);
     }
 
@@ -1904,7 +1905,7 @@ class EventBot {
 
         // Encabezado personalizado
         let responseText = isFirstProposal
-            ? `<strong>🎯 ¡Entendido! He preparado esta propuesta para ti:</strong><br><br>`
+            ? `<strong>🎯 ¡Listo! Preparé esta propuesta para ti:</strong><br><br>`
             : `<strong>✨ Aquí está tu propuesta actualizada:</strong><br><br>`;
 
         // Tarjeta del evento
@@ -2598,8 +2599,8 @@ class EventBot {
         }
 
         return `${greeting} 👋<br><br>
-Soy <strong>Celé</strong>, tu amigo para organizar eventos. 🎉<br><br>
-Cuéntame, ¿qué estás planeando? Un cumple, una boda, una reunión... ¡Lo que sea, te ayudo!`;
+Soy <strong>Celé</strong>, tu asesora de eventos. 🎉<br><br>
+Cuéntame, ¿qué estás planeando?`;
     }
 
     // Obtener insight de mercado relevante
