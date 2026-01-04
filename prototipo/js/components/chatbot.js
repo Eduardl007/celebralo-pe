@@ -1,5 +1,5 @@
 /* ========================================
-   CELÉBRALO PE - Chatbot "Celé" v8.0
+   CELÉBRALO PE - Chatbot "Celé" v8.2
    Asesora Inteligente de Eventos
    + IA Profesional para asesoría completa
    + Análisis contextual de ideas
@@ -143,11 +143,11 @@ class EventBot {
             formal: ['formal', 'serio', 'profesional', 'ejecutivo', 'importante']
         };
 
-        // Storage keys - Versión 8.1 con saludo mejorado
-        this.CHAT_VERSION = '8.1';
-        this.STORAGE_KEY = 'cele_hist_v8';
-        this.VERSION_KEY = 'cele_ver_v8';
-        this.OWNER_CHATS_KEY = 'cele_own_v8';
+        // Storage keys - Versión 8.2 con sintaxis corregida
+        this.CHAT_VERSION = '8.2';
+        this.STORAGE_KEY = 'cele_hist_v82';
+        this.VERSION_KEY = 'cele_ver_v82';
+        this.OWNER_CHATS_KEY = 'cele_own_v82';
 
         // Cola de mensajes para prevenir race conditions
         this._messageQueue = [];
@@ -191,29 +191,26 @@ class EventBot {
             });
         }
 
-        // Cargar historial si existe
-        this.loadChatHistory();
+        // Limpiar cualquier historial anterior y mostrar saludo fresco
+        this.messagesContainer.innerHTML = '';
+        this.messages = [];
 
         // Detectar si estamos en página de local
         this.detectLocalPage();
 
-        // Initial greeting si no hay historial
-        if (this.messages.length === 0) {
-            console.log('💬 Mostrando saludo inicial...');
-            setTimeout(() => {
-                const greeting = this.getGreeting();
-                console.log('📝 Saludo:', greeting);
-                this.addBotMessage(greeting, {
-                    buttons: [
-                        { text: '💡 Tengo una idea', value: 'tengo idea de evento' },
-                        { text: '🏛️ Ver locales', value: 'ver locales' },
-                        { text: '🔍 Solo explorar', value: 'explorar' }
-                    ]
-                });
-            }, 500);
-        } else {
-            console.log('📂 Historial cargado:', this.messages.length, 'mensajes');
-        }
+        // Mostrar saludo inicial siempre (sin cargar historial)
+        console.log('💬 Mostrando saludo inicial...');
+        setTimeout(() => {
+            const greeting = this.getGreeting();
+            console.log('📝 Saludo:', greeting);
+            this.addBotMessage(greeting, {
+                buttons: [
+                    { text: '💡 Tengo una idea', value: 'tengo idea de evento' },
+                    { text: '🏛️ Ver locales', value: 'ver locales' },
+                    { text: '🔍 Solo explorar', value: 'explorar' }
+                ]
+            });
+        }, 500);
     }
 
     // ==========================================
