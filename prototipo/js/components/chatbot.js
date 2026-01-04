@@ -2653,22 +2653,45 @@ class EventBot {
             stage: 'greeting',
             userName: null,
             preferences: [],
-            searchHistory: []
+            searchHistory: [],
+            eventIdea: null,
+            eventStyle: null,
+            requiredServices: [],
+            excludedServices: [],
+            suggestedLocales: [],
+            suggestedServices: [],
+            specialRequirements: [],
+            occasion: null,
+            conversationHistory: [],
+            proposalCount: 0,
+            lastProposal: null
         };
         this.currentStep = 0;
     }
 
-    // Método para limpiar historial
+    // Método para limpiar historial y resetear todo
     clearHistory() {
         this.messages = [];
+        this.resetWizard();
         localStorage.removeItem(this.STORAGE_KEY);
+        localStorage.removeItem(this.OWNER_CHATS_KEY);
         this.messagesContainer.innerHTML = '';
+        this.mode = 'assistant';
+        this.currentOwner = null;
+        this.currentLocal = null;
         this.addBotMessage(this.getGreeting(), {
             buttons: [
-                { text: '🎊 Organizar evento', value: 'organizar_evento' },
-                { text: '🔍 Solo explorar', value: 'explorar' }
+                { text: '💡 Tengo una idea', value: 'tengo idea de evento' },
+                { text: '🏛️ Ver locales', value: 'ver locales' },
+                { text: '🎉 Ver servicios', value: 'ver servicios' }
             ]
         });
+    }
+
+    // Método público para resetear el chat (puede llamarse desde consola)
+    reset() {
+        this.clearHistory();
+        console.log('✅ Chat reseteado correctamente');
     }
 }
 
