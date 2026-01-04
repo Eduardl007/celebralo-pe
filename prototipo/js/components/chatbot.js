@@ -143,11 +143,11 @@ class EventBot {
             formal: ['formal', 'serio', 'profesional', 'ejecutivo', 'importante']
         };
 
-        // Storage keys y versión para forzar reset cuando hay cambios importantes
+        // Storage keys - NUEVA KEY para ignorar historial antiguo
         this.CHAT_VERSION = '7.0';
-        this.STORAGE_KEY = 'celebralo_chat_history';
-        this.VERSION_KEY = 'celebralo_chat_version';
-        this.OWNER_CHATS_KEY = 'celebralo_owner_chats';
+        this.STORAGE_KEY = 'cele_chat_v7';
+        this.VERSION_KEY = 'cele_version_v7';
+        this.OWNER_CHATS_KEY = 'cele_owner_v7';
 
         // Cola de mensajes para prevenir race conditions
         this._messageQueue = [];
