@@ -2157,23 +2157,30 @@ class EventBot {
     // ==========================================
 
     generateResponse(message) {
-        // Precios
+        // Precios - Respuesta profesional con contexto de mercado
         if (this.matchKeywords(message, ['precio', 'costo', 'cuanto', 'cuánto', 'tarifa', 'cobran'])) {
+            const marketContext = this.getMarketPriceContext();
             return {
-                text: `<strong>💰 Rangos de Precios:</strong><br><br>
-                    <strong>🏛️ Locales:</strong><br>
-                    • Económicos: S/ 600 - S/ 1,000<br>
-                    • Estándar: S/ 1,000 - S/ 1,800<br>
-                    • Premium: S/ 1,800 - S/ 2,500+<br><br>
-                    <strong>🎉 Servicios:</strong><br>
-                    • Catering: desde S/ 35/persona<br>
-                    • DJ: desde S/ 400<br>
-                    • Foto/Video: desde S/ 350<br><br>
-                    ¿Quieres que te ayude a encontrar opciones en tu presupuesto?`,
+                text: `<strong>💰 Guía de Precios del Mercado</strong><br><br>
+                    <div style="background: #f8f9fa; padding: 12px; border-radius: 10px; margin-bottom: 12px;">
+                    <strong>🏛️ Alquiler de Locales:</strong><br>
+                    • <strong>Económico:</strong> S/ 600 - S/ 1,000 <em>(salones pequeños, 50-80 personas)</em><br>
+                    • <strong>Estándar:</strong> S/ 1,000 - S/ 1,800 <em>(la mayoría de eventos)</em><br>
+                    • <strong>Premium:</strong> S/ 1,800 - S/ 3,000+ <em>(quintas, haciendas)</em>
+                    </div>
+                    <div style="background: #f8f9fa; padding: 12px; border-radius: 10px; margin-bottom: 12px;">
+                    <strong>🎉 Servicios Adicionales:</strong><br>
+                    • <strong>Catering:</strong> S/ 35 - S/ 80 por persona<br>
+                    • <strong>DJ + Sonido:</strong> S/ 400 - S/ 800<br>
+                    • <strong>Fotografía:</strong> S/ 350 - S/ 1,200<br>
+                    • <strong>Decoración:</strong> S/ 450 - S/ 1,500
+                    </div>
+                    ${marketContext}
+                    <br><strong>¿Te ayudo a armar un presupuesto para tu evento?</strong>`,
                 options: {
                     buttons: [
-                        { text: '💵 Buscar por presupuesto', value: 'organizar evento' },
-                        { text: '🎉 Ver servicios', value: 'ver servicios' }
+                        { text: '📋 Cotizar mi evento', value: 'organizar evento' },
+                        { text: '🏛️ Ver locales', value: 'ver locales' }
                     ]
                 }
             };
@@ -2419,6 +2426,7 @@ class EventBot {
         const hour = new Date().getHours();
         let greeting = 'Hola';
         let timeEmoji = '✨';
+        let marketTip = this.getMarketInsight();
 
         if (hour >= 5 && hour < 12) {
             greeting = '¡Buenos días';
@@ -2432,12 +2440,107 @@ class EventBot {
         }
 
         return `${greeting}! ${timeEmoji}<br><br>
-            Soy <strong>Celé</strong>, tu asesor inteligente de eventos en <strong>Celébralo pe</strong>.<br><br>
-            <div style="background: linear-gradient(135deg, #667eea11, #764ba211); padding: 12px; border-radius: 10px; margin: 8px 0;">
-            💡 <strong>¿Cómo puedo ayudarte?</strong><br><br>
-            Cuéntame tu idea de evento y te prepararé una propuesta personalizada con local y servicios incluidos.
-            </div><br>
-            <em style="color: #666;">Ejemplo: "Quiero organizar una boda elegante para 120 personas en un jardín"</em>`;
+            Soy <strong>Celé</strong>, tu asesor profesional de eventos.<br><br>
+            <div style="background: linear-gradient(135deg, #667eea11, #764ba211); padding: 14px; border-radius: 12px; margin: 8px 0; border-left: 3px solid #667eea;">
+            <strong>🎯 ¿Cómo puedo ayudarte hoy?</strong><br><br>
+            • Encontrar el local perfecto para tu evento<br>
+            • Cotizar servicios (catering, DJ, decoración)<br>
+            • Armar un presupuesto completo<br>
+            • Asesoría personalizada
+            </div>
+            ${marketTip}<br>
+            <em style="color: #888; font-size: 0.9em;">Solo cuéntame qué tienes en mente...</em>`;
+    }
+
+    // Obtener insight de mercado relevante
+    getMarketInsight() {
+        const month = new Date().getMonth();
+        const dayOfWeek = new Date().getDay();
+
+        // Insights según temporada
+        const seasonalInsights = {
+            // Verano (Dic-Feb) - temporada alta
+            high: [
+                '📈 <strong>Tip:</strong> Enero-Febrero es temporada alta. Te recomiendo reservar con 2-3 meses de anticipación.',
+                '🔥 <strong>Tendencia:</strong> Los locales al aire libre están con alta demanda este mes.',
+                '💡 <strong>Dato:</strong> Los paquetes todo incluido tienen 15% más de reservas en verano.'
+            ],
+            // Otoño/Invierno (Mar-Ago) - temporada baja
+            low: [
+                '💰 <strong>Oportunidad:</strong> Esta época hay mejores precios y disponibilidad de locales.',
+                '✨ <strong>Tip:</strong> Es buen momento para negociar descuentos en servicios.',
+                '📅 <strong>Ventaja:</strong> Mayor flexibilidad de fechas en esta temporada.'
+            ],
+            // Primavera (Sep-Nov) - temporada de bodas
+            wedding: [
+                '💒 <strong>Temporada de bodas:</strong> Alta demanda en locales para matrimonios.',
+                '📈 <strong>Tendencia:</strong> Septiembre-Noviembre es la época favorita para bodas.',
+                '💡 <strong>Consejo:</strong> Reserva con 4-6 meses de anticipación para bodas.'
+            ]
+        };
+
+        let season = 'low';
+        if (month >= 11 || month <= 1) season = 'high';
+        else if (month >= 8 && month <= 10) season = 'wedding';
+
+        const insights = seasonalInsights[season];
+        const randomInsight = insights[Math.floor(Math.random() * insights.length)];
+
+        // Agregar tip de fin de semana
+        const weekendTip = (dayOfWeek === 5 || dayOfWeek === 6)
+            ? '<br>📌 <em>Los sábados son los más solicitados. Considera viernes o domingo para mejores precios.</em>'
+            : '';
+
+        return `<div style="background: #f8f9fa; padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 0.9em;">
+            ${randomInsight}${weekendTip}
+        </div>`;
+    }
+
+    // Contexto de precios según temporada
+    getMarketPriceContext() {
+        const month = new Date().getMonth();
+        const isHighSeason = month >= 11 || month <= 1 || (month >= 8 && month <= 10);
+
+        if (isHighSeason) {
+            return `<div style="background: #fff3cd; padding: 10px; border-radius: 8px; border-left: 3px solid #ffc107; font-size: 0.9em;">
+                ⚠️ <strong>Temporada Alta:</strong> Los precios pueden ser 10-20% más altos. Te recomiendo reservar con anticipación para asegurar mejores tarifas.
+            </div>`;
+        }
+
+        return `<div style="background: #d4edda; padding: 10px; border-radius: 8px; border-left: 3px solid #28a745; font-size: 0.9em;">
+            ✅ <strong>Buen momento para reservar:</strong> Es temporada baja, hay más disponibilidad y mejores precios.
+        </div>`;
+    }
+
+    // Obtener respuesta contextual según historial
+    getContextualFollowUp() {
+        const context = this.context;
+
+        if (context.eventType && !context.guests) {
+            return {
+                question: `¿Para cuántas personas aproximadamente sería tu ${context.eventType.name}?`,
+                buttons: [
+                    { text: '👥 Menos de 50', value: 'para 50 personas' },
+                    { text: '👥 50-100', value: 'para 100 personas' },
+                    { text: '👥 100-200', value: 'para 150 personas' },
+                    { text: '👥 Más de 200', value: 'para 250 personas' }
+                ]
+            };
+        }
+
+        if (context.eventType && context.guests && !context.eventIdea?.services?.length) {
+            return {
+                question: '¿Qué servicios te interesan para tu evento?',
+                buttons: [
+                    { text: '🍽️ Catering', value: 'necesito catering' },
+                    { text: '🎵 DJ', value: 'necesito dj' },
+                    { text: '📸 Foto/Video', value: 'necesito fotografia' },
+                    { text: '✨ Todo incluido', value: 'quiero paquete completo' }
+                ]
+            };
+        }
+
+        return null;
     }
 
     logInteraction(query, response) {
@@ -2448,18 +2551,42 @@ class EventBot {
             ? 'asesor_ia'
             : (this.mode === 'owner' ? 'propietario' : 'asistente');
 
+        // Extraer información del contexto para mejor análisis
+        const contextData = {
+            tipoEvento: this.context.eventType?.type || this.context.eventIdea?.eventType || null,
+            invitados: this.context.guests?.exact || this.context.eventIdea?.guests || null,
+            presupuesto: this.context.budget || null,
+            etapa: this.context.stage,
+            serviciosInteres: this.context.eventIdea?.services?.join(', ') || null,
+            requisitosEspeciales: this.context.specialRequirements?.join(', ') || null
+        };
+
         if (typeof sendToGoogleSheets === 'function') {
             sendToGoogleSheets('Consultas', {
                 id: 'CHT-' + Date.now(),
                 consulta: query,
-                respuesta: response.substring(0, 200).replace(/<[^>]*>/g, ''),
+                respuesta: response.substring(0, 300).replace(/<[^>]*>/g, ''),
                 categoria: category,
                 modoChat: modoChat,
+                tipoEvento: contextData.tipoEvento,
+                invitados: contextData.invitados,
+                serviciosInteres: contextData.serviciosInteres,
+                etapa: contextData.etapa,
                 localId: this.currentLocal?.id || null,
+                local: this.currentLocal?.name || null,
                 servicioId: this.providerType === 'servicio' ? this.currentLocal?.id : null,
                 fecha: new Date().toLocaleDateString('es-PE'),
                 hora: new Date().toLocaleTimeString('es-PE'),
                 timestamp: new Date().toISOString()
+            });
+        }
+
+        // Log para analytics si está disponible
+        if (window.analytics && typeof window.analytics.track === 'function') {
+            window.analytics.track('chat_interaction', {
+                category,
+                modoChat,
+                hasContext: !!this.context.eventType
             });
         }
 
