@@ -58,8 +58,8 @@ const ESTRUCTURA_HOJAS = {
 
     // Reservas de locales y servicios
     Reservas: [
-        'id', 'tipo', 'proveedor', 'fechaEvento', 'tipoEvento',
-        'invitados', 'precioEstimado', 'nombre', 'contacto', 'telefono',
+        'id', 'tipo', 'local', 'proveedor', 'fechaEvento', 'tipoEvento',
+        'invitados', 'precioEstimado', 'nombre', 'email', 'telefono',
         'mensaje', 'estado', 'origen', 'fecha', 'hora', 'timestamp'
     ],
 
