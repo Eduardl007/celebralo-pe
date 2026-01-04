@@ -1977,7 +1977,7 @@
 
             // Mostrar reseñas
             allReviews.slice(0, 5).forEach((review, idx) => {
-                const isUserReview = review.id?.startsWith('REV-');
+                const isUserReview = typeof review.id === 'string' && review.id.startsWith('REV-');
                 html += `
                     <div class="review-card ${isUserReview ? 'user-review' : ''}">
                         <div class="review-header">

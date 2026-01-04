@@ -1000,7 +1000,7 @@ function getPageType() {
 initAnalytics();
 
 // Exponer funciones para uso manual
-window.Celébralo peAnalytics = {
+window.CelebraloAnalytics = {
     trackEvent,
     showAnalyticsDashboard,
     config: ANALYTICS_CONFIG
